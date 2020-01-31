@@ -58,8 +58,9 @@ class ItemOrderAdmin(admin.ModelAdmin):
     readonly_fields = ("id", "formatted_total")
 
 class ItemAdmin(admin.ModelAdmin):
-    fields = ["image_tag", "image", "name", "description", "limited_time"]
-    readonly_fields = ("image_tag", )
+    #fields = ["image_tag", "image", "name", "description", "limited_time"]
+    #readonly_fields = ("image_tag", )
+    fields = ["name", "description", "limited_time"]
     inlines = (ItemOrderInline1, )
 
 admin.site.register(models.GroupOrder, GroupOrderAdmin)

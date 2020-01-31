@@ -11,9 +11,9 @@ class Item(models.Model):
 
     #image = models.ImageField(upload_to="static/images")
 
-    name        = models.CharField(max_length=50, required=True)
+    name        = models.CharField(max_length=50)
     description = models.TextField(max_length=250)
-    price       = models.FloatField(default=1.0, validators=[MinValueValidator(0.0)], required=True)
+    price       = models.FloatField(default=1.0, validators=[MinValueValidator(0.0)])
 
     # Numbers (besides 'Every Day' option) that represent days from python datatime class
     # representing what day of the week the item is available
@@ -124,7 +124,7 @@ class ItemOrder(models.Model, BasicOrder):
     item       = models.ForeignKey("Item", related_name="item_orders", on_delete=models.CASCADE)
     order      = models.ForeignKey("Order", related_name="item_orders", on_delete=models.CASCADE)
     quantity   = models.IntegerField(default=1, validators=[MinValueValidator(1)])
-    item_price = models.IntegerField(default=0, validators=[MinValueValidator(0)) # price of item at time of order
+    item_price = models.IntegerField(default=0, validators=[MinValueValidator(0)]) # price of item at time of order
 
     class Meta:
         unique_together = ('order', 'item')
