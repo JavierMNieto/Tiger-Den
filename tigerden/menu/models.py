@@ -135,8 +135,22 @@ class ItemOrder(models.Model, BasicOrder):
     def __str__(self):
         return str(self.id)
 
-class ItemOption(models.Model):
+class ItemOptionTemplate(models.Model):
     """Specification of an Item
         Ex: Type of cream in Coffee
     """
+    name = models.CharField(max_length=50)
+    item = models.ForeignKey("Item", related_name="item_options", on_delete=models.CASCADE)
+    options = models.ManyToManyField("Option")
+
+class Option(models.Model):
+    option_name = models.CharField(max_length=50)
+    
+    def __str__(self):
+        return self.option_name
+
+class ItemOption(models.Model):
+    """
+    """
+    
     pass

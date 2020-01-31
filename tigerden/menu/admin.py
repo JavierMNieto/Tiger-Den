@@ -40,6 +40,12 @@ class ItemOrderInline1(EditLinkToInlineObject, admin.TabularInline):
     fields = ["edit_link", "order", "quantity", "formatted_total"]
     readonly_fields = ("edit_link", "order", "quantity", "formatted_total")
 
+class ItemOptionTemplateInline(EditLinkToInlineObject, admin.TabularInline):
+    model = models.ItemOptionTemplate
+    extra = 0
+    fields = ["edit_link", "name", "options"]
+    readonly_fields = ("edit_link",)
+
 class GroupOrderAdmin(admin.ModelAdmin):
     list_display = ("__str__", "user", "location", "confirmed", "formatted_total", "created_at")
     fields       = ["id", "user", "location", "confirmed", "formatted_total", "created_at"]
@@ -57,12 +63,18 @@ class ItemOrderAdmin(admin.ModelAdmin):
     fields       = ["id", "item", "quantity", "formatted_total"]
     readonly_fields = ("id", "formatted_total")
 
+class ItemOptionTemplateAdmin(admin.ModelAdmin):
+    list_display = ("__str__", "name")
+    fields       = ["name", "options", "item"]
+
 class ItemAdmin(admin.ModelAdmin):
     #fields = ["image_tag", "image", "name", "description", "limited_time"]
     #readonly_fields = ("image_tag", )
     fields = ["name", "description", "limited_time"]
-    inlines = (ItemOrderInline1, )
+    inlines = (ItemOrderInline1, ItemOptionTemplateInline)
 
+admin.site.register(models.Option)
+admin.site.register(models.ItemOptionTemplate, ItemOptionTemplateAdmin)
 admin.site.register(models.GroupOrder, GroupOrderAdmin)
 admin.site.register(models.Order, OrderAdmin)
 admin.site.register(models.ItemOrder, ItemOrderAdmin)

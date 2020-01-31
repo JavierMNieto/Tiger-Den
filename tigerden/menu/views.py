@@ -23,14 +23,14 @@ def add_item(request):
     if request.method == 'POST':
         form = forms.ItemForm(request.POST)
 
-        cart = json.loads(request.session.get('cart', '[]'))
-
+        cart = json.loads(request.session.get('cart', r'{}'))
+        
         if form.is_valid():
-            item_id = form.cleaned_data["id"]
+            item_id = str(form.cleaned_data["id"])
             if item_id in cart:
-                cart[item_id] += form.cleaned_data["quantity"]
+                cart[item_id] += int(form.cleaned_data["quantity"])
             else:
-                cart[item_id] = form.cleaned_data["quantity"]
+                cart[item_id] = int(form.cleaned_data["quantity"])
             
             if cart[item_id] < 1:
                 del cart[item_id]
