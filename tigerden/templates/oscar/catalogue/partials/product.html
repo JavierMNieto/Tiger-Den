@@ -1,0 +1,9 @@
+{% extends "oscar/catalogue/partials/product.html" %}
+
+{% block product_price %}
+    <div class="product_price">
+        {% if not product.is_parent and not product.has_options %}
+            {% include "oscar/catalogue/partials/add_to_basket_form_compact.html" %}
+        {% endif %}
+    </div>
+{% endblock %}
