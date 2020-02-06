@@ -61,12 +61,14 @@ INSTALLED_APPS = [
     'oscar.apps.catalogue.reviews',
     #'oscar.apps.partner',
     'custom_apps.partner.apps.PartnerConfig',
-    'oscar.apps.basket',
+    #'oscar.apps.basket',
+    'custom_apps.basket.apps.BasketConfig',
     'oscar.apps.payment',
     'oscar.apps.offer',
     #'oscar.apps.order',
     'custom_apps.order.apps.OrderConfig',
-    'oscar.apps.customer',
+    #'oscar.apps.customer',
+    'custom_apps.customer.apps.CustomerConfig',
     'oscar.apps.search',
     'oscar.apps.voucher',
     'oscar.apps.wishlists',
@@ -74,7 +76,9 @@ INSTALLED_APPS = [
     'custom_apps.dashboard.apps.DashboardConfig',
     'oscar.apps.dashboard.reports',
     'oscar.apps.dashboard.users',
-    'oscar.apps.dashboard.orders',
+    #'oscar.apps.dashboard.orders',
+    'custom_apps.dashboard.orders.apps.OrdersDashboardConfig',
+    'custom_apps.dashboard.grouporders.apps.GroupOrdersDashboardConfig',
     #'oscar.apps.dashboard.catalogue',
     'custom_apps.dashboard.catalogue.apps.CatalogueDashboardConfig',
     'oscar.apps.dashboard.offers',
@@ -264,7 +268,7 @@ OSCAR_DEFAULT_CURRENCY = "USD"
 # Oscar Media Settings
 # https://django-oscar.readthedocs.io/en/stable/ref/settings.html#upload-media-settings
 
-OSCAR_MISSING_IMAGE_URL = MEDIA_ROOT + 'image_not_found.jpg'
+OSCAR_MISSING_IMAGE_URL = MEDIA_ROOT + '/image_not_found.jpg'
 
 # Oscar Misc Settings
 # https://django-oscar.readthedocs.io/en/stable/ref/settings.html#misc-settings
@@ -317,14 +321,18 @@ OSCAR_DASHBOARD_NAVIGATION = [
                 'label': _('Orders'),
                 'url_name': 'dashboard:order-list',
             },
+            #{
+            #    'label': _('Group Orders'),
+            #    'url_name': 'dashboard:order-list',
+            #},
             {
                 'label': _('Statistics'),
                 'url_name': 'dashboard:order-stats',
             },
-            #{
-            #    'label': _('Partners'),
-            #    'url_name': 'dashboard:partner-list',
-            #},
+            {
+                'label': _('Partners'),
+                'url_name': 'dashboard:partner-list',
+            },
             # The shipping method dashboard is disabled by default as it might
             # be confusing. Weight-based shipping methods aren't hooked into
             # the shipping repository by default (as it would make

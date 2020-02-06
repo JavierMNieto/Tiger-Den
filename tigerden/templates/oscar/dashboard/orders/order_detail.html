@@ -1,0 +1,23 @@
+{% extends "oscar/dashboard/orders/order_detail.html" %}
+{% load i18n %}
+{% load currency_filters %}
+
+{% block order_information %}
+<table class="table table-striped table-bordered table-hover">
+    <caption><i class="icon-shopping-cart icon-large"></i>{% trans "Order information" %}</caption>
+    <tr>
+        <th>{% trans "Supervisor" %}</th>
+        <th>{% trans "Order Total" %}</th>
+        <th>{% trans "Date of purchase" %}</th>
+        <th>{% trans "Time of purchase" %}</th>
+        <th>{% trans "Status" %}</th>
+    </tr>
+    <tr>
+        <td>{{ order.supervisor|default:"None Assigned" }}</td>
+        <td>{{ order.total_incl_tax|currency:order.currency }}</td>
+        <td>{{ order.date_placed|date }}</td>
+        <td>{{ order.date_placed|time }}</td>
+        <td>{{ order.status|default:"N/A" }}</td>
+    </tr>
+</table>
+{% endblock %}

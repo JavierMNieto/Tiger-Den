@@ -104,7 +104,9 @@ class IndexView(CustomIndexView):
         open_alerts = alerts.filter(status=StockAlert.OPEN)
         closed_alerts = alerts.filter(status=StockAlert.CLOSED)
 
-        total_lines_last_day = lines.filter(order__in=orders_last_day).count()
+        # Not efficient to get all Orders again
+        total_lines_last_day = lines.filter(order__in=Order.objects.all().filter(date_placed__gt=datetime_24hrs_ago)).count()
+       
         stats = {
             'total_orders_last_day': orders_last_day.count(),
             'total_lines_last_day': total_lines_last_day,
