@@ -251,14 +251,14 @@ OSCAR_REQUIRED_ADDRESS_FIELDS = ('name', 'location') #
 # Oscar Communication Settings
 # https://django-oscar.readthedocs.io/en/stable/ref/settings.html#communication-settings
 
-OSCAR_FROM_EMAIL = "cryptotracker8969@gmail.com"
+OSCAR_FROM_EMAIL = "tigerdentest@gmail.com"
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = "cryptotracker8969@gmail.com"
-EMAIL_HOST_PASSWORD = "cryptotracker89"
+EMAIL_HOST_USER = "tigerdentest@gmail.com"
+EMAIL_HOST_PASSWORD = "%56Z+Ws.TE,x,?Vx"
 
 # Oscar Currency Settings
 # https://django-oscar.readthedocs.io/en/stable/ref/settings.html#currency-settings
