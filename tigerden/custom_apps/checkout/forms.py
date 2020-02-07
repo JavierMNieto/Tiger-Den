@@ -11,7 +11,7 @@ def get_supervisors_tuple():
         name = user.get_full_name()
         if name.strip() == "":
             name = user.email
-        supervisors += ((name, user.pk),)
+        supervisors += ((user.pk, name),)
     
     return supervisors
 
@@ -20,9 +20,11 @@ class GuestSupervisorForm(forms.Form):
     Form to get guest's supervisor
     """
     
-    supervisors = forms.CharField(required=True)
+    supervisor = forms.CharField(required=True)
     
     def __init__(self, *args, **kwargs):
         super(GuestSupervisorForm, self).__init__(*args, **kwargs)
         
-        self.fields['supervisors'].widget = fields.ListTextWidget(data_list=get_supervisors_tuple(), name='supervisor-list')
+        self.fields['supervisor'].widget = fields.ListTextWidget(data_list=get_supervisors_tuple(), 
+                                                                 name='supervisor-list', 
+                                                                 attrs={'class': 'form-control m-1'})

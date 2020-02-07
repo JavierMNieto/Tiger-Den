@@ -7,7 +7,7 @@ GuestSupervisorForm = get_class('checkout.forms', 'GuestSupervisorForm')
 
 
 class IndexView(views.IndexView):
-    success_url = "checkout:shipping-address" # change to guest stage 1
+    success_url = "checkout:supervisor-info" # guest stage 1
     
     def form_valid(self, form):
         if form.is_guest_checkout() or form.is_new_account_checkout():
@@ -26,12 +26,12 @@ class IndexView(views.IndexView):
                       "back to the checkout process"))
                 self.success_url = "%s?next=%s&email=%s" % (
                     reverse('customer:register'),
-                    reverse('checkout:shipping-address'), # change to guest stage 1
+                    reverse('checkout:supervisor-info'), # guest stage 1
                     urlquote(email)
                 )
         else:
             if self.request.user.is_supervisor():
-                self.success_url = "" # change to supervisor stage 1
+                self.success_url = 'checkout:supervisor-info' # change to supervisor stage 1
             user = form.get_user()
             login(self.request, user)
 
@@ -58,3 +58,14 @@ class GuestSupervisorView(views.CheckoutSessionMixin, generic.FormView):
         'check_basket_is_not_empty',
         'check_basket_is_valid',
         'check_user_email_is_captured']
+    
+    def form_valid(self, form):
+        print(form)
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        
+        data["guest_form"] = GuestSupervisorForm()
+        
+        return data
