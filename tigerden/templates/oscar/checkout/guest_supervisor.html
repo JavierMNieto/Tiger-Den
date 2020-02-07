@@ -1,0 +1,35 @@
+{% extends "oscar/checkout/checkout.html" %}
+{% load i18n %}
+
+{% block title %}
+    {% trans "Supervisor Info" %} | {{ block.super }}
+{% endblock %}
+
+{% block checkout_nav %}
+    {% include 'oscar/checkout/guest_nav.html' with step=1 %}
+{% endblock %}
+
+{% block checkout_title %}{% trans "Supervisor Info" %}{% endblock %}
+
+{% block order_contents %}{% endblock %}
+
+{% block supervisor_info %}
+<div class="col-sm-3"></div>
+<form action="{% url 'checkout:supervisor-info' %}" method="post" id="supervisor_info" autocomplete="off" class="col-sm-6">
+    {% csrf_token %}
+    {{ guest_form }}
+    <button class="btn btn-primary btn-large" data-loading-text="{% trans 'Submitting...' %}">{% trans "Submit" %}</button>
+</form>
+<div class="col-sm-3"></div>
+{% endblock supervisor_info %}
+
+{% block extrascripts %}
+<script>
+    $(function() {
+        $('#supervisor_info').submit(function(event) {
+            var value = $('input[name="supervisor"]').val();
+            $('input[name="supervisor"]').val($('#list__supervisor-list [value="' + value + '"]').data('value'));
+        });
+    });
+</script>
+{% endblock %}
