@@ -8,7 +8,8 @@ class CheckoutConfig(apps.CheckoutConfig):
     def ready(self):
         super().ready()
         
-        self.supervisor_info_view = get_class('checkout.views', 'GuestSupervisorView')
+        self.supervisor_info_view = get_class('checkout.views', 'SupervisorView')
+        self.delivery_info_view = get_class('checkout.views', 'LocationView')
 
     def get_urls(self):
         urls = [
@@ -16,7 +17,7 @@ class CheckoutConfig(apps.CheckoutConfig):
 
             # Guest Views
             url(r'supervisor-info/$', self.supervisor_info_view.as_view(), name='supervisor-info'),
-            
+            url(r'delivery-info/$', self.delivery_info_view.as_view(), name='delivery-info'),
 
             # Shipping/user address views
             #url(r'shipping-address/$', self.shipping_address_view.as_view(), name='shipping-address'),
@@ -27,8 +28,8 @@ class CheckoutConfig(apps.CheckoutConfig):
             #url(r'shipping-method/$', self.shipping_method_view.as_view(), name='shipping-method'),
 
             # Payment views
-            #url(r'payment-method/$', self.payment_method_view.as_view(), name='payment-method'),
-            #url(r'payment-details/$', self.payment_details_view.as_view(), name='payment-details'),
+            url(r'payment-method/$', self.payment_method_view.as_view(), name='payment-method'),
+            url(r'payment-details/$', self.payment_details_view.as_view(), name='payment-details'),
 
             # Preview and thankyou
             url(r'preview/$',

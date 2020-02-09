@@ -29,3 +29,19 @@ urlpatterns = [
     path('i18n/', include('django.conf.urls.i18n')),
     path('', include(apps.get_app_config('oscar').urls[0])),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+from custom_apps.partner.models import Partner
+from django.contrib.auth.models import Group, User
+
+def one_time_startup():
+    """
+    Not the best but the easiest way to this...
+    """
+    if not Partner.objects.exists():
+        Partner.objects.create(name='Tiger Den')
+    if not Group.objects.filter(name__iexact='Supervisor').exists():
+        supervisor_group = Group.objects.create(name='Supervisor')
+        for staff in User.objects.filter(is_staff=True):
+            supervisor_group.user_set.add(staff)
+
+one_time_startup()
