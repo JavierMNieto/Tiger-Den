@@ -36,7 +36,7 @@ class IndexView(CustomIndexView):
         for hour in range(0, hours, 2):
             end_time = start_time + timedelta(hours=2)
             hourly_orders = orders.filter(date_placed__gte=start_time,
-                                          date_placed__lt=end_time).exclude(status__exact=next(iter(getattr(settings, 'OSCAR_ORDER_STATUS_PIPELINE', {}))))
+                                          date_placed__lt=end_time).exclude(status__in=[next(iter(getattr(settings, 'OSCAR_ORDER_STATUS_PIPELINE', {}))), 'Cancelled'])
             total = hourly_orders.aggregate(
                 Sum('total_incl_tax')
             )['total_incl_tax__sum'] or D('0.0')
@@ -77,7 +77,7 @@ class IndexView(CustomIndexView):
         datetime_24hrs_ago = now() - timedelta(hours=24)
 
         # Only get orders passed first status        
-        orders = Order.objects.all().exclude(status__exact=next(iter(getattr(settings, 'OSCAR_ORDER_STATUS_PIPELINE', {}))))
+        orders = Order.objects.all().exclude(status__in=[next(iter(getattr(settings, 'OSCAR_ORDER_STATUS_PIPELINE', {}))), 'Cancelled'])
         alerts = StockAlert.objects.all()
         baskets = Basket.objects.filter(status=Basket.OPEN)
         customers = User.objects.filter(orders__isnull=False).distinct()
