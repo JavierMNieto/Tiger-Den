@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'django.contrib.flatpages',
 
     'custom_apps',
-    'custom_apps.grouporder.apps.GroupOrderConfig',
 
     'oscar',
     #'oscar.apps.analytics',
@@ -78,7 +77,6 @@ INSTALLED_APPS = [
     'oscar.apps.dashboard.users',
     #'oscar.apps.dashboard.orders',
     'custom_apps.dashboard.orders.apps.OrdersDashboardConfig',
-    'custom_apps.dashboard.grouporders.apps.GroupOrdersDashboardConfig',
     #'oscar.apps.dashboard.catalogue',
     'custom_apps.dashboard.catalogue.apps.CatalogueDashboardConfig',
     'oscar.apps.dashboard.offers',

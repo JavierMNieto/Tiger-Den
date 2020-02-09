@@ -1,7 +1,8 @@
 from oscar.apps.checkout import mixins
 from oscar.core.loading import get_model
-
-GroupOrder = get_model('grouporder', 'GroupOrder')
+from decimal import Decimal as D
+from django.http import HttpResponseRedirect
+GroupOrder = get_model('order', 'GroupOrder')
 
 logger = mixins.logger
 
@@ -30,13 +31,20 @@ class OrderPlacementMixin(mixins.OrderPlacementMixin):
         basket.submit()
         
         if user.is_supervisor():
+            reqs_total = D('0.00')
+            reqs = user.get_order_requests()
+            
+            if reqs:
+                for req in reqs.all():
+                    reqs_total += req.total_excl_tax
+            
             group_order = GroupOrder(number=order_number, 
                                     user=user, 
-                                    total_excl_tax=order_total.excl_tax,
+                                    total_excl_tax=reqs_total,
                                     status=GroupOrder.all_statuses()[0],
                                     location=location)
             group_order.save()
-            reqs = user.get_order_requests()
+            
             if reqs:
                 for req in reqs.all():
                     req.group_order_id = group_order.id
@@ -44,7 +52,7 @@ class OrderPlacementMixin(mixins.OrderPlacementMixin):
                     
                     # Send confirmation message (normally an email)
                     self.send_confirmation_message(req, self.communication_type_code)
-            
+                    
             group_order.set_status(GroupOrder.all_statuses()[1])
         
         return self.handle_successful_order(order)

@@ -92,13 +92,7 @@ class PaymentDetailsView(views.PaymentDetailsView):
         'check_order_has_location']
     
     preview = True
-
-    def get(self, request, *args, **kwargs):
-        if not request.user.is_supervisor():
-            self.success_url = reverse('checkout:req_thankyou')
-        
-        return super().get(request, *args, **kwargs)
-
+    
     def submit(self, user, basket, shipping_address, shipping_method,  # noqa (too complex (10))
                shipping_charge, billing_address, order_total,
                payment_kwargs=None, order_kwargs=None, location=None):
