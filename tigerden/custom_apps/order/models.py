@@ -7,12 +7,13 @@ from oscar.core.compat import AUTH_USER_MODEL
 
 class Order(AbstractOrder):
     group_order = models.ForeignKey(
-        'grouporder.grouporder', null=True, blank=True,
+        'grouporder.GroupOrder', null=True, blank=True,
         verbose_name=_("Group Order"),
+        related_name='orders',
         on_delete=models.CASCADE)
     
     supervisor = models.ForeignKey(
-        AUTH_USER_MODEL, related_name='student_orders', null=True, blank=True,
+        AUTH_USER_MODEL, related_name='order_requests', null=True, blank=True,
         verbose_name=_("Supervisor"), on_delete=models.SET_NULL)
     
     def set_status(self, new_status):
