@@ -13,7 +13,11 @@
         <th>{% trans "Status" %}</th>
     </tr>
     <tr>
-        <td>{{ order.supervisor|default:"None Assigned" }}</td>
+    {% if order.supervisor %}
+        <td><a href="{% url 'dashboard:user-detail' pk=order.supervisor.pk %}">{{order.supervisor}}</a></td>
+    {% else %}
+        <td>None Assigned</td>
+    {% endif %}
         <td>{{ order.total_incl_tax|currency:order.currency }}</td>
         <td>{{ order.date_placed|date }}</td>
         <td>{{ order.date_placed|time }}</td>

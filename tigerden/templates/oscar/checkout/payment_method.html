@@ -1,0 +1,30 @@
+{% extends "oscar/checkout/checkout.html" %}
+{% load i18n %}
+
+{% block title %}
+    {% trans "Payment Method" %} | {{ block.super }}
+{% endblock %}
+
+{% block checkout_nav %}
+    {% include 'oscar/checkout/nav.html' with step=2 %}
+{% endblock %}
+
+{% block checkout_title %}
+    {% trans "Payment Method" %}
+{% endblock %}
+
+{% block order_contents %}
+    {% if request.user.is_authenticated %}
+        {% trans "Balance: " %}
+    {% endif %}
+{% endblock %}
+
+{% block payment-method %}
+<div class="col-sm-4"></div>
+<form action="{% url 'checkout:payment-method' %}" method="post" autocomplete="off" class="col-sm-4">
+    {% csrf_token %}
+    {{ form }}
+    <button class="btn btn-primary btn-large" data-loading-text="{% trans 'Submitting...' %}">{% trans "Next" %}</button>
+</form>
+<div class="col-sm-4"></div>
+{% endblock payment-method %}

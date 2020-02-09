@@ -1,11 +1,60 @@
+{% load i18n %}
+
 <div class="navbar navbar-static-top navbar-inverse nav-checkout">
     <ul class="nav navbar-nav">
         {% spaceless %}
             {% if request.user.is_supervisor %}
-                {% include "oscar/checkout/supervisor_nav.html" %}
+                <li class="step1 {% if step == 1 %}active{% else %}{% if step == 2 %}previous{% else %}{% if step > 1 %}visited{% else %}disabled{% endif %}{% endif %}{% endif %} ">
+                    {% if step == 2 or step == 3 or step == 4 %}
+                        <a href="{% url 'checkout:delivery-info' %}">
+                            <span class="visible-inline-sm icon-chevron-right"></span>
+                            <span>
+                                {% trans "1. Delivery Info" %}
+                            </span>
+                        </a>
+                    {% else %}
+                        <span class="navbar-text">
+                            {%  trans "1. Delivery Info" %}
+                        </span>
+                    {% endif %}
+                </li>
             {% else %}
-                {% include "oscar/checkout/guest_nav.html" %}
+                <li class="step1 {% if step == 1 %}active{% else %}{% if step == 2 %}previous{% else %}{% if step > 1 %}visited{% else %}disabled{% endif %}{% endif %}{% endif %} ">
+                    {% if step == 2 or step == 3 or step == 4 %}
+                        <a href="{% url 'checkout:supervisor-info' %}">
+                            <span class="visible-inline-sm icon-chevron-right"></span>
+                            <span>
+                                {% trans "1. Supervisor" %}
+                            </span>
+                        </a>
+                    {% else %}
+                        <span class="navbar-text">
+                            {%  trans "1. Supervisor" %}
+                        </span>
+                    {% endif %}
+                </li>
             {% endif %}
+            
+            <li class="step2 {% if step == 2 %}active{% else %}{% if step == 3 %}previous{% else %}{% if step > 2 %}visited{% else %}disabled{% endif %}{% endif %}{% endif %} ">
+                {% if step == 3 %}
+                    <a href="{% url 'checkout:payment-method' %}">
+                        <span class="visible-inline-sm icon-chevron-right"></span>
+                        <span>
+                            {% trans "2. Payment" %}
+                        </span>
+                    </a>
+                {% else %}
+                    <span class="navbar-text">
+                        {%  trans "2. Payment" %}
+                    </span>
+                {% endif %}
+            </li>
+
+            <li class="step3 {% if step == 3 %}active{% else %}disabled{% endif %} ">
+                <span class="navbar-text">
+                    {% trans "3. Confirmation" %}
+                </span>
+            </li>
         {% endspaceless %}
     </ul><!-- /navbar-inner -->
 </div><!-- /navbar -->

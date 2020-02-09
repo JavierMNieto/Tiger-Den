@@ -1,0 +1,14 @@
+{% extends "oscar/checkout/preview.html" %}
+{% load i18n %}
+
+{% block title %}
+    {% trans "Order" %} | {{ block.super }}
+{% endblock %}
+
+{% block checkout_nav %}
+    {% include 'oscar/checkout/nav.html' with step=3 %}
+{% endblock %}
+
+{% block checkout_title %}
+    {% trans "Place order" %}
+{% endblock %}
