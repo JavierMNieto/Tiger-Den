@@ -5,7 +5,7 @@
         {% spaceless %}
             {% if request.user.is_supervisor %}
                 <li class="step1 {% if step == 1 %}active{% else %}{% if step == 2 %}previous{% else %}{% if step > 1 %}visited{% else %}disabled{% endif %}{% endif %}{% endif %} ">
-                    {% if step == 2 or step == 3 or step == 4 %}
+                    {% if step == 1 or step == 2 or step == 3 %}
                         <a href="{% url 'checkout:delivery-info' %}">
                             <span class="visible-inline-sm icon-chevron-right"></span>
                             <span>
@@ -20,7 +20,7 @@
                 </li>
             {% else %}
                 <li class="step1 {% if step == 1 %}active{% else %}{% if step == 2 %}previous{% else %}{% if step > 1 %}visited{% else %}disabled{% endif %}{% endif %}{% endif %} ">
-                    {% if step == 2 or step == 3 or step == 4 %}
+                    {% if step == 1 or step == 2 or step == 3 %}
                         <a href="{% url 'checkout:supervisor-info' %}">
                             <span class="visible-inline-sm icon-chevron-right"></span>
                             <span>
@@ -36,7 +36,7 @@
             {% endif %}
             
             <li class="step2 {% if step == 2 %}active{% else %}{% if step == 3 %}previous{% else %}{% if step > 2 %}visited{% else %}disabled{% endif %}{% endif %}{% endif %} ">
-                {% if step == 3 %}
+                {% if step == 2 or step == 3 %}
                     <a href="{% url 'checkout:payment-method' %}">
                         <span class="visible-inline-sm icon-chevron-right"></span>
                         <span>
@@ -50,7 +50,7 @@
                 {% endif %}
             </li>
 
-            <li class="step3 {% if step == 3 %}active{% else %}disabled{% endif %} ">
+            <li class="step3 {% if step == 3 or step == 4 %}active{% else %}disabled{% endif %} ">
                 <span class="navbar-text">
                     {% trans "3. Confirmation" %}
                 </span>
