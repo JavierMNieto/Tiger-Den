@@ -4,6 +4,7 @@ from oscar.core.loading import get_model
 import uuid
 
 Partner = get_model('partner', 'Partner')
+Option  = get_model('catalogue', 'Option')
 
 class ProductForm(base_forms.ProductForm):
 
@@ -36,3 +37,7 @@ class StockRecordForm(base_forms.StockRecordForm):
             'partner': forms.HiddenInput(),
             'partner_sku': forms.HiddenInput()
         }
+        
+class OptionForm(base_forms.ProductAttributesForm):
+    class Meta(base_forms.ProductAttributesForm.Meta):
+        model = Option
