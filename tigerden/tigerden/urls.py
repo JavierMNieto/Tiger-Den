@@ -18,6 +18,7 @@ from django.urls import include, path
 from django.apps import apps
 from django.conf import settings
 from django.conf.urls.static import static
+import sys
 
 from . import views
 
@@ -44,4 +45,5 @@ def one_time_startup():
         for staff in User.objects.filter(is_staff=True):
             supervisor_group.user_set.add(staff)
 
-one_time_startup()
+if ('makemigrations' in sys.argv or 'migrate' in sys.argv):
+    one_time_startup()
