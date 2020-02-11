@@ -18,6 +18,7 @@ from django.urls import include, path
 from django.apps import apps
 from django.conf import settings
 from django.conf.urls.static import static
+import sys
 
 from . import views
 
@@ -40,8 +41,11 @@ def one_time_startup():
     if not Partner.objects.exists():
         Partner.objects.create(name='Tiger Den')
     if not Group.objects.filter(name__iexact='Supervisor').exists():
-        supervisor_group = Group.objects.create(name='Supervisor')
-        for staff in User.objects.filter(is_staff=True):
-            supervisor_group.user_set.add(staff)
+        Group.objects.create(name='Supervisor')
+    supervisor_group = Group.objects.get(name='Supervisor')
+    
+    for staff in User.objects.filter(is_staff=True):
+        supervisor_group.user_set.add(staff)
 
-one_time_startup()
+if ('makemigrations' not in sys.argv and 'migrate' not in sys.argv):
+    one_time_startup()

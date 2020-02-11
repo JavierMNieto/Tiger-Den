@@ -3,25 +3,31 @@
 {% load i18n %}
 {% load image_tags %}
 
-{% if not request.user.is_supervisor %}
-    {% block title %}
+{% block title %}
+    {% if not request.user.is_supervisor  %}
         {% blocktrans with number=order.number %}
             Order {{ number }}: request
         {% endblocktrans %} | {{ block.super }}
-    {% endblock title %}
-{% endif %}
+    {% else %}
+        {{ block.super }}
+    {% endif %}
+{% endblock %}
 
 {% block checkout_nav %}
     {% include 'oscar/checkout/nav.html' with step=4 %}
 {% endblock %}
 
-{% if not request.user.is_supervisor %}
-    {% block checkout_title %}
+
+{% block checkout_title %}
+    {% if not request.user.is_supervisor  %}
         {% blocktrans with number=order.number supervisor=order.supervisor.get_full_name|default:order.supervisor.email %}
-            Sent Order {{ number }}: request to {{supervisor}}
+            Sent Order {{ number }} request to {{supervisor}}
         {% endblocktrans %}
-    {% endblock %}
-{% endif %}
+    {% else %}
+        {{ block.super }}
+    {% endif %}
+{% endblock %}
+
 
 
 {% block content %}
@@ -29,7 +35,7 @@
         {% if request.user.is_supervisor %}
             {% if order.group_order.orders.all.count > 1 %}
                 {% blocktrans with number=order.number %}
-                    Your and your student orders have been placed and a confirmation email has been sent - your order and group order number is
+                    Your orders have been placed and a confirmation email has been sent - your order and group order number is
                     <strong>{{ number }}</strong>.
                 {% endblocktrans %}
             {% else %}
