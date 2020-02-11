@@ -1,0 +1,14 @@
+{% extends "oscar/layout.html" %}
+
+{% block extrascripts %}
+    {{ block.super }}
+    {% if request.user.is_supervisor %}
+        <script>
+            $(function() {
+                setInterval(async function() {
+                    $("#minibasketcontents").html(await $.get("{% url "basket:mini-basket-contents" %}"));
+                }, 1000);
+            });
+        </script>
+    {% endif %}
+{% endblock %}
