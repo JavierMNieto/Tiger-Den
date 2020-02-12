@@ -8,7 +8,9 @@ class BasketConfig(apps.BasketConfig):
     
     def ready(self):
         super().ready()
-        self.mini_basket_view = get_class('basket.views', 'MiniCartContentView')
+        self.mini_reqs_view = get_class('basket.views', 'MiniReqsCartView')
+        self.cart_reqs_view = get_class('basket.views', 'ReqsCartView')
+        self.cancel_request_view = get_class('basket.views', 'RequestCancelView')
     
     def get_urls(self):
         urls = [
@@ -20,7 +22,9 @@ class BasketConfig(apps.BasketConfig):
                 self.remove_voucher_view.as_view(), name='vouchers-remove'),
             url(r'^saved/$', login_required(self.saved_view.as_view()),
                 name='saved'),
-            url(r'^minibasketcontents/$', self.mini_basket_view.as_view(), name='mini-basket-contents')
+            url(r'^minireqscart/$', self.mini_reqs_view.as_view(), name='mini-reqs-cart'),
+            url(r'^reqscart/$', self.cart_reqs_view.as_view(), name='reqs-cart'),
+            url(r'^req/(?P<pk>\d+)/remove/$', self.cancel_request_view.as_view(), name='req-cancel'),
         ]
         return self.post_process_urls(urls)
         

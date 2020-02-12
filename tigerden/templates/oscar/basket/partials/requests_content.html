@@ -1,0 +1,94 @@
+{% load i18n %}
+{% load purchase_info_tags %}
+{% load image_tags %}
+{% load currency_filters %}
+
+{% with reqs=request.user.get_order_requests %}
+    <div class="basket-title hidden-xs">
+        <div class="row">
+            <h2 class="col-sm-6 h3"></h2>
+            <p class="col-sm-3 h3">{% trans "Quantity" %}</p>
+            <p class="col-sm-1 h3 align-right">{% trans "Price" %}</p>
+            <p class="col-sm-2 h3 align-right">{% trans "Total" %}</p>
+        </div>
+    </div>
+    {% if reqs %}
+        <div class="basket_summary" id="reqs">
+            {% for req in reqs %}
+                {% ifchanged req.user %}
+                    <h4>{{req.user.label}}</h4>
+                {% endifchanged %}
+
+                {% for line in req.lines.all %}
+                    {% purchase_info_for_line request line as session %}
+                    <div class="basket-items">
+                        <div class="row">
+                            <div class="col-sm-2">
+                                {% with image=line.product.primary_image %}
+                                    {% oscar_thumbnail image.original "100x100" upscale=False as thumb %}
+                                    <a href="{{ line.product.get_absolute_url }}">
+                                        <img class="thumbnail" src="{{ thumb.url }}" alt="{{ line.product.get_title }}"/>
+                                    </a>
+                                {% endwith %}
+                            </div>
+                            <div class="col-sm-4">
+                                <h3><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h3>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="checkout-quantity">
+                                    {{line.quantity}}
+                                </div>
+                                <form action="{% url 'basket:req-cancel' pk=req.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="submit" data-behaviours="remove" value="{% trans "Remove" %}" class="inline btn btn-link">
+                                </form>
+                            </div>
+                            <div class="col-sm-1">
+                                {% if not line.unit_price_incl_tax and not line.unit_tax_excl_tax %}
+                                    <p class="align-right">&mdash;</p>
+                                {% else %}
+                                    <p class="price_color align-right">
+                                        {{ line.unit_price_excl_tax|currency:request.basket.currency }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                            <div class="col-sm-2">
+                                {% if not line.line_price_incl_tax and not line_price_excl_tax %}
+                                    <p class="align-right">&mdash;</p>
+                                {% else %}
+                                    <p class="price_color align-right">
+                                        {{ line.line_price_excl_tax|currency:request.basket.currency }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6"></div>
+            {% block baskettotals %}
+                <div class="col-sm-6">
+                    <div class="sub-header">
+                        <h2>{% trans "Group Order Total" %}</h2>
+                    </div>
+                    {% include 'oscar/basket/partials/supervisor_totals.html' with editable=1 %}
+                </div>
+            {% endblock baskettotals %}
+        </div>
+
+        <div class="form-group clearfix">
+            <div class="row">
+                <div class="col-sm-4 col-sm-offset-8">
+                    <a href="{% url 'checkout:index' %}" class="btn btn-lg btn-primary btn-block">{% trans "Proceed to checkout" %}</a>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <p>
+            {% trans "You have no order requests." %}
+        </p>
+    {% endif %}
+{% endwith %}

@@ -130,7 +130,7 @@ TEMPLATES = [
                 'oscar.core.context_processors.metadata',
             ],
             'libraries':{
-                #'order_extras': 'menu.templatetags.order_extras'
+                'custom_tags': 'templatetags.custom_tags'
             },
         },
     },

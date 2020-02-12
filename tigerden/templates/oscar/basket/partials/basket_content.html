@@ -1,0 +1,17 @@
+{% extends "oscar/basket/partials/basket_content.html" %}
+{% load i18n %}
+
+{% block vouchers %}
+    <div class="col-sm-6"></div>
+{% endblock %}
+
+{% block savedbasket %}{% endblock %}
+
+{% block baskettotals %}
+    <div class="col-sm-6">
+        <div class="sub-header">
+            <h2>{% trans "Your Total" %}</h2>
+        </div>
+        {% include 'oscar/basket/partials/basket_totals.html' with editable=1 %}
+    </div>
+{% endblock baskettotals %}
