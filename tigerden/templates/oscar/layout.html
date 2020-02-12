@@ -1,14 +1,22 @@
 {% extends "oscar/layout.html" %}
 
-{% block extrascripts %}
+{% block onbodyload %}
     {{ block.super }}
-    {% if request.user.is_supervisor %}
-        <script>
-            $(function() {
-                setInterval(async function() {
-                    $("#minibasketcontents").html(await $.get("{% url "basket:mini-basket-contents" %}"));
-                }, 1000);
-            });
-        </script>
-    {% endif %}
+    {% block reqs_script %}
+        {% if request.user.is_supervisor %}
+            async function updateMiniBasket() {
+                $("#mini_reqs_cart").html(await $.get("{% url "basket:mini-reqs-cart" %}"));
+                var numStudentReqs = $("#mini_reqs_cart .student-order").length;
+                if (numStudentReqs > 0) {
+                    $(".student_cart_label").show();
+                    $(".student_cart_label").text(numStudentReqs);
+                } else {
+                    $(".student_cart_label").hide();
+                }
+            }
+
+            updateMiniBasket();
+            setInterval(updateMiniBasket, 2500);
+        {% endif %}
+    {% endblock %}
 {% endblock %}

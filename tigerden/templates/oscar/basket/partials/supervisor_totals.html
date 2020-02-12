@@ -1,12 +1,12 @@
 {% load i18n %}
 {% load currency_filters %}
-{% load shipping_tags %}
+{% load custom_tags %}
 
 <div id="basket_totals">
     <table class="table table-condensed">
         <tbody>
             <tr>
-                <th colspan="2"><h3>{% trans "Your Cart" %}</h3></th>
+                <th colspan="2"><h3>{% trans "Your Group Cart" %}</h3></th>
             </tr>
             {% block discount_totals %}
             {% endblock %}
@@ -14,9 +14,9 @@
             {% block basket_total %}
                 {# No discounts to basket #}
                 <tr>
-                    <th class="total">{% trans "Your cart total" %}</th>
+                    <th class="total">{% trans "Your group cart total" %}</th>
                     <th class="total align-right">
-                        {{ basket.total_excl_tax|currency:basket.currency }}
+                        {{ basket.total_excl_tax|add:request.user.get_reqs_total|currency:basket.currency }}
                     </th>
                 </tr>
             {% endblock %}

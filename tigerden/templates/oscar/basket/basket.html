@@ -1,0 +1,21 @@
+{% extends "oscar/basket/basket.html" %}
+
+{% block content %}
+    {% include 'oscar/basket/partials/basket_content.html' %}
+    {% if request.user.is_supervisor %}
+        <div class="page-header action">
+            <h1>Student/Guest Order Requests</h1>
+        </div>
+        <div id="reqs_cart">
+            {% include 'oscar/basket/partials/requests_content.html' %}
+        </div>
+    {% endif %}
+{% endblock content %}
+
+{% block reqs_script %}
+    async function updateReqsBasket() {
+        $("#reqs_cart").html(await $.get("{% url "basket:reqs-cart" %}"));
+    }
+
+    setInterval(updateReqsBasket, 2500);
+{% endblock %}
