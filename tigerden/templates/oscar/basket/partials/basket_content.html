@@ -5,7 +5,16 @@
     <div class="col-sm-6"></div>
 {% endblock %}
 
-{% block savedbasket %}{% endblock %}
+{% block savedbasket %}
+    {% if request.user.is_supervisor %}
+        <div class="page-header action">
+            <h1>Student/Guest Order Requests</h1>
+        </div>
+        <div id="reqs_cart">
+            {% include 'oscar/basket/partials/requests_content.html' %}
+        </div>
+    {% endif %}
+{% endblock %}
 
 {% block baskettotals %}
     <div class="col-sm-6">
