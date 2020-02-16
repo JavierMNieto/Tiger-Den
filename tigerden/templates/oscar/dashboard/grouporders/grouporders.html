@@ -1,0 +1,23 @@
+{% load i18n %}
+{% load currency_filters %}
+{% for grouporder in grouporders %}
+    <tr data-id="{{grouporder.id}}" class="grouporder {% if grouporder.status == "Processed" %} success {% elif grouporder.status == "Cancelled" %} danger {% else %} info {% endif %}">
+        <td><input type="checkbox" name="selected_grouporder" class="selected_grouporder" value="{{ grouporder.id }}"/></td>
+        <td><a href="{% url 'dashboard:grouporder-detail' number=grouporder.number %}">{{ grouporder.number }}</a></td>
+        <td>{{ grouporder.total_excl_tax|currency:grouporder.currency }}</td>
+        <td>{{ grouporder.num_orders }}</td>
+        <td>{{ grouporder.status|default:"-" }}</td>
+        <td>
+            {% if grouporder.user %}
+                <a href="{% url 'dashboard:user-detail' pk=grouporder.user.id %}">{{ grouporder.user.label|default:"-" }}</a>
+            {% else %}
+                &lt;{% trans "Deleted" %}&gt;
+            {% endif %}
+        </td>
+        <td>{{ grouporder.location }}</td>
+        <td>{{ grouporder.date_placed }}</td>
+        <td>
+            <a class="btn btn-info" href="{% url 'dashboard:grouporder-detail' number=grouporder.number %}">{% trans "View" %}</a>
+        </td>
+    </tr>
+{% endfor %}

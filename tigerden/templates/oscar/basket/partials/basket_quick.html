@@ -41,7 +41,7 @@
     {% else %}
         <li><p>{% trans "Your basket is empty." %}</p></li>
     {% endif %}
-    {% if request.user.is_supervisor %}
+    {% if request.user.is_authenticated and request.user.is_supervisor %}
         <li><h4 class="font-weight-bold">Student/Guest Orders</h4></li>
         <li id="mini_reqs_cart"></li>
     {% endif %}

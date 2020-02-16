@@ -239,7 +239,7 @@ class SupervisorView(views.CheckoutSessionMixin, generic.FormView):
         'check_user_email_is_captured']
     
     def get(self, request, *args, **kwargs):
-        if request.user.is_supervisor():
+        if request.user.is_authenticated and request.user.is_supervisor():
             self.checkout_session.set_supervisor(request.user.pk)
             self.success_url = reverse_lazy("checkout:delivery-info")
             return self.get_success_response()

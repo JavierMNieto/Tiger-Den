@@ -32,7 +32,7 @@
 
 {% block content %}
     <p class="lead">
-        {% if request.user.is_supervisor %}
+        {% if request.user.is_authenticated and request.user.is_supervisor %}
             {% if order.group_order.orders.all.count > 1 %}
                 {% blocktrans with number=order.number %}
                     Your orders have been placed and a confirmation email has been sent - your order and group order number is
@@ -189,3 +189,5 @@
         </div>
     {% endblock order_actions %}
 {% endblock content %}
+
+{% block reqs_script %}{% endblock %}
