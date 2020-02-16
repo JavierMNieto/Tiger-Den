@@ -77,6 +77,7 @@ INSTALLED_APPS = [
     'oscar.apps.dashboard.users',
     #'oscar.apps.dashboard.orders',
     'custom_apps.dashboard.orders.apps.OrdersDashboardConfig',
+    'custom_apps.dashboard.grouporders.apps.GroupOrdersDashboardConfig',
     #'oscar.apps.dashboard.catalogue',
     'custom_apps.dashboard.catalogue.apps.CatalogueDashboardConfig',
     'oscar.apps.dashboard.offers',
@@ -245,7 +246,7 @@ OSCAR_ORDER_STATUS_CASCADE = {
 # Oscar Checkout Settings
 # https://django-oscar.readthedocs.io/en/stable/ref/settings.html#checkout-settings
 
-#OSCAR_ALLOW_ANON_CHECKOUT = True
+OSCAR_ALLOW_ANON_CHECKOUT = True
 OSCAR_REQUIRED_ADDRESS_FIELDS = ('name', 'location') # 
 
 # Oscar Review Settings
@@ -326,10 +327,10 @@ OSCAR_DASHBOARD_NAVIGATION = [
                 'label': _('Orders'),
                 'url_name': 'dashboard:order-list',
             },
-            #{
-            #    'label': _('Group Orders'),
-            #    'url_name': 'dashboard:order-list',
-            #},
+            {
+                'label': _('Group Orders'),
+                'url_name': 'dashboard:grouporder-list',
+            },
             {
                 'label': _('Statistics'),
                 'url_name': 'dashboard:order-stats',

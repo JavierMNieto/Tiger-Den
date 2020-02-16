@@ -34,7 +34,7 @@ class CheckoutSessionMixin(session.CheckoutSessionMixin):
             
     def check_order_has_location(self, request):
         # Check that supervisor has been set
-        if request.user.is_supervisor() and not self.checkout_session.is_location_set():
+        if request.user.is_authenticated and request.user.is_supervisor() and not self.checkout_session.is_location_set():
             raise exceptions.FailedPreCondition(
                 url=reverse('checkout:delivery-info'),
                 message=_("Please indicate your location")

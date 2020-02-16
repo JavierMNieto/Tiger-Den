@@ -30,7 +30,7 @@ class OrderPlacementMixin(mixins.OrderPlacementMixin):
             billing_address=billing_address, **kwargs)
         basket.submit()
         
-        if user.is_supervisor():
+        if user.is_authenticated and user.is_supervisor():
             reqs_total = D('0.00')
             reqs = user.get_order_requests()
             
@@ -42,7 +42,8 @@ class OrderPlacementMixin(mixins.OrderPlacementMixin):
                                     user=user, 
                                     total_excl_tax=reqs_total,
                                     status=GroupOrder.all_statuses()[0],
-                                    location=location)
+                                    location=location,
+                                    currency=order.currency)
             group_order.save()
             
             if reqs:
