@@ -3,7 +3,7 @@
 <div class="navbar navbar-static-top navbar-inverse nav-checkout">
     <ul class="nav navbar-nav">
         {% spaceless %}
-            {% if request.user.is_supervisor %}
+            {% if request.user.is_authenticated and request.user.is_supervisor %}
                 <li class="step1 {% if step == 1 %}active{% else %}{% if step == 2 %}previous{% else %}{% if step > 1 %}visited{% else %}disabled{% endif %}{% endif %}{% endif %} ">
                     {% if step == 1 or step == 2 or step == 3 %}
                         <a href="{% url 'checkout:delivery-info' %}">

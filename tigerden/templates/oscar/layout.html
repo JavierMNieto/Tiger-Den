@@ -3,7 +3,7 @@
 {% block onbodyload %}
     {{ block.super }}
     {% block reqs_script %}
-        {% if request.user.is_supervisor %}
+        {% if request.user.is_authenticated and request.user.is_supervisor %}
             async function updateMiniBasket() {
                 $("#mini_reqs_cart").html(await $.get("{% url "basket:mini-reqs-cart" %}"));
                 var numStudentReqs = $("#mini_reqs_cart .student-order").length;

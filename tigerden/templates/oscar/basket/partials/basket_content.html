@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block savedbasket %}
-    {% if request.user.is_supervisor %}
+    {% if request.user.is_authenticated and request.user.is_supervisor %}
         <div class="page-header action">
             <h1>Student/Guest Order Requests</h1>
         </div>

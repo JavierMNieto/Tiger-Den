@@ -1,4 +1,4 @@
-from oscar.apps.order.abstract_models import AbstractOrder
+from oscar.apps.order.abstract_models import AbstractOrder, exceptions
 from django.utils.translation import gettext_lazy as _
 from django.db import models
 from oscar.core.loading import get_class
@@ -8,6 +8,10 @@ from django.conf import settings
 from decimal import Decimal as D
 from django.utils.timezone import now
 from django.core.signing import BadSignature, Signer
+from oscar.core.utils import get_default_currency
+from django.utils.crypto import constant_time_compare
+
+EventHandler = get_class('order.processing', 'EventHandler')
 
 class Order(AbstractOrder):
     group_order = models.ForeignKey(
@@ -25,6 +29,9 @@ class Order(AbstractOrder):
         
         if new_status == self.all_statuses()[1]:
             order_placed.send(sender=self, order=self, user=self.user)
+        else:
+            if self.group_order and self.available_statuses() == ():
+                self.group_order.check_all_order_statuses(self.number)
 
 class GroupOrder(models.Model):
     """
@@ -39,6 +46,8 @@ class GroupOrder(models.Model):
         verbose_name=_("Supervisor"), on_delete=models.SET_NULL)
     
     location = models.CharField(_("Delivery Location"), max_length=50)
+    
+    currency = models.CharField(_("Currency"), max_length=14, default=get_default_currency)
     
     total_excl_tax = models.DecimalField(
         _("Order total (excl. tax)"), decimal_places=2, max_digits=12)
@@ -83,7 +92,6 @@ class GroupOrder(models.Model):
             return
 
         old_status = self.status
-
         if new_status not in self.available_statuses():
             raise exceptions.InvalidOrderStatus(
                 _("'%(new_status)s' is not a valid status for order %(number)s"
@@ -91,13 +99,26 @@ class GroupOrder(models.Model):
                 % {'new_status': new_status,
                    'number': self.number,
                    'status': self.status})
-        self.status = new_status
         
         for order in self.orders.all():
-            order.set_status(self.status)
-            
-        self.save()
+            if order.status != new_status:
+                handler = EventHandler(order.user)
+                success_msg = _(
+                    "Order status changed from '%(old_status)s' to "
+                    "'%(new_status)s'") % {'old_status': old_status,
+                                        'new_status': new_status}
+                try:
+                    handler.handle_order_status_change(
+                        order, new_status, note_msg=success_msg)
+                except exceptions.InvalidOrderStatus:
+                    pass
+        
+        if self.available_statuses() != ():
+            self._set_status(old_status, new_status)
 
+    def _set_status(self, old_status, new_status):
+        self.status = new_status
+        self.save()
         self._create_order_status_change(old_status, new_status)
 
     set_status.alters_data = True
@@ -105,6 +126,13 @@ class GroupOrder(models.Model):
     def _create_order_status_change(self, old_status, new_status):
         # Not setting the status on the order as that should be handled before
         self.status_changes.create(old_status=old_status, new_status=new_status)
+    
+    def check_all_order_statuses(self, cur_order):
+        for order in self.orders.all():
+            if order.number != cur_order and order.available_statuses() != ():
+                return
+        
+        self._set_status(self.status, "Processed")
     
     class Meta:
         app_label = 'order'
@@ -138,6 +166,10 @@ class GroupOrder(models.Model):
     @property
     def email(self):
         return self.user.email
+    
+    @property
+    def num_orders(self):
+        return self.orders.all().count()
     
     def set_date_placed_default(self):
         if self.date_placed is None:
