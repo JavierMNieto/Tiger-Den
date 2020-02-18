@@ -76,7 +76,7 @@
                 <div class="table-header">
                     <h3>{% trans "Orders" %}</h3>
                 </div>
-                <form id="order_lines_form" method="post" class="form-inline">
+                <div id="order_lines_form" class="form-inline">
                     {% csrf_token %}
                     {% block order_lines %}
                         <table class="table table-bordered table-hover">
@@ -99,7 +99,7 @@
                                             {% elif order.user %}
                                                 {{ order.user.label }}
                                             {% else %}
-                                                {% trans "Supervisor has deleted his or her account." %}
+                                                {% trans "User has deleted his or her account." %}
                                             {% endif %}
                                         </td>
                                         <td>{{ order.status|default:"-" }}</td>
@@ -141,7 +141,7 @@
                         override this block to provide your own form widgets that suit your order processing
                         flow.  The default contents shows a range of widgets - more than is sensible really.
                     {% endcomment %}
-                </form>
+                </div>
 
                 <form method="post" id="order_status_form">
                     {% csrf_token %}

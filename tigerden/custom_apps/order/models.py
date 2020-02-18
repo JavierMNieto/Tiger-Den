@@ -128,11 +128,19 @@ class GroupOrder(models.Model):
         self.status_changes.create(old_status=old_status, new_status=new_status)
     
     def check_all_order_statuses(self, cur_order):
+        is_cancelled = True
         for order in self.orders.all():
-            if order.number != cur_order and order.available_statuses() != ():
+            if order.number == cur_order:
+                order = Order.objects.get(number=cur_order)
+            if order.available_statuses() != ():
                 return
+            if order.status != "Cancelled":
+                is_cancelled = False
         
-        self._set_status(self.status, "Processed")
+        if is_cancelled:
+            self._set_status(self.status, "Cancelled")
+        else:
+            self._set_status(self.status, "Processed")
     
     class Meta:
         app_label = 'order'

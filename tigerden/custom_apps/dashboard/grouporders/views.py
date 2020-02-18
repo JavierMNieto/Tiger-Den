@@ -45,7 +45,8 @@ class GroupOrderListView(views.OrderListView):
     context_object_name = 'grouporders'
     template_name = 'oscar/dashboard/grouporders/grouporder_list.html'
     form_class = GroupOrderSearchForm
-    actions = ('download_selected_orders', 'change_grouporder_statuses')
+    actions = ('download_selected_orders', 'change_grouporder_statuses', 'change_grouporder_status')
+    paginate_by = None
     
     def dispatch(self, request, *args, **kwargs):
         # base_queryset is equal to all orders the user is allowed to access
@@ -150,6 +151,8 @@ class GroupOrderListView(views.OrderListView):
         return redirect('dashboard:grouporder-list')
 
     def change_grouporder_status(self, request, grouporder):
+        if isinstance(grouporder, list):
+            grouporder = grouporder[0]
         new_status = request.POST['new_status'].strip()
         if not new_status:
             messages.error(request, _("The new status '%s' is not valid")
@@ -166,6 +169,7 @@ class GroupOrderListView(views.OrderListView):
                 messages.error(
                     request, _("Unable to change group order status as the requested "
                                 "new status is not valid"))
+        return render(request, "oscar/dashboard/grouporders/grouporders.html", {"grouporders": [grouporder]})
     
     def download_selected_orders(self, request, grouporders):
         response = HttpResponse(content_type='text/csv')
