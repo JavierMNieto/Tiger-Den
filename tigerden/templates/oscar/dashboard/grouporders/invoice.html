@@ -54,12 +54,13 @@
                 <thead>
                     <th>Quantity</th>
                     <th>Product</th>
+                    <th>Options</th>
                     <th>Cost</th>
                 </thead>
                 <tbody>
                     {% for order in grouporder.orders.all %}
-                        <tr>
-                            <td colspan="3">
+                        <tr class="text-dark">
+                            <th colspan="4">
                                 Customer: 
                                 {% if order.guest_email %}
                                     {{ order.guest_email }} (guest)
@@ -69,16 +70,24 @@
                                     User has deleted his or her account.
                                 {% endif %}
                                 <span style="float: right;">Order #{{order.number}}</span>
-                            </td>
+                            </th>
                         </tr>
                         {% for line in order.lines.all %}
                             <tr>
                                 <td>{{ line.quantity }}</td>
                                 <td>{{ line.title }}</td>
-                                <td>{{ line.line_price_before_discounts_excl_tax|currency:order.currency }}</td>
+                                <td class="text-center" style="max-width: 2in;">
+                                    {% for attribute in line.attributes.all %}
+                                    <span style="display: inline-block; margin-right: 0.1in;">
+                                        <strong>{{ attribute.option }}: </strong>{{ attribute.value }}
+                                    </span>
+                                    {% endfor %}
+                                </td>
+                                <td class="text-right">{{ line.line_price_before_discounts_excl_tax|currency:order.currency }}</td>
                             </tr>
                         {% endfor %}
                         <tr>
+                            <td></td>
                             <td></td>
                             <th>Order total</th>
                             <th class="text-right">{{ order.total_excl_tax|currency:order.currency }}</th>
