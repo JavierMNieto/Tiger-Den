@@ -3,11 +3,24 @@
 {% load sorting_tags %}
 {% load i18n %}
 {% load widget_tweaks %}
+{% load static %}
+
+{% block extrastyles %}
+    {{block.super}}
+    <style>
+        table th {
+            background-color: white;
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+        }
+    </style>
+{% endblock %}
 
 {% block body_class %}{{ block.super }} group orders{% endblock %}
 
 {% block title %}
-    {% trans "Live Group Orders" %} | {{ block.super }}
+    {% trans "Group Orders" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -20,9 +33,15 @@
 {% endblock %}
 
 {% block header %}
-    <div class="page-header">
-        <h1>{% trans "Group Orders" %}</h1>
-    </div>
+    {% if not request.GET %}
+        <div class="page-header">
+            <h1>{% trans "Live Group Orders" %}</h1>
+        </div>
+    {% else %}
+        <div class="page-header">
+            <h1>{% trans "Group Orders" %} <a class="btn-lg" href="{% url 'dashboard:grouporder-list' %}">Go Live</a></h1>
+        </div>
+    {% endif %}
 {% endblock header %}
 
 {% block dashboard_content %}
@@ -94,40 +113,43 @@
             {% include "oscar/dashboard/orders/partials/bulk_edit_form.html" with status=active_status %}
 
             {% block order_list %}
-            <table class="table table-bordered table-hover">
-                <caption>
-                    <h3 class="pull-left"><i class="icon-shopping-cart icon-large"></i>
-                        {% if search_filters %}
-                        {% trans "Group Order Search Results" %}
-                        {% else %}
-                        {% trans "All Group Orders" %}
-                        {% endif %}
-                    </h3>
-                    <div class="pull-right">
-                        <div class="form-inline">
-                            <label>{% trans "Download selected group orders as a CSV" %}</label>
-                            <button type="submit" class="btn btn-primary" name="action" value="download_selected_orders" data-loading-text="{% trans 'Submitting...' %}">{% trans "Download" %}</button>
+            <div class="table-responsive" style="overflow-y: auto !important; max-height: 500px; display: inline-block; width: 100%;">
+                <table class="table table-bordered table-hover">
+                    <caption>
+                        <h3 class="pull-left"><i class="icon-shopping-cart icon-large"></i>
+                            {% if search_filters %}
+                            {% trans "Group Order Search Results" %}
+                            {% else %}
+                            {% trans "All Group Orders" %}
+                            {% endif %}
+                        </h3>
+                        <div class="pull-right">
+                            <div class="form-inline">
+                                <label>{% trans "Download selected group orders as a CSV" %}</label>
+                                <button type="submit" class="btn btn-primary" name="action" value="download_selected_orders" data-loading-text="{% trans 'Submitting...' %}">{% trans "Download" %}</button>
+                            </div>
                         </div>
-                    </div>
-                </caption>
-
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>{% anchor 'number' _("Order number") %}</th>
-                        <th>{% anchor 'total_excl_tax' _("Total Excl Tax") %}</th>
-                        <th>{% trans "Number of orders" %}</th>
-                        <th>{% trans "Status" %}</th>
-                        <th>{% trans "Supervisor" %}</th>
-                        <th>{% trans "Location" %}</th>
-                        <th>{% trans "Date of purchase" %}</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody id="grouporders">
-                    {% include "oscar/dashboard/grouporders/grouporders.html" with grouporders=grouporders  %}
-                </tbody>
-            </table>
+                    </caption>
+    
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>{% anchor 'number' _("Group Order #") %}</th>
+                            <th>{% anchor 'total_excl_tax' _("Total") %}</th>
+                            <th>{% trans "Number of orders" %}</th>
+                            <th>{% trans "Status" %}</th>
+                            <th>{% trans "Supervisor" %}</th>
+                            <th>{% trans "Location" %}</th>
+                            <th>{% trans "Date of purchase" %}</th>
+                            <th>{% trans "Actions" %}</th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody id="grouporders" class="container">
+                        {% include "oscar/dashboard/grouporders/grouporders.html" with grouporders=grouporders  %}
+                    </tbody>
+                </table>
+            </div>
             {% endblock order_list %}
             {% block order_actions %}
                 <div class="well">
@@ -168,6 +190,51 @@
 
     {% endblock dashboard_content %}
 
+    {% block extrascripts %}
+        {{block.super}}
+        <script>
+            function changeGroupOrderStatus(id, status) {
+                $("input[type='checkbox']").prop('checked', false);
+                //$(`.grouporder[data-id='${id}'] input[type='checkbox]`).prop('checked', true);
+                var data = $("#orders_form").serialize();
+                data = data.substring(0, data.indexOf("&new_status="));
+
+                data += `&new_status=${status}&action=change_grouporder_status&selected_grouporder=${id}`;
+
+                $.ajax({
+                    method: "POST",
+                    data: data,
+                    success: function(resp) {
+                        $("#group_" + id).replaceWith(resp);
+                    }
+                });
+            }
+
+            function PrintInvoice(id, isConfirm=false) {
+                var printWindow = window.open('', 'PRINT', 'height=600,width=800');
+
+                printWindow.document.write('<html><head><title> Group Order #' + $("#" + id).attr("data-number") + '</title>');
+                printWindow.document.write('<style media="print">input[type="checkbox"] {display: none;}</style></head><body>');
+                printWindow.document.write($("#print_" + id).html());
+                printWindow.document.write('</body></html>');
+                
+                if (isConfirm) {
+                    printWindow.onafterprint = function(event) {
+                        changeGroupOrderStatus(id, "Processed");
+                    };
+                }
+
+                printWindow.document.close(); // necessary for IE >= 10
+                printWindow.focus(); // necessary for IE >= 10*/
+
+                printWindow.print();
+                printWindow.close();
+
+                return true;
+            }
+        </script>
+    {% endblock %}
+
     {% block onbodyload %}
         {{ block.super }}
         oscar.dashboard.orders.initTable();
@@ -175,6 +242,7 @@
         {% if form.errors %}
         $('#SearchModal').modal('show');
         {% endif %}
+        {% if not request.GET %}
         setInterval(function() {
             $.ajax({
                 data: {
@@ -187,4 +255,5 @@
                 }
             });
         }, 2500);
+        {% endif %}
     {% endblock onbodyload %}

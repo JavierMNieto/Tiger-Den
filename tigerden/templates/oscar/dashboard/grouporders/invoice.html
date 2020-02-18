@@ -1,0 +1,92 @@
+{% load static %}
+{% load currency_filters %}
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'oscar/css/dashboard.css'  %}" media="print">
+</head>
+<div style="width: 8.5in; background-color: white;">
+    <div class="page-header row" style="border-bottom: 2px solid black; margin-bottom: 5px;">
+        <div class="col">
+            <div class="col-xs-6 row">
+                <!--
+                <div class="col-xs-4 thumbnail">
+                    <img src="">
+                </div>
+                -->
+                <div class="col-xs-1"></div>
+                <h1 class="col text-center">Tiger Den <small></small></h1>
+            </div>
+            <div class="col-xs-4"></div>
+            <div class="col-xs-2">
+                
+            </div>
+        </div>
+    </div>
+    <div class="container" style="width: 8.5in;">
+        <div class="row">
+            <div class="col">
+                <div class="col-xs-12">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th>Supervisor</th>
+                                <td>{{ grouporder.user.label }}</td>
+                            </tr>
+                            <tr>
+                                <th>Location</th>
+                                <td>{{ grouporder.location }}</td>
+                            </tr>
+                            <tr>
+                                <th>Time of Purchase</th>
+                                <td>{{ grouporder.date_placed }}</td>
+                            </tr>
+                            <tr>
+                                <th>Total</th>
+                                <td>{{ grouporder.total_excl_tax|currency:grouporder.currency }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <h2>Order(s)</h2>
+        <div class="container" style="width: 8.25in;">
+            <table class="table table-bordered">
+                <thead>
+                    <th>Quantity</th>
+                    <th>Product</th>
+                    <th>Cost</th>
+                </thead>
+                <tbody>
+                    {% for order in grouporder.orders.all %}
+                        <tr>
+                            <td colspan="3">
+                                Customer: 
+                                {% if order.guest_email %}
+                                    {{ order.guest_email }} (guest)
+                                {% elif order.user %}
+                                    {{ order.user.label }}
+                                {% else %}
+                                    User has deleted his or her account.
+                                {% endif %}
+                                <span style="float: right;">Order #{{order.number}}</span>
+                            </td>
+                        </tr>
+                        {% for line in order.lines.all %}
+                            <tr>
+                                <td>{{ line.quantity }}</td>
+                                <td>{{ line.title }}</td>
+                                <td>{{ line.line_price_before_discounts_excl_tax|currency:order.currency }}</td>
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <td></td>
+                            <th>Order total</th>
+                            <th class="text-right">{{ order.total_excl_tax|currency:order.currency }}</th>
+                        </tr>
+                    {% endfor %}
+                    <tr></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
