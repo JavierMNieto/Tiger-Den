@@ -10,8 +10,9 @@ from oscar.core.validators import non_python_keyword
 from oscar.core.loading import get_model
 
 class Product(AbstractProduct):
+    # is_supervisor_only CURRENTLY NOT WORKING
     is_supervisor_only = models.BooleanField(
-        _('Is for supervisors only'),
+        _('Is for supervisors only?'),
         default=False,
         help_text=_("Only show this product to supervisors."))
     
@@ -26,11 +27,11 @@ class Product(AbstractProduct):
         (6, 'Sunday'),
     ]
 
-    limited_time = models.IntegerField(choices=LIMITED_DAY_CHOICES, default=-1)
+    limited_day = models.IntegerField(_("Time of product's availability"), choices=LIMITED_DAY_CHOICES, default=-1, help_text=_("Only show this product on a specific day."))
 
 class ProductClass(AbstractProductClass):
     # Not implementing stock tracking
-    track_stock = models.BooleanField(_("Track stock levels?"), default=False)
+    #track_stock = models.BooleanField(_("Track stock levels?"), default=False)
     
     # Not implementing shipping
     requires_shipping = models.BooleanField(_("Requires shipping?"), default=False)
