@@ -1,9 +1,32 @@
+from datetime import date, datetime
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from oscar.apps.catalogue.abstract_models import AbstractProductAttribute, AbstractProductClass
+from oscar.apps.catalogue.abstract_models import AbstractProductAttribute, AbstractProductClass, AbstractProduct
 from oscar.models.fields import AutoSlugField
 from django.core.validators import RegexValidator
+from django.core.exceptions import ValidationError
+from django.core.files.base import File
 from oscar.core.validators import non_python_keyword
+from oscar.core.loading import get_model
+
+class Product(AbstractProduct):
+    is_supervisor_only = models.BooleanField(
+        _('Is for supervisors only'),
+        default=False,
+        help_text=_("Only show this product to supervisors."))
+    
+    LIMITED_DAY_CHOICES = [
+        (-1, 'Every Day'),
+        (0, 'Monday'),
+        (1, 'Tuesday'),
+        (2, 'Wednesday'),
+        (3, 'Thursday'),
+        (4, 'Friday'),
+        (5, 'Saturday'),
+        (6, 'Sunday'),
+    ]
+
+    limited_time = models.IntegerField(choices=LIMITED_DAY_CHOICES, default=-1)
 
 class ProductClass(AbstractProductClass):
     # Not implementing stock tracking

@@ -10,7 +10,7 @@ class ProductForm(base_forms.ProductForm):
 
     class Meta(base_forms.ProductForm.Meta):
         #fields = ['title', 'upc', 'description', 'is_public', 'is_discountable', 'structure'] do we need upc?
-        fields = ['title', 'description', 'is_public', 'is_discountable', 'structure']
+        fields = ['title', 'description', 'is_public', 'is_discountable', 'is_supervisor_only' , 'structure']
     
 class ProductClassForm(base_forms.ProductClassForm):
 
