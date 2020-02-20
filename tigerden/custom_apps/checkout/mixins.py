@@ -31,32 +31,41 @@ class OrderPlacementMixin(mixins.OrderPlacementMixin):
         basket.submit()
         
         if user.is_authenticated and user.is_supervisor():
-            reqs_total = D('0.00')
-            reqs = user.get_order_requests()
-            
-            if reqs:
-                for req in reqs.all():
-                    reqs_total += req.total_excl_tax
-            
-            group_order = GroupOrder(number=order_number, 
-                                    user=user, 
-                                    total_excl_tax=reqs_total,
-                                    status=GroupOrder.all_statuses()[0],
-                                    location=location,
-                                    currency=order.currency)
-            group_order.save()
-            
-            if reqs:
-                for req in reqs.all():
-                    req.group_order_id = group_order.id
-                    req.save()
-                    
-                    # Send confirmation message (normally an email)
-                    self.send_confirmation_message(req, self.communication_type_code)
-                    
-            group_order.set_status(GroupOrder.all_statuses()[1])
+            self.handle_requests_placement(user, order_number, location, order.currency)
         
         return self.handle_successful_order(order)
+    
+    def handle_requests_placement(self, user, order_number, location, currency):
+        reqs_total = D('0.00')
+        reqs = user.get_order_requests()
+        
+        if reqs:
+            for req in reqs.all():
+                reqs_total += req.total_excl_tax
+        
+        group_order = GroupOrder(number=order_number, 
+                                user=user, 
+                                total_excl_tax=reqs_total,
+                                status=GroupOrder.all_statuses()[0],
+                                location=location,
+                                currency=currency)
+        group_order.save()
+        
+        if reqs:
+            for req in reqs.all():
+                req.group_order_id = group_order.id
+                req.save()
+                
+                # Send confirmation message (normally an email)
+                self.send_confirmation_message(req, self.communication_type_code)
+                
+        group_order.set_status(GroupOrder.all_statuses()[1])
+        
+        self.checkout_session.flush()
+
+        # Save order id in session so thank-you page can load it
+        self.request.session['checkout_order_id'] = group_order.id
+        return HttpResponseRedirect(self.get_success_url())
     
     def handle_successful_order(self, order):
         """

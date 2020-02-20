@@ -13,4 +13,11 @@
     {% trans "Place order" %}
 {% endblock %}
 
+{% block order_contents %}
+    {{block.super}}
+    {% if request.user.is_authenticated and request.user.is_supervisor %}
+    {% include 'oscar/basket/partials/requests_content.html' with reqs_placement=True %}
+    {% endif %}
+{% endblock %}
+
 {% block reqs_script %}{% endblock %}

@@ -7,6 +7,14 @@ from oscar.core.loading import get_classes, get_class
 NoShippingRequired = get_class('shipping.methods', 'NoShippingRequired')
 
 class CheckoutSessionMixin(session.CheckoutSessionMixin):
+    def check_basket_is_not_empty(self, request):
+        if (request.basket.is_empty and not request.user.is_authenticated) or (request.basket.is_empty and request.user.is_authenticated and not request.user.get_order_requests().exists()):
+            raise exceptions.FailedPreCondition(
+                url=reverse('basket:summary'),
+                message=_(
+                    "You need to add some items to your basket to checkout")
+            )
+    
     def check_order_has_supervisor(self, request):
         # Check that supervisor has been set
         if not self.checkout_session.is_supervisor_set():

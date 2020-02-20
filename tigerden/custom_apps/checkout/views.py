@@ -76,11 +76,21 @@ class PaymentMethodView(views.CheckoutSessionMixin, generic.FormView):
         'check_user_email_is_captured',
         'check_order_has_supervisor']
 
-    skip_conditions = ['skip_unless_payment_is_required'] # skip if supervisor that is not ordering anything
+    #skip_conditions = ['skip_unless_payment_is_required']
     
     def form_valid(self, form):
         self.checkout_session.pay_by(form.cleaned_data['payment_method'])
         return super().form_valid(form)
+    
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated and request.user.is_supervisor() and request.basket.is_empty:
+            self.success_url = reverse_lazy('checkout:order-requests')
+            return self.get_success_response()
+        
+        return super().get(request, *args, **kwargs)
+    
+    def get_success_response(self):
+        return redirect(self.get_success_url())
 
 class PaymentDetailsView(views.PaymentDetailsView):
     pre_conditions = [
@@ -271,4 +281,26 @@ class LocationView(views.CheckoutSessionMixin, generic.FormView):
     def form_valid(self, form):
         self.checkout_session.set_location(form.cleaned_data['location'])
         return super().form_valid(form)
+
+class OrderRequestsView(views.OrderPlacementMixin, generic.TemplateView):
+    template_name = 'oscar/checkout/order_requests.html'
     
+    pre_conditions = [
+        'check_basket_is_not_empty',
+        'check_user_email_is_captured',
+        'check_order_has_location']
+    
+    def post(self, request, *args, **kwargs):
+
+        # We use a custom parameter to indicate if this is an attempt to place
+        # an order (normally from the preview page).  Without this, we assume a
+        # payment form is being submitted from the payment details view. In
+        # this case, the form needs validating and the order preview shown.
+        if request.POST.get('action', '') == 'place_requests':
+            return self.place_requests(request)
+    
+    def place_requests(self, request):
+        return super().handle_requests_placement(request.user,
+                                          request.user.get_order_requests().first().number,
+                                          self.checkout_session.location(),
+                                          "USD")
