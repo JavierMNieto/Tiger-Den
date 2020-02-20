@@ -15,7 +15,7 @@
 
 {% block order_contents %}
     {% if request.user.is_authenticated %}
-        {% trans "Balance: " %}
+        
     {% endif %}
 {% endblock %}
 
@@ -23,8 +23,11 @@
 <div class="col-sm-4"></div>
 <form action="{% url 'checkout:payment-method' %}" method="post" autocomplete="off" class="col-sm-4">
     {% csrf_token %}
-    {{ form }}
-    <button class="btn btn-primary btn-large" data-loading-text="{% trans 'Submitting...' %}">{% trans "Next" %}</button>
+    {% include "oscar/partials/form_fields.html" with form=form %}
+    <div class="col-sm-offset-4 col-sm-8">
+        <button type="submit" class="btn btn-lg btn-primary" data-loading-text="{% trans 'Continuing...' %}">{% trans "Continue" %}</button>
+        {% trans "or" %} <a href="{% url 'basket:summary' %}">{% trans "return to basket" %}</a>
+    </div>
 </form>
 <div class="col-sm-4"></div>
 {% endblock payment-method %}

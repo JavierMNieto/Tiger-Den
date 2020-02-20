@@ -10,6 +10,7 @@ class CheckoutConfig(apps.CheckoutConfig):
         
         self.supervisor_info_view = get_class('checkout.views', 'SupervisorView')
         self.delivery_info_view = get_class('checkout.views', 'LocationView')
+        self.requests_info_view = get_class('checkout.views', 'OrderRequestsView')
 
     def get_urls(self):
         urls = [
@@ -17,6 +18,9 @@ class CheckoutConfig(apps.CheckoutConfig):
 
             # Guest Views
             url(r'supervisor-info/$', self.supervisor_info_view.as_view(), name='supervisor-info'),
+            
+            # Supervisor Views
+            url(r'order-requests/$', self.requests_info_view.as_view(), name='order-requests'),
             url(r'delivery-info/$', self.delivery_info_view.as_view(), name='delivery-info'),
 
             # Shipping/user address views

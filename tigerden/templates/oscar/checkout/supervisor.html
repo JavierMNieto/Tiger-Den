@@ -18,7 +18,10 @@
 <form action="{% url 'checkout:supervisor-info' %}" method="post" id="supervisor_info" autocomplete="off" class="col-sm-4">
     {% csrf_token %}
     {{ form }}
-    <button class="btn btn-primary btn-large float-right" data-loading-text="{% trans 'Submitting...' %}">{% trans "Next" %}</button>
+    <div class="col-sm-offset-4 col-sm-8" style="margin-top: 5px;">
+        <button type="submit" class="btn btn-lg btn-primary" data-loading-text="{% trans 'Continuing...' %}">{% trans "Continue" %}</button>
+        {% trans "or" %} <a href="{% url 'basket:summary' %}">{% trans "return to basket" %}</a>
+    </div>
 </form>
 <div class="col-sm-4"></div>
 {% endblock supervisor_info %}

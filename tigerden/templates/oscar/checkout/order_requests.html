@@ -1,0 +1,41 @@
+{% extends "oscar/checkout/checkout.html" %}
+{% load i18n %}
+
+{% block title %}
+    {% trans "Order requests" %} | {{ block.super }}
+{% endblock %}
+
+{% block checkout_nav %}
+    {% include 'oscar/checkout/nav.html' with step=2 %}
+{% endblock %}
+
+{% block checkout_title %}
+    {% trans "Order requests" %}
+{% endblock %}
+
+{% block place_order %}
+    <form method="post" action="{% url 'checkout:order-requests' %}" id="place_order_form">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="place_requests" />
+
+        <div class="form-group clearfix">
+            <div class="row">
+                <div class="col-sm-3 col-sm-offset-9">
+                     <button id='place-order' type="submit" class="btn btn-primary btn-lg btn-block" data-loading-text="{% trans 'Submitting...' %}">{% trans "Place order(s)" %}</button>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock place_order %}
+
+{% block order_contents %}
+    {% include 'oscar/basket/partials/requests_content.html' with reqs_placement=True %}
+{% endblock %}
+
+{% block reqs_script %}
+    async function updateReqsBasket() {
+        $("#reqs_cart").html(await $.get("{% url "basket:reqs-cart" %}"));
+    }
+
+    setInterval(updateReqsBasket, 2500);
+{% endblock %}

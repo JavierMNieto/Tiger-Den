@@ -79,6 +79,7 @@
             {% endblock baskettotals %}
         </div>
 
+        {% if not reqs_placement %}
         <div class="form-group clearfix">
             <div class="row">
                 <div class="col-sm-4 col-sm-offset-8">
@@ -86,6 +87,7 @@
                 </div>
             </div>
         </div>
+        {% endif %}
     {% else %}
         <p>
             {% trans "You have no order requests." %}

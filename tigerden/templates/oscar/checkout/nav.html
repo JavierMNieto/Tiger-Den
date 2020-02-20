@@ -34,7 +34,22 @@
                     {% endif %}
                 </li>
             {% endif %}
-            
+            {% if request.user.is_authenticated and request.user.is_supervisor and request.basket.is_empty %}
+            <li class="step2 {% if step == 2 %}active{% else %}{% if step == 3 %}previous{% else %}{% if step > 2 %}visited{% else %}disabled{% endif %}{% endif %}{% endif %} ">
+                {% if step == 2 or step == 3 %}
+                    <a href="{% url 'checkout:order-requests' %}">
+                        <span class="visible-inline-sm icon-chevron-right"></span>
+                        <span>
+                            {% trans "2. Order Requests" %}
+                        </span>
+                    </a>
+                {% else %}
+                    <span class="navbar-text">
+                        {%  trans "2. Order Requests" %}
+                    </span>
+                {% endif %}
+            </li>
+            {% else %}
             <li class="step2 {% if step == 2 %}active{% else %}{% if step == 3 %}previous{% else %}{% if step > 2 %}visited{% else %}disabled{% endif %}{% endif %}{% endif %} ">
                 {% if step == 2 or step == 3 %}
                     <a href="{% url 'checkout:payment-method' %}">
@@ -49,12 +64,12 @@
                     </span>
                 {% endif %}
             </li>
-
             <li class="step3 {% if step == 3 or step == 4 %}active{% else %}disabled{% endif %} ">
                 <span class="navbar-text">
                     {% trans "3. Confirmation" %}
                 </span>
             </li>
+            {% endif %}
         {% endspaceless %}
     </ul><!-- /navbar-inner -->
 </div><!-- /navbar -->
