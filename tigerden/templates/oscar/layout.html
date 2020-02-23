@@ -13,30 +13,29 @@
 
         body {
             margin: 5px;
+            /*background-color: #333333;*/
         }
+
+        /*
+        .brand {
+            background-color: #eeeeee;
+            border-radius: 6px 6px 0 0;
+            padding-top: 5px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 5px rgba(0,0,0,0.24);
+        }
+        */
 
         .btn-primary {
             background-color: #fcba04;
-            border-color: black;
+            border-color: black !important;
         }
 
-        .btn-primary:hover {
-            background-color: black;
+        .btn-primary:hover, .btn-primary:active, .btn-primary:focus {
+            background-color: #101010 !important;
         }
 
-        .product_pod {
-            border-radius: 2px;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 5px rgba(0,0,0,0.24);
-            transition: all 0.3s cubic-bezier(.25,.8,.25,1);
-            height: auto;
-        }
-
-        .product_pod h3 {
-            margin-bottom: 5rem;
-        }
-
-        .product_pod:hover {
-            box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+        .btn-primary.disabled:hover, .btn-primary.disabled:active {
+            background-color: #101010 !important;
         }
         
         .header .page_inner {
@@ -52,16 +51,27 @@
             box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 5px rgba(0,0,0,0.24);
             transition: all 0.3s cubic-bezier(.25,.8,.25,1);
         }
+
+        a:hover, a:focus {
+            color: #101010;
+        }
+
+        a:hover .thumbnail {
+            border-color: #101010;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 5px rgba(0,0,0,0.24);
+        }
+
+        .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
+            background-color: #101010;
+        }
     </style>
 {% endblock %}
 
 {% block layout %}
     {# Site logo/title, mini-basket, browse dropdown and searchbox #}
-    <header class="header container-fluid">
-        <div class="page_inner"></div>
-            <div class="row">
-                {% include "oscar/partials/brand.html" %}                
-            </div>
+    <header class="header container-fluid" style="margin-top: 50px;">
+        <div class="brand">
+            {% include "oscar/partials/brand.html" %}
         </div>
         {% block navigation %}
             {% include "oscar/partials/nav_primary.html" %}
@@ -74,7 +84,7 @@
     <div class="container-fluid page" style="position: relative; z-index: 5;">
         
         <div class="page_inner">
-            {% include "oscar/partials/mini_basket.html" %}
+            {% block minibasket %}{% include "oscar/partials/mini_basket.html" %}{% endblock %}
             {% block breadcrumbs %}{% endblock %}
             {% block header %}
                 <div class="page-header action">
