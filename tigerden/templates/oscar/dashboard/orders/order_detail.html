@@ -81,7 +81,7 @@
                 <form id="order_lines_form" method="post" class="form-inline">
                     {% csrf_token %}
                     {% block order_lines %}
-                    <table class="table table-striped table-bordered table-hover">
+                    <table class="table table-striped table-bordered table-hover table-responsive">
                         <thead>
                             <tr>
                                 <th></th>
@@ -148,7 +148,7 @@
                         <h3>{% trans "Status Changes" %}</h3>
                     </div>
                     {% with status_changes=order.status_changes.all %}
-                        <table class="table table-striped table-bordered table-hover">
+                        <table class="table table-striped table-bordered table-hover table-responsive">
                             {% if status_changes %}
                                 <thead>
                                     <tr>

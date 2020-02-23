@@ -25,7 +25,8 @@ def _option_integer_field(attribute):
 
 def _option_boolean_field(attribute):
     return forms.BooleanField(label=attribute.name,
-                              required=attribute.required)
+                              required=attribute.required,
+                              widget=forms.CheckboxInput())
 
 
 def _option_float_field(attribute):
@@ -54,7 +55,7 @@ def _option_option_field(attribute):
 
 def _option_multi_option_field(attribute):
     return forms.ModelMultipleChoiceField(
-        label=attribute.name,
+        label=attribute.name + " <small>(multi select)</small>",
         required=attribute.required,
         queryset=attribute.option_group.options.all())
 

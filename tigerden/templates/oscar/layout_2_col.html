@@ -1,0 +1,29 @@
+{% extends "oscar/layout.html" %}
+
+{% block content_wrapper %}
+<div class="container-fluid page" style="position: relative; z-index: 5;">
+    <div class="page_inner">
+        {% include "oscar/partials/mini_basket.html" %}
+        {% block breadcrumbs %}{% endblock %}
+        <div class="row">
+
+            <aside class="sidebar col-sm-4 col-md-3">
+                {% block column_left %}{% endblock %}
+            </aside>
+
+            <div class="col-sm-8 col-md-9">
+                {% block header %}
+                <div class="page-header action">
+                    <h1>{% block headertext %}{% endblock %}</h1>
+                </div>
+                {% endblock %}
+
+                {% include "oscar/partials/alert_messages.html" %}
+
+                {% block content %}{% endblock %}
+            </div>
+
+        </div><!-- /row -->
+    </div><!-- /page_inner -->
+</div><!-- /container-fluid -->
+{% endblock %}
