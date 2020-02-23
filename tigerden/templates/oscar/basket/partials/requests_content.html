@@ -8,7 +8,9 @@
         <div class="row">
             <h2 class="col-sm-6 h3"></h2>
             <p class="col-sm-3 h3">{% trans "Quantity" %}</p>
+            {% if not reqs_placement %}
             <p class="col-sm-1 h3 align-right">{% trans "Price" %}</p>
+            {% endif %}
             <p class="col-sm-2 h3 align-right">{% trans "Total" %}</p>
         </div>
     </div>
@@ -38,10 +40,12 @@
                                 <div class="checkout-quantity">
                                     {{line.quantity}}
                                 </div>
+                                {% if not reqs_placement %}
                                 <form action="{% url 'basket:req-cancel' pk=req.id %}" method="POST">
                                     {% csrf_token %}
                                     <input type="submit" data-behaviours="remove" value="{% trans "Remove" %}" class="inline btn btn-link">
                                 </form>
+                                {% endif %}
                             </div>
                             <div class="col-sm-1">
                                 {% if not line.unit_price_incl_tax and not line.unit_tax_excl_tax %}
