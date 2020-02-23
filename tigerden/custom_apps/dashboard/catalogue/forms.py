@@ -16,7 +16,7 @@ class ProductClassForm(base_forms.ProductClassForm):
 
     class Meta(base_forms.ProductClassForm.Meta):
         #fields = ['name', 'requires_shipping', 'track_stock', 'options']
-        fields = ['name', 'options']
+        fields = ['name', 'options', 'track_stock']
 
 class StockRecordForm(base_forms.StockRecordForm):
     class Meta(base_forms.StockRecordForm.Meta):
