@@ -77,11 +77,13 @@
                                 <td>{{ line.quantity }}</td>
                                 <td>{{ line.title }}</td>
                                 <td class="text-center" style="max-width: 2in;">
-                                    {% for attribute in line.attributes.all %}
+                                {% for attribute in line.attributes.all %}
+                                    {% if attribute.option != "" %}
                                     <span style="display: inline-block; margin-right: 0.1in;">
                                         <strong>{{ attribute.option }}: </strong>{{ attribute.value }}
                                     </span>
-                                    {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
                                 </td>
                                 <td class="text-right">{{ line.line_price_before_discounts_excl_tax|currency:order.currency }}</td>
                             </tr>
