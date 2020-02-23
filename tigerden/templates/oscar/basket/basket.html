@@ -1,8 +1,10 @@
 {% extends "oscar/basket/basket.html" %}
 
+{% block minibasket %}{% endblock %}
+
 {% block content %}
     {% include 'oscar/basket/partials/basket_content.html' %}
-{% endblock content %}
+{% endblock %}
 
 {% block reqs_script %}
     async function updateReqsBasket() {
