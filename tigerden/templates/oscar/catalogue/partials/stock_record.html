@@ -15,15 +15,11 @@
 {% else %}
     <p class="price_color">&nbsp;</p>
 {% endif %}
-<p class="{{ session.availability.code }} availability">
+<p class="{{ session.availability.code }} availability" style="white-space: unset;">
     <i class="icon-{% if session.availability.is_available_to_buy %}ok{% else %}remove{% endif %}"></i>
     {% if verbose %}
         {{ session.availability.message }}
     {% else %}
         {{ session.availability.short_message }}
-    {% endif %}
-    {% if session.availability.extra_message %}
-    <br>
-    <small>{{ session.availability.extra_message }}</small>
     {% endif %}
 </p>
