@@ -25,7 +25,7 @@ class StockRecordForm(base_forms.StockRecordForm):
         #    'price_currency', 'price_excl_tax', 'price_retail', 'cost_price',
         #    'num_in_stock', 'low_stock_threshold']
 
-        fields = ['price_retail', 'cost_price', 'partner', 'partner_sku', 'num_in_stock']
+        fields = ['price_retail', 'cost_price', 'partner', 'partner_sku', 'num_in_stock', 'low_stock_threshold']
         
 class OptionForm(base_forms.ProductAttributesForm):
     class Meta(base_forms.ProductAttributesForm.Meta):
