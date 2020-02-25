@@ -3,11 +3,11 @@
 {% load currency_filters %}
 
 {% block user_general_info %}
-    <div class="col-md-12">
+    <div class="col-md-12 table-responsive">
         <div class="table-header">
             <h2>{% trans "General" %}</h2>
         </div>
-        <table class="table table-bordered table-responsive">
+        <table class="table table-bordered">
             <tr>
                 <th>{% trans "Name" %}</th>
                 <td>{{ customer.get_full_name|default:"-" }}</td>
@@ -62,10 +62,12 @@
                     </tr>
                 {% endwith %}
             {% endif %}
+            <!--
             <tr>
                 <th>{% trans "Reviews written" %}</th>
                 <td>{{ customer.reviews.count }}</td>
             </tr>
+            -->
             {% if customer.email %}
                 <tr>
                     <th>{% trans "Actions" %}</th>
@@ -80,3 +82,12 @@
         </table>
     </div>
 {% endblock %}
+
+{% block tab_nav %}
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#user_orders" data-toggle="tab">{% trans "Orders" %}</a></li>
+    </ul>
+{% endblock %}
+
+{% block user_addresses %}{% endblock %}
+{% block user_reviews %}{% endblock %}

@@ -8,10 +8,10 @@
     }
 
     .product_pod {
-        border-radius: 2px;
+        border-radius: 4px;
         box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 5px rgba(0,0,0,0.24);
         transition: all 0.3s cubic-bezier(.25,.8,.25,1);
-        height: auto;
+        max-height: 260px;
     }
 
     .product_pod h3 {
@@ -29,11 +29,24 @@
     }
 
     .product_pod .image_container {
+        min-height: 100px;
+        max-height: 160px;
+        padding-bottom: 7px;
         margin-bottom: 0;
     }
 
     .product_pod .availability {
         min-height: 40px;
+    }
+
+    .nav li a {
+        font-size: larger;
+        position: relative;
+        display: block;
+    }
+
+    .nav li li a {
+        font-size: small;
     }
 </style>
 {% endblock %}

@@ -212,7 +212,7 @@ OSCAR_SHOP_TAGLINE = "Where Everyone Belongs"
 OSCAR_HIDDEN_FEATURES = ["wishlists", "reviews"]
 
 # DEFAULT TO 20
-#OSCAR_PRODUCTS_PER_PAGE
+OSCAR_PRODUCTS_PER_PAGE = 100
 #OSCAR_OFFERS_PER_PAGE
 #OSCAR_REVIEWS_PER_PAGE
 #OSCAR_NOTIFICATIONS_PER_PAGE
@@ -220,7 +220,7 @@ OSCAR_HIDDEN_FEATURES = ["wishlists", "reviews"]
 #OSCAR_ORDERS_PER_PAGE
 #OSCAR_ADDRESSES_PER_PAGE
 #OSCAR_STOCK_ALERTS_PER_PAGE
-#OSCAR_DASHBOARD_ITEMS_PER_PAGE
+OSCAR_DASHBOARD_ITEMS_PER_PAGE = 100
 
 # Oscar Order Settings
 # https://django-oscar.readthedocs.io/en/stable/ref/settings.html#order-settings
@@ -355,10 +355,10 @@ OSCAR_DASHBOARD_NAVIGATION = [
                 'label': _('Customers'),
                 'url_name': 'dashboard:users-index',
             },
-            #{
-            #    'label': _('Stock alert requests'),
-            #    'url_name': 'dashboard:user-alert-list',
-            #},
+            {
+                'label': _('Stock alert requests'),
+                'url_name': 'dashboard:user-alert-list',
+            },
         ]
     },
     {
