@@ -7,9 +7,36 @@
 {% endblock %}
 
 {% block reqs_script %}
-    async function updateReqsBasket() {
-        $("#reqs_cart").html(await $.get("{% url "basket:reqs-cart" %}"));
-    }
+    {% if request.user.is_authenticated and request.user.is_supervisor %}
+        async function updateReqsBasket() {
+            cur_reqs = []
+            $(".order-req").each(function() {
+                cur_reqs.push($(this).attr("data-req-id"));
+            });
+            var newReqs = $(await $.ajax({
+                url: "{% url "basket:reqs-cart" %}",
+                type: "GET",
+                data: {
+                    cur_reqs: cur_reqs
+                }
+            }));
+            if ((newReqs.attr("id") == "empty" && !$("#empty").length) ||
+                (newReqs.find("#reqs").length && $("#empty").length)) {
+                $("#reqs_cart").hide("normal", function() {
+                    $("#reqs_cart").html(newReqs);
+                    $("#reqs_cart").show("normal");
+                });
+            } else if (newReqs.find("#reqs").length) {
+                if ($("#reqs-extra").length) {
+                    $("#reqs-extra").html(newReqs.find("#reqs-extra").detach().html());
+                }
+                newReqs = newReqs.find(".order-req");
+                newReqs.hide();
+                $("#reqs").prepend(newReqs);
+                newReqs.show("normal");
+            }
+        }
 
-    setInterval(updateReqsBasket, 2500);
+        setInterval(updateReqsBasket, 2500);
+    {% endif %}
 {% endblock %}

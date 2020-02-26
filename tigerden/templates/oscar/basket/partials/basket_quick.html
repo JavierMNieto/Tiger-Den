@@ -28,13 +28,6 @@
             </li>
         {% endfor %}
         <li class="form-group form-actions">
-            <p class="align-right">
-                {% if request.basket.is_tax_known %}
-                    <small>{% trans "Total:" %} {{ request.basket.total_incl_tax|currency:request.basket.currency }}</small>
-                {% else %}
-                    <small>{% trans "Total:" %} {{ request.basket.total_excl_tax|currency:request.basket.currency }}</small>
-                {% endif %}
-            </p>
             <a href="{% url 'basket:summary' %}" class="btn btn-info btn-sm">{% trans "View basket" %}</a>
             <a href="{% url 'checkout:index' %}" class="btn btn-primary btn-sm pull-right"><i class="icon-shopping-cart"></i> {% trans "Checkout" %}</a>
         </li>
@@ -42,7 +35,9 @@
         <li><p>{% trans "Your basket is empty." %}</p></li>
     {% endif %}
     {% if request.user.is_authenticated and request.user.is_supervisor %}
-        <li><h4 class="font-weight-bold">Student/Guest Orders</h4></li>
-        <li id="mini_reqs_cart"></li>
+        <li><h4 class="font-weight-bold" style="margin: 0;">Student/Guest Orders</h4></li>
+        <li id="mini_reqs_cart" style="padding-top: 0; padding-bottom: 0;">
+            {% include 'oscar/basket/partials/requests_quick.html' with order_requests=request.user.get_order_requests  %}
+        </li>
     {% endif %}
 </ul>

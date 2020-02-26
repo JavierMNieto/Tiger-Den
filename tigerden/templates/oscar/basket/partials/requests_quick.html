@@ -1,18 +1,24 @@
 {% load currency_filters %}
-<!--{% load image_tags %}-->
 {% load i18n %}
+{% load image_tags %}
 
-{% with reqs=request.user.get_order_requests %}
+{% with reqs=order_requests %}
     {% if reqs %}
-        {% for order_request in reqs %}
-            <li class="student-order">
-                <h5>
-                    {{order_request.user.label}}
+        {% for req in reqs %}
+            <li class="order-req" data-req-id="{{req.id}}" style="margin: 0;">
+                <h5 style="margin: 0;">
+                    {% if req.guest_email %}
+                        {{ req.guest_email }}
+                    {% elif req.user %}
+                        {{ req.user.label }}
+                    {% else %}
+                        {% trans "User has deleted his or her account." %}
+                    {% endif %}
+                    <small>{% trans "Request" %} #{{req.number}}</small>
                 </h5>
-            {% for line in order_request.lines.all %}
+            {% for line in req.lines.all %}
                 <li>
                     <div class="row">
-                        <!--
                         <div class="col-sm-3">
                             <div class="image_container">
                                 {% with image=line.product.primary_image %}
@@ -23,7 +29,6 @@
                                 {% endwith %}
                             </div>
                         </div>
-                        -->
                         <div class="col-sm-5">
                             <p><strong><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></strong></p>
                         </div>
@@ -34,7 +39,7 @@
             {% endfor %}
             </li>
         {% endfor %}
-    {% else %}
-        <li>You have no order requests</li>
+    {% elif not request.user.get_order_requests.exists %}
+        <li id="empty">{% trans "You have no order requests." %}</li>
     {% endif %}
 {% endwith %}

@@ -32,13 +32,17 @@
                             <div class="checkout-quantity">
                                 <div class="input-group  {% if form.errors %}error{% endif %}">
                                     {% render_field form.quantity class+="form-control" %}
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default" type="submit" data-loading-text="{% trans 'Updating...' %}">{% trans "Update" %}</button>
-                                </span>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" type="submit" data-loading-text="{% trans 'Updating...' %}">{% trans "Update" %}</button>
+                                    </span>
                                 </div>
                             </div>
                                 <div>
                                     <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="remove" class="inline">{% trans "Remove" %}</a>
+                                    <div style="display:none">
+                                        {{ form.save_for_later }}
+                                        {{ form.DELETE }}
+                                    </div>
                                     {% for field_errors in form.errors.values %}
                                         {% for error in field_errors %}
                                             <span class="error-block"><i class="icon-exclamation-sign"></i> {{ error }}</span>
@@ -86,11 +90,13 @@
 
 {% block savedbasket %}
     {% if request.user.is_authenticated and request.user.is_supervisor %}
-        <div class="page-header action">
-            <h1>Student/Guest Order Requests</h1>
-        </div>
-        <div id="reqs_cart">
-            {% include 'oscar/basket/partials/requests_content.html' %}
+        <div id="reqs-container">
+            <div class="page-header action">
+                <h1>Student/Guest Order Requests</h1>
+            </div>
+            <div id="reqs_cart">
+            {% include 'oscar/basket/partials/requests_content.html' with order_requests=request.user.get_order_requests %}
+            </div>
         </div>
     {% endif %}
 {% endblock %}

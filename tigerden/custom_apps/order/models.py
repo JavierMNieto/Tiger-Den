@@ -1,4 +1,4 @@
-from oscar.apps.order.abstract_models import AbstractOrder, exceptions
+from oscar.apps.order.abstract_models import AbstractOrder, AbstractLine, exceptions
 from django.utils.translation import gettext_lazy as _
 from django.db import models
 from oscar.core.loading import get_class
@@ -32,6 +32,22 @@ class Order(AbstractOrder):
         else:
             if self.group_order and self.available_statuses() == ():
                 self.group_order.check_all_order_statuses(self.number)
+
+class Line(AbstractLine):
+    @property
+    def description(self):
+        """
+        Returns a description of this line including details of any
+        line attributes.
+        """
+        desc = self.title
+        ops = []
+        for attribute in self.attributes.all():
+            if (attribute.value.strip() != ""):
+                ops.append("%s = '%s'" % (attribute.type, attribute.value))
+        if ops:
+            desc = "%s (%s)" % (desc, ", ".join(ops))
+        return desc
 
 class GroupOrder(models.Model):
     """
