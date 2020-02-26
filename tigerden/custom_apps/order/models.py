@@ -43,7 +43,7 @@ class Line(AbstractLine):
         desc = self.title
         ops = []
         for attribute in self.attributes.all():
-            if (attribute.value.strip() != ""):
+            if attribute.value.strip() != "":
                 ops.append("%s = '%s'" % (attribute.type, attribute.value))
         if ops:
             desc = "%s (%s)" % (desc, ", ".join(ops))
