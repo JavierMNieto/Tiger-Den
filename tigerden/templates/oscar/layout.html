@@ -7,10 +7,6 @@
 
 {% block extrastyles %}
     <style>
-        a {
-            color: darkorange;
-        }
-
         body {
             margin: 5px;
             /*background-color: #333333;*/
@@ -52,16 +48,29 @@
             transition: all 0.3s cubic-bezier(.25,.8,.25,1);
         }
 
+        a {
+            color: darkorange;
+        }
+
+        .btn-link {
+            color: darkorange;
+        }
+
         a:hover, a:focus {
             color: #101010;
         }
 
+        .btn-link:hover, .btn-link:focus {
+            color: #101010;
+        }
+        
         a:hover .thumbnail {
             border-color: #101010;
             box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 5px rgba(0,0,0,0.24);
         }
 
         .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
+            color: darkorange;
             background-color: #101010;
         }
     </style>
@@ -112,17 +121,29 @@
     {% block reqs_script %}
         {% if request.user.is_authenticated and request.user.is_supervisor %}
             async function updateMiniBasket() {
-                $("#mini_reqs_cart").html(await $.get("{% url "basket:mini-reqs-cart" %}"));
-                var numStudentReqs = $("#mini_reqs_cart .student-order").length;
-                if (numStudentReqs > 0) {
-                    $(".student_cart_label").show();
-                    $(".student_cart_label").text(numStudentReqs);
-                } else {
-                    $(".student_cart_label").hide();
+                cur_reqs = []
+                $(".order-req").each(function() {
+                    cur_reqs.push($(this).attr("data-req-id"));
+                });
+                var newReqs = $(await $.ajax({
+                    url: "{% url "basket:mini-reqs-cart" %}",
+                    type: "GET",
+                    data: {
+                        cur_reqs: cur_reqs
+                    }
+                }));
+                if (newReqs.attr("id") == "empty" && !$("#empty").length) {
+                    $("#mini_reqs_cart").hide("normal", function() {
+                        $("#mini_reqs_cart").html(newReqs);
+                        $("#mini_reqs_cart").show("normal");
+                    });                    
+                } else if (newReqs.find(".row").length) {
+                    newReqs.hide();
+                    $("#mini_reqs_cart").prepend(newReqs);
+                    newReqs.show("normal");
                 }
             }
 
-            updateMiniBasket();
             setInterval(updateMiniBasket, 2500);
         {% endif %}
     {% endblock %}
