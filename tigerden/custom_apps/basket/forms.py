@@ -153,7 +153,10 @@ class AddToBasketForm(base_forms.AddToBasketForm):
                             new_value += ", "
                         new_value += str(val)
                     value = new_value
-                        
+                
+                if value is None:
+                    value = ""    
+                       
                 options.append({
                     'option': option,
                     'value': value})
