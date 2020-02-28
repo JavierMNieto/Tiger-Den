@@ -37,7 +37,6 @@
     {% if request.user.is_authenticated and request.user.is_supervisor %}
         <li><h4 class="font-weight-bold" style="margin: 0;">Student/Guest Orders</h4></li>
         <li id="mini_reqs_cart" style="padding-top: 0; padding-bottom: 0;">
-            {% include 'oscar/basket/partials/requests_quick.html' with order_requests=request.user.get_order_requests  %}
         </li>
     {% endif %}
 </ul>

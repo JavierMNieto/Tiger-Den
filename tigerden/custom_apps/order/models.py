@@ -49,6 +49,30 @@ class Line(AbstractLine):
             desc = "%s (%s)" % (desc, ", ".join(ops))
         return desc
 
+    def get_clean_attrs(self):
+        attrs = []
+        
+        for attribute in self.attributes.all():
+            if attribute.value.strip() != "":
+                attrs.append({
+                    'option': attribute.option,
+                    'value': attribute.value
+                })
+        
+        return attrs
+
+    @property
+    def code(self):
+        if not self.product:
+            return str(self.id)
+        code = str(self.product.id)
+        
+        for attr in self.attributes.all():
+            if attr.value.strip() != "":
+                code += attr.value.replace(" ", "")
+        
+        return code
+
 class GroupOrder(models.Model):
     """
     Group Order Model
@@ -206,14 +230,21 @@ class GroupOrder(models.Model):
         self.set_date_placed_default()
         super().save(*args, **kwargs)
     
-    """
-    @property
-    def total_excl_tax(self):
-        total = D('0.00')
-        for order in self.orders.all():
-            total += order.total_excl_tax()
-        return total
-    """
+    def get_all_lines_sorted(self):
+        lines = Line.objects.filter(order__group_order__id=self.id).order_by('-pk')
+        lines_dict = {}
+        
+        for line in lines:
+            if line.code in lines_dict:
+                lines_dict[line.code]['quantity'] += line.quantity
+            else:
+                lines_dict[line.code] = {
+                    'title': line.title,
+                    'quantity': line.quantity,
+                    'attributes': line.get_clean_attrs()
+                }
+        
+        return lines_dict
 
 class GroupOrderStatusChange(models.Model):
     group_order = models.ForeignKey(

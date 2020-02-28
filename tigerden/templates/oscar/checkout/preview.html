@@ -13,10 +13,10 @@
     {% trans "Place order" %}
 {% endblock %}
 
-{% block order_contents %}
+{% block place_order %}
     {{block.super}}
     {% if request.user.is_authenticated and request.user.is_supervisor %}
-    {% include 'oscar/basket/partials/requests_content.html' with reqs_placement=True %}
+        {% include 'oscar/basket/partials/requests_content.html' with reqs_placement=True order_requests=request.user.get_order_requests %}
     {% endif %}
 {% endblock %}
 

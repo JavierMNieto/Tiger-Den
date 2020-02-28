@@ -13,6 +13,10 @@
     {% trans "Order requests" %}
 {% endblock %}
 
+{% block order_contents %}
+    {% include 'oscar/basket/partials/requests_content.html' with reqs_placement=True order_requests=request.user.get_order_requests %}
+{% endblock %}
+
 {% block place_order %}
     <form method="post" action="{% url 'checkout:order-requests' %}" id="place_order_form">
         {% csrf_token %}
@@ -27,10 +31,6 @@
         </div>
     </form>
 {% endblock place_order %}
-
-{% block order_contents %}
-    {% include 'oscar/basket/partials/requests_content.html' with reqs_placement=True %}
-{% endblock %}
 
 {% block reqs_script %}
     async function updateReqsBasket() {

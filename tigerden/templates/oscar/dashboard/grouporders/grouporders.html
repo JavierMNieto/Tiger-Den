@@ -22,73 +22,24 @@
             <a class="btn btn-info" data-toggle="collapse" data-parent="#grouporders" href=".orders_{{grouporder.id}}">{% trans "View" %}</a>
             -->
             {% if grouporder.status != "Processed" and grouporder.status != "Cancelled" %} 
-                <btn class="btn btn-success" onclick="PrintInvoice('{{grouporder.id}}', true)">Print & Confirm Order(s)</btn>
+                <btn class="btn btn-success" onclick="PrintInvoice('{{grouporder.id}}', true)">Print Order(s)</btn>
                 <btn class="btn btn-danger" onclick="changeGroupOrderStatus('{{grouporder.id}}', 'Cancelled')">Cancel</btn>
             {% else %}
                 <btn class="btn btn-primary" onclick="PrintInvoice('{{grouporder.id}}')">Print Order(s)</btn>
             {% endif %}
             <btn class="btn btn-primary" data-toggle="modal" data-target="#print_modal_{{grouporder.id}}">View Invoice</btn>
-            <div class="modal fade" id="print_modal_{{grouporder.id}}">
+            <div class="modal fade" id="print_modal_{{grouporder.id}}" style="overflow: auto;">
                 <div class="modal-sm col-lg-offset-3">
-                    <div class="modal-body" id="print_{{grouporder.id}}">
+                    <div class="modal-body" id="print_fulfill_{{grouporder.id}}">
+                        {% include "oscar/dashboard/grouporders/fulfillment.html" with grouporder=grouporder %}
+                    </div>
+                </div>
+                <div class="modal-sm col-lg-offset-3">
+                    <div class="modal-body" id="print_invoice_{{grouporder.id}}">
                         {% include "oscar/dashboard/grouporders/invoice.html" with grouporder=grouporder %}
                     </div>
                 </div>
             </div>
         </td>
-        
     </tr>
-{% comment %}
-    <tr class="collapse orders_{{grouporder.id}}">
-        <td></td>
-        <td>{% trans "Order #" %}</td>
-        <td>{% trans "Total" %}</td>
-        <td>{% trans "Number of items" %}</td>
-        <td>{% trans "Status" %}</td>
-        <td>{% trans "Customer" %}</td>
-        <td></td>
-    </tr>
-    {% for order in grouporder.orders.all %}
-    <tr class="collapse orders_{{grouporder.id}}">
-        <td></td>
-        <td><a href="{% url 'dashboard:order-detail' number=order.number %}">{{ order.number }}</a></td>
-        <td>{{ order.total_excl_tax|currency:order.currency }}</td>
-        <td>{{ order.num_items }}</td>
-        <td>{{ order.status|default:"-" }}</td>
-        <td>
-            {% if order.guest_email %}
-                <span>{{ order.guest_email|default:"-" }} (guest)</span>
-            {% elif order.user %}
-                <a href="{% url 'dashboard:user-detail' pk=order.user.id %}">{{ order.user.label|default:"-" }}</a>
-            {% else %}
-                &lt;{% trans "Deleted" %}&gt;
-            {% endif %}
-        </td>
-        <td>
-            <a class="btn btn-info" data-toggle="collapse" data-parent="#grouporders" href=".lines_{{order.id}}">{% trans "View" %}</a>
-        </td>
-    </tr>
-        {% for line in order.lines.all %}
-        <tr>
-            <td></td>
-            <td><a href="{% url 'dashboard:order-detail' number=order.number %}">{{ order.number }}</a></td>
-            <td>{{ order.total_excl_tax|currency:order.currency }}</td>
-            <td>{{ order.num_items }}</td>
-            <td>{{ order.status|default:"-" }}</td>
-            <td>
-                {% if order.guest_email %}
-                    <span>{{ order.guest_email|default:"-" }} (guest)</span>
-                {% elif order.user %}
-                    <a href="{% url 'dashboard:user-detail' pk=order.user.id %}">{{ order.user.label|default:"-" }}</a>
-                {% else %}
-                    &lt;{% trans "Deleted" %}&gt;
-                {% endif %}
-            </td>
-            <td>
-                <a class="btn btn-info" data-toggle="collapse" data-parent="#grouporders" href=".lines_{{order.id}}">{% trans "View" %}</a>
-            </td>
-        </tr>
-        {% endfor %}
-    {% endfor %}
-{% endcomment %}
 {% endfor %}

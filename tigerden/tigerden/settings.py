@@ -74,7 +74,8 @@ INSTALLED_APPS = [
     #'oscar.apps.dashboard',
     'custom_apps.dashboard.apps.DashboardConfig',
     'oscar.apps.dashboard.reports',
-    'oscar.apps.dashboard.users',
+    #'oscar.apps.dashboard.users',
+    'custom_apps.dashboard.users.apps.UsersDashboardConfig',
     #'oscar.apps.dashboard.orders',
     'custom_apps.dashboard.orders.apps.OrdersDashboardConfig',
     'custom_apps.dashboard.grouporders.apps.GroupOrdersDashboardConfig',
@@ -200,7 +201,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = location('public/media')
 STATIC_ROOT = location('public/static')
 STATICFILES_DIRS = (
-  os.path.join(BASE_DIR, 'static/'),
+  os.path.join(BASE_DIR, 'static'),
 )
 
 # Oscar Display Settings

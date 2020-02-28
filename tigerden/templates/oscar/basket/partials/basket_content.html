@@ -28,7 +28,7 @@
                             <h3><a href="{{ product.get_absolute_url }}">{{ line.description }}</a></h3>
                             <p class="availability {{ session.availability.code }}">{{ session.availability.message }}</p>
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-3 col-xs-8">
                             <div class="checkout-quantity">
                                 <div class="input-group  {% if form.errors %}error{% endif %}">
                                     {% render_field form.quantity class+="form-control" %}
@@ -51,7 +51,7 @@
                                 </div>
 
                         </div>
-                        <div class="col-sm-1">
+                        <div class="col-sm-1 hidden-xs">
                             {% if not line.unit_price_incl_tax and not line.unit_tax_excl_tax %}
                                 <p class="align-right">&mdash;</p>
                             {% else %}
@@ -64,7 +64,7 @@
                                 </p>
                             {% endif %}
                         </div>
-                        <div class="col-sm-2">
+                        <div class="col-sm-2 col-xs">
                             {% if not line.line_price_incl_tax and not line_price_excl_tax %}
                                 <p class="align-right">&mdash;</p>
                             {% else %}

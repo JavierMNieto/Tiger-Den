@@ -12,7 +12,7 @@
                     <img src="">
                 </div>
                 -->
-                <h1 class="text-center">Tiger Den <small>Order #{{grouporder.number}} invoice</small></h1>
+                <h1 class="text-center">Tiger Den <small>Order #{{grouporder.number}} fulfillment</small></h1>
             </div>
             <div class="col-xs-4"></div>
             <div class="col-xs-2">
@@ -54,44 +54,21 @@
                     <th>Quantity</th>
                     <th>Product</th>
                     <th>Options</th>
-                    <th>Cost</th>
                 </thead>
                 <tbody>
-                    {% for order in grouporder.orders.all %}
-                        <tr class="text-dark">
-                            <th colspan="4">
-                                Customer: 
-                                {% if order.guest_email %}
-                                    {{ order.guest_email }} (guest)
-                                {% elif order.user %}
-                                    {{ order.user.label }}
-                                {% else %}
-                                    User has deleted his or her account.
-                                {% endif %}
-                                <span style="float: right;">Order #{{order.number}}</span>
-                            </th>
-                        </tr>
-                        {% for line in order.lines.all %}
-                            <tr>
-                                <td>{{ line.quantity }}</td>
-                                <td>{{ line.title }}</td>
-                                <td class="text-center" style="max-width: 2in;">
-                                {% for attribute in line.attributes.all %}
-                                    {% if attribute.value != "" %}
-                                    <span style="display: inline-block; margin-right: 0.1in;">
-                                        <strong>{{ attribute.option }}: </strong>{{ attribute.value }}
-                                    </span>
-                                    {% endif %}
-                                {% endfor %}
-                                </td>
-                                <td class="text-right">{{ line.line_price_before_discounts_excl_tax|currency:order.currency }}</td>
-                            </tr>
-                        {% endfor %}
+                    {% for key, line in grouporder.get_all_lines_sorted.items %}
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <th class="text-right">Order total: </th>
-                            <th class="text-right">{{ order.total_excl_tax|currency:order.currency }}</th>
+                            <td><span style="font-size: large;">&#9744;</span>{{ line.quantity }}</td>
+                            <td>{{ line.title }}</td>
+                            <td class="text-center" style="max-width: 2in;">
+                            {% for attribute in line.attributes %}
+                                {% if attribute.value != "" %}
+                                <span style="display: inline-block; margin-right: 0.1in;">
+                                    <strong>{{ attribute.option }}: </strong>{{ attribute.value }}
+                                </span>
+                                {% endif %}
+                            {% endfor %}
+                            </td>
                         </tr>
                     {% endfor %}
                     <tr></tr>

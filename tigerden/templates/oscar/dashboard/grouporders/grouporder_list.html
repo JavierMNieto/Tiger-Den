@@ -212,10 +212,11 @@
 
             function PrintInvoice(id, isConfirm=false) {
                 var printWindow = window.open('', 'PRINT', 'height=600,width=800');
-
-                printWindow.document.write('<html><head><title> Group Order #' + $("#" + id).attr("data-number") + '</title>');
-                printWindow.document.write('<style media="print">input[type="checkbox"] {display: none;}</style></head><body>');
-                printWindow.document.write($("#print_" + id).html());
+                printWindow.document.write('<html><head><title> Group Order #' + $("#group_" + id).attr("data-number") + '</title>');
+                printWindow.document.write('<style media="print">input[type="checkbox"] {display: none;} footer {page-break-after: always;}</style></head><body>');
+                printWindow.document.write($("#print_fulfill_" + id).html());
+                printWindow.document.write('<footer></footer>');
+                printWindow.document.write($("#print_invoice_" + id).html());
                 printWindow.document.write('</body></html>');
                 
                 if (isConfirm) {

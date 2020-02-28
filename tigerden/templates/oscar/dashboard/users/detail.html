@@ -32,7 +32,18 @@
             </tr>
             <tr>
                 <th>{% trans "Supervisor" %}?</th>
-                <td>{{ customer.is_supervisor|yesno:_("True,False") }}</td>
+                <td>
+                    {{ customer.is_supervisor|yesno:_("True,False") }}
+                    <form method="POST" style="display: inline-block;">
+                        {% csrf_token %}
+                        <input type="hidden" name="user_action" value="change_supervisor">
+                        {% if customer.is_supervisor %}
+                        <input type="submit" class="btn btn-primary" value="Disable Supervisor">
+                        {% else %}
+                        <input type="submit" class="btn btn-primary" value="Enable Supervisor">
+                        {% endif %}
+                    </form>
+                </td>
             </tr>
             <tr>
                 <th>{% trans "Last login" %}</th>
