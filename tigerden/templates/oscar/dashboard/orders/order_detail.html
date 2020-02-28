@@ -44,7 +44,7 @@
         </tr>
         <tr>
         {% if order.supervisor %}
-            <td><a href="{% url 'dashboard:user-detail' pk=order.supervisor.pk %}">{{order.supervisor}}</a></td>
+            <td><a href="{% url 'dashboard:user-detail' pk=order.supervisor.pk %}">{{order.supervisor.label}}</a></td>
         {% else %}
             <td>None Assigned</td>
         {% endif %}
