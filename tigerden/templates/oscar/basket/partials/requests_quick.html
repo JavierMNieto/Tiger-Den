@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load image_tags %}
 
+{% spaceless %}
 {% with reqs=order_requests %}
     {% if reqs %}
         {% for req in reqs %}
@@ -43,3 +44,4 @@
         <li id="empty">{% trans "You have no order requests." %}</li>
     {% endif %}
 {% endwith %}
+{% endspaceless %}

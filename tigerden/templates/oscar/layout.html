@@ -142,8 +142,16 @@
                     $("#mini_reqs_cart").prepend(newReqs);
                     newReqs.show("normal");
                 }
-            }
 
+                var numStudentReqs = $("#mini_reqs_cart .order-req").length;
+                if (numStudentReqs > 0) {
+                    $(".req_cart_label").text(numStudentReqs);
+                    $(".req_cart_label").show("normal");
+                } else {
+                    $(".req_cart_label").hide();
+                }
+            }
+            updateMiniBasket();
             setInterval(updateMiniBasket, 2500);
         {% endif %}
     {% endblock %}
