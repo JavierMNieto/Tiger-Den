@@ -34,7 +34,9 @@
                 <th>{% trans "Email address" %}</th>
             </tr>
             <tr>
-                <td>{{ grouporder.user.get_full_name|default:"-" }}</td>
+                <td>
+                    <a href="{% url 'dashboard:user-detail' pk=grouporder.user.pk %}">{{grouporder.user.get_full_name|default:"-"}}</a>
+                </td>
                 <td>{{ grouporder.user.email|default:"-" }}</td>
             </tr>
         {% else %}
@@ -76,7 +78,7 @@
                 <div class="table-header">
                     <h3>{% trans "Orders" %}</h3>
                 </div>
-                <div id="order_lines_form" class="form-inline">
+                <div id="order_lines_form" class="form-inline table-responsive">
                     {% csrf_token %}
                     {% block order_lines %}
                         <table class="table table-bordered table-hover">
@@ -97,9 +99,9 @@
                                             {% if order.guest_email %}
                                                 {{ order.guest_email }} (guest)
                                             {% elif order.user %}
-                                                {{ order.user.label }}
+                                                <a href="{% url 'dashboard:user-detail' pk=order.user.pk %}">{{order.user.label|default:"-"}}</a>
                                             {% else %}
-                                                {% trans "User has deleted his or her account." %}
+                                                {% trans "Deleted Account." %}
                                             {% endif %}
                                         </td>
                                         <td>{{ order.status|default:"-" }}</td>

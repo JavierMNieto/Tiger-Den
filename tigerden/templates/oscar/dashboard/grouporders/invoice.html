@@ -87,12 +87,14 @@
                                 <td class="text-right">{{ line.line_price_before_discounts_excl_tax|currency:order.currency }}</td>
                             </tr>
                         {% endfor %}
+                        {% if order.lines.count > 1 %}
                         <tr>
                             <td></td>
                             <td></td>
                             <th class="text-right">Order total: </th>
                             <th class="text-right">{{ order.total_excl_tax|currency:order.currency }}</th>
                         </tr>
+                        {% endif %}
                     {% endfor %}
                     <tr></tr>
                 </tbody>
