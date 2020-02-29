@@ -21,7 +21,7 @@
                 }
             }));
             if ((newReqs.attr("id") == "empty" && !$("#empty").length) ||
-                (newReqs.find("#reqs").length && $("#empty").length)) {
+                (newReqs.find(".order-req").length && $("#empty").length)) {
                 $("#reqs_cart").hide("normal", function() {
                     $("#reqs_cart").html(newReqs);
                     $("#reqs_cart").show("normal");
