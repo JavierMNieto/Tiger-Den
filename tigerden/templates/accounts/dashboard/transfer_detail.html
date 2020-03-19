@@ -1,0 +1,49 @@
+{% extends 'accounts/dashboard/transfer_detail.html' %}
+{% load currency_filters %}
+{% load i18n %}
+
+{% block headertext %}Transfer <small>{{ transfer.reference }}</small>{% endblock %}
+
+{% block dashboard_content %}
+<div class="panel panel-default">
+    <div class="panel-heading">{% trans "Transfers" %}</div>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <tbody>
+                <tr>
+                    <th>{% trans "Reference" %}</th>
+                    <td>{{ transfer.reference }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans "Source" %}</th>
+                    <td><a href="{% url 'accounts_dashboard:accounts-detail' transfer.source.id %}">{{ transfer.source }}</a></td>
+                </tr>
+                <tr>
+                    <th>{% trans "Destination" %}</th>
+                    <td><a href="{% url 'accounts_dashboard:accounts-detail' transfer.destination.id %}">{{ transfer.destination }}</a></td>
+                </tr>
+                <tr>
+                    <th>{% trans "Amount" %}</th>
+                    <td>{{ transfer.amount|currency }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans "Merchant reference" %}</th>
+                    <td>{{ transfer.merchant_reference|default:"-" }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans "Description" %}</th>
+                    <td>{{ transfer.description|default:"-" }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans "Authorised by" %}</th>
+                    <td><a href="{% url 'dashboard:user-detail' transfer.user.id %}">{{ transfer.user.label }}</a></td>
+                </tr>
+                <tr>
+                    <th>{% trans "Date" %}</th>
+                    <td>{{ transfer.date_created }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock dashboard_content %}

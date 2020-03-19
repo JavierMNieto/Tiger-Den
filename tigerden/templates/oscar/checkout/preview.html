@@ -1,5 +1,6 @@
 {% extends "oscar/checkout/preview.html" %}
 {% load i18n %}
+{% load currency_filters %}
 
 {% block title %}
     {% trans "Order" %} | {{ block.super }}
@@ -13,11 +14,40 @@
     {% trans "Place order" %}
 {% endblock %}
 
+{% block payment-details %}
+<div class="col-sm-12">
+    <div class="sub-header">
+        <h2>{% trans "Payment" %}</h2>
+    </div>
+    <div class="well well-success">
+        <h3>{% trans "Payment" %}</h3>
+        {% for source in sources %}
+            <p>
+            {% blocktrans with amount=source.amount|currency:source.currency type=source.type %}
+                {{ amount }} in {{ type }}
+            {% endblocktrans %}
+            </p>
+        {% empty %}
+            <p>
+            {% trans "No payment." %}
+            </p>
+        {% endfor %}
+
+        {% if order.billing_address %}
+            <h4>{% trans "Billing address" %}</h4>
+            <address>
+                {% for field in order.billing_address.active_address_fields %}
+                    {{ field }}<br/>
+                {% endfor %}
+            </address>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
 {% block place_order %}
     {{block.super}}
     {% if request.user.is_authenticated and request.user.is_supervisor %}
         {% include 'oscar/basket/partials/requests_content.html' with reqs_placement=True order_requests=request.user.get_order_requests %}
     {% endif %}
 {% endblock %}
-
-{% block reqs_script %}{% endblock %}

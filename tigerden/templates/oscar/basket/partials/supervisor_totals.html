@@ -16,7 +16,11 @@
                 <tr>
                     <th class="total">{% trans "Your group cart total" %}</th>
                     <th class="total align-right">
-                        {{ basket.total_excl_tax|add:request.user.get_reqs_total|currency:basket.currency }}
+                        {% if group_order %}
+                            {{ group_order.total_excl_tax|currency:group_order.currency }}
+                        {% else %}
+                            {{ basket.total_excl_tax|add:request.user.get_reqs_total|currency:basket.currency }}
+                        {% endif %}
                     </th>
                 </tr>
             {% endblock %}

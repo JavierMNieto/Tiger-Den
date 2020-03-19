@@ -64,7 +64,8 @@ class OrderPlacementMixin(mixins.OrderPlacementMixin):
         self.checkout_session.flush()
 
         # Save order id in session so thank-you page can load it
-        self.request.session['checkout_order_id'] = group_order.id
+        
+        self.request.session['checkout_order_id'] = group_order.orders.first().id
         return HttpResponseRedirect(self.get_success_url())
     
     def handle_successful_order(self, order):

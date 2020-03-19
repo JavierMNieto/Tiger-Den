@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load currency_filters %}
 
 {% block nav_account_languages %}
 {% if LANGUAGES|length > 1 %}
@@ -22,6 +23,11 @@
 <ul class="nav navbar-nav navbar-right">
     {% if user.is_authenticated %}
     {% block nav_account_navbar_authenticated %}
+        <li>
+            <h4>
+                Tiger Den Credit: <span>{{ request.user.get_bal|currency:"USD" }}</span>
+            </h4>
+        </li>
         <li>
             {% if num_unread_notifications > 0 %}
                 {# If user has new notifications - we change account link to go to inbox #}

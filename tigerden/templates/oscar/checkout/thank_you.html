@@ -3,6 +3,19 @@
 {% load i18n %}
 {% load image_tags %}
 
+{% block extrastyles %}
+{{block.super}}
+<style>
+    .progress-bar-warning {
+        background-color: #ffc107!important;
+    }
+
+    .text-warning {
+        color: #ffc107!important;
+    }
+</style>
+{% endblock %}
+
 {% block title %}
     {% if not request.user.is_supervisor  %}
         {% blocktrans with number=order.number %}
@@ -17,7 +30,6 @@
     {% include 'oscar/checkout/nav.html' with step=4 %}
 {% endblock %}
 
-
 {% block checkout_title %}
     {% if not request.user.is_supervisor  %}
         {% blocktrans with number=order.number supervisor=order.supervisor.get_full_name|default:order.supervisor.email %}
@@ -28,12 +40,15 @@
     {% endif %}
 {% endblock %}
 
-
-
 {% block content %}
     <p class="lead">
         {% if request.user.is_authenticated and request.user.is_supervisor %}
-            {% if order.group_order.orders.all.count > 1 %}
+            {% if not order.user.id == request.user.id %}
+                {% blocktrans with number=order.number %}
+                    Your order requests have been placed - your group order number is
+                    <strong>{{ number }}</strong>.
+                {% endblocktrans %}
+            {% elif order.group_order.orders.all.count > 1 %}
                 {% blocktrans with number=order.number %}
                     Your orders have been placed and a confirmation email has been sent - your order and group order number is
                     <strong>{{ number }}</strong>.
@@ -46,13 +61,14 @@
             {% endif %}
         {% else %}
             {% blocktrans with number=order.number supervisor=order.supervisor.get_full_name|default:order.supervisor.email %}
-                Your order request has been sent to your supervisor {{supervisor}}. Your order will be placed at the discretion of your supervisor. Charges are only applied once your order is placed. Your order number is
+                Your order request has been sent to your supervisor <strong>{{supervisor}}</strong>. Your order will be placed at the <strong>discretion</strong> of your supervisor. Charges are only applied once your order is placed. Your order number is
                 <strong>{{ number }}</strong>.
             {% endblocktrans %}
         {% endif %}
         {% trans "Please make a note of this reference or print this page and quote it in any communication with us regarding your order." %}
     </p>
 
+{% if order.user.id == request.user.id %}
     <div class="row shipping-payment">
         <div class="">
             {% block shipping_info %}
@@ -74,7 +90,7 @@
                             {% endblocktrans %}
                         {% else %}
                             {% blocktrans with amount=source.amount_allocated|currency:source.currency type=source.source_type.name %}
-                                Allocation of {{ amount }} from type {{ type }}
+                                {{ amount }} in {{ type }}
                             {% endblocktrans %}
                         {% endif %}
                         </p>
@@ -97,81 +113,94 @@
             {% endblock %}
         </div>
     </div>
+{% endif %}
 
     {% block order_contents %}
-        <div class="sub-header">
-            <h2>{% trans "Order contents" %}</h2>
-        </div>
-
-        <div class="basket-title">
-            <div class="row">
-                <p class="col-sm-9 h4">{% trans "Items purchased" %}</p>
-                <p class="col-sm-1 h4 align-center">{% trans "Quantity" %}</p>
-                <p class="col-sm-2 h4 align-right">{% trans "Total" %}</p>
+        {% if order.user.id == request.user.id %}
+            <div class="sub-header">
+                <h2>{% trans "Order contents" %}</h2>
             </div>
-        </div>
 
-        {% for line in order.lines.all %}
-            <div class="basket-items">
+            <div class="basket-title">
                 <div class="row">
-                    <div class="col-sm-2">
-                        <div class="image_container">
-                            {% with image=line.product.primary_image %}
-                                {% oscar_thumbnail image.original "200x200" upscale=False as thumb %}
-                                <a href="{{ line.product.get_absolute_url }}">
-                                    <img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}">
-                                </a>
-                            {% endwith %}
+                    <p class="col-sm-9 h4">{% trans "Items purchased" %}</p>
+                    <p class="col-sm-1 h4 align-center">{% trans "Quantity" %}</p>
+                    <p class="col-sm-2 h4 align-right">{% trans "Total" %}</p>
+                </div>
+            </div>
+
+            {% for line in order.lines.all %}
+                <div class="basket-items">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <div class="image_container">
+                                {% with image=line.product.primary_image %}
+                                    {% oscar_thumbnail image.original "200x200" upscale=False as thumb %}
+                                    <a href="{{ line.product.get_absolute_url }}">
+                                        <img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}">
+                                    </a>
+                                {% endwith %}
+                            </div>
+                        </div>
+                        <div class="col-sm-7">
+                            <h3><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h3>
+                            <p>
+                            {% if line.upc %}{{ line.upc }}<br/>{% endif %}
+                            {% if line.est_dispatch_date %}
+                                {% blocktrans with date=line.est_dispatch_date %}
+                                    Estimated dispatch: <strong>{{ date }}</strong>
+                                {% endblocktrans %}
+                            {% endif %}
+                            </p>
+                        </div>
+                        <div class="col-sm-1 align-center">
+                            {{ line.quantity }}
+                        </div>
+                        <div class="col-sm-2 align-right">
+                            <p class="price_color">
+                                {% if show_tax_separately %}
+                                    {{ line.line_price_before_discounts_excl_tax|currency:order.currency }}
+                                {% else %}
+                                    {{ line.line_price_before_discounts_incl_tax|currency:order.currency }}
+                                {% endif %}
+                            </p>
                         </div>
                     </div>
-                    <div class="col-sm-7">
-                        <h3><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h3>
-                        <p>
-                        {% if line.upc %}{{ line.upc }}<br/>{% endif %}
-                        {% if line.est_dispatch_date %}
-                            {% blocktrans with date=line.est_dispatch_date %}
-                                Estimated dispatch: <strong>{{ date }}</strong>
-                            {% endblocktrans %}
-                        {% endif %}
-                        </p>
-                    </div>
-                    <div class="col-sm-1 align-center">
-                        {{ line.quantity }}
-                    </div>
-                    <div class="col-sm-2 align-right">
-                        <p class="price_color">
-                            {% if show_tax_separately %}
-                                {{ line.line_price_before_discounts_excl_tax|currency:order.currency }}
-                            {% else %}
-                                {{ line.line_price_before_discounts_incl_tax|currency:order.currency }}
-                            {% endif %}
-                        </p>
+                </div>
+            {% endfor %}
+
+            {% block basket_totals %}
+                <div class="row">
+                    <div class="col-sm-6">&nbsp;</div>
+                    <div class="col-sm-6">
+                        <div class="sub-header">
+                            <h2>{% trans 'Totals' %}</h2>
+                        </div>
+                        {% include 'oscar/order/partials/basket_totals.html' %}
                     </div>
                 </div>
-            </div>
-        {% endfor %}
+            {% endblock basket_totals %}
+        {% endif %}
 
-        {% block basket_totals %}
-            <div class="row">
-                <div class="col-sm-6">&nbsp;</div>
-                <div class="col-sm-6">
-                    <div class="sub-header">
-                        <h2>{% trans 'Totals' %}</h2>
-                    </div>
-                    {% include 'oscar/order/partials/basket_totals.html' %}
+        {% if request.user.is_authenticated and request.user.is_supervisor %}
+        {% with reqs=order.group_order.order_requests %}
+            {% if reqs.count > 0 %}
+                <div class="sub-header">
+                    <h3>{% trans "Fulfilled order requests" %}</h3>
                 </div>
-            </div>
-        {% endblock basket_totals %}
-
+                {% include 'oscar/basket/partials/requests_content.html' with reqs_placement=True order_requests=reqs group_order=order.group_order %}
+            {% endif %}
+        {% endwith %}
+        {% endif %}
     {% endblock order_contents %}
 
     {% block order_tracking %}
-        {% if not order.user %}
+        {% if not request.user.is_authenticated and not order.user %}
             <div class="sub-header">
                 <h2>{% trans "Tracking your order" %}</h2>
             </div>
             <p>{% trans "You can track the status of your order" %}</p>
-            <a class="btn btn-primary" href="{% url 'customer:anon-order' order_number=order.number hash=order.verification_hash %}">{% trans "View order status" %}</a>.
+            <a class="btn btn-primary" href="{% url 'customer:anon-order' order_number=order.number hash=order.verification_hash %}">{% trans "View order status" %}</a>
         {% endif %}
     {% endblock %}
 

@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.conf.urls import url
 from django.apps import apps
 from django.conf import settings
 from django.conf.urls.static import static
@@ -29,6 +30,7 @@ urlpatterns = [
     
     path('i18n/', include('django.conf.urls.i18n')),
     path('', include(apps.get_app_config('oscar').urls[0])),
+    url(r'^dashboard/accounts/', apps.get_app_config('accounts_dashboard').urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 from custom_apps.partner.models import Partner

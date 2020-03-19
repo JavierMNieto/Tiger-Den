@@ -1,0 +1,39 @@
+{% extends 'accounts/dashboard/account_detail.html' %}
+{% load currency_filters %}
+{% load i18n %}
+
+{% block dashboard_content %}
+{% include 'accounts/dashboard/partials/account_detail.html' %}
+<div class="panel panel-default">
+    <div class="panel-heading">{% trans "Transaction overview" %}</div>
+    <div class="panel-body table-responsive">
+        {% if transactions %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>{% trans "Transfer" %}</th>
+                    <th>{% trans "Amount" %}</th>
+                    <th>{% trans "Description" %}</th>
+                    <th>{% trans "Authorised by" %}</th>
+                    <th>{% trans "Date" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for txn in transactions %}
+                <tr>
+                    <td><a href="{% url 'accounts_dashboard:transfers-detail' txn.transfer.reference %}">{{ txn.transfer }}</a></td>
+                    <td>{{ txn.amount|currency }}</td>
+                    <td>{{ txn.transfer.description|default:"-" }}</td>
+                    <td>{{ txn.transfer.user|default:"-" }}</td>
+                    <td>{{ txn.date_created }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% include "oscar/dashboard/partials/pagination.html" %}
+        {% else %}
+        <p>{% trans "No transactions." %}</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock dashboard_content %}

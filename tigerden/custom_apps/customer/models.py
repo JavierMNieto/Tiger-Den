@@ -23,9 +23,16 @@ def label(user):
         return user.email
     return user.get_full_name()
 
+def get_bal(user):
+    accounts = user.accounts
+    if accounts.exists():
+        return accounts.first().balance
+    return D('0.00')
+
 User.add_to_class('is_supervisor', is_supervisor)
 User.add_to_class('get_order_requests', get_order_requests)
 User.add_to_class('get_reqs_total', get_reqs_total)
 User.add_to_class('label', label)
+User.add_to_class('get_bal', get_bal)
 
 from oscar.apps.customer.models import *  # noqa isort:skip

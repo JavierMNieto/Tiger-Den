@@ -1,6 +1,7 @@
 {% extends "oscar/dashboard/users/detail.html" %}
 {% load i18n %}
 {% load currency_filters %}
+{% load custom_tags %}
 
 {% block user_general_info %}
     <div class="col-md-12 table-responsive">
@@ -38,11 +39,37 @@
                         {% csrf_token %}
                         <input type="hidden" name="user_action" value="change_supervisor">
                         {% if customer.is_supervisor %}
-                        <input type="submit" class="btn btn-primary" value="Disable Supervisor">
+                        <input type="submit" class="btn btn-danger" value="{% trans "Disable Supervisor" %}">
                         {% else %}
-                        <input type="submit" class="btn btn-primary" value="Enable Supervisor">
+                        <input type="submit" class="btn btn-success" value="{% trans "Enable Supervisor" %}">
                         {% endif %}
                     </form>
+                </td>
+            </tr>
+            <tr>
+                <th>{% trans "Credit Account" %}</th>
+                <td>
+                {% if customer.accounts.exists %}
+                    <form method="POST" class="form-inline" id="change_credit">
+                        {% csrf_token %}
+                        <a href="{% url 'accounts_dashboard:accounts-detail' pk=customer.accounts.first.pk %}">${{ customer.accounts.first.balance }}</a>
+                        <div class="form-group" style="margin-left:10px">
+                            <input type="hidden" name="user_action" value="credit_action">
+                            <input type="hidden" name="credit_action" value="">
+                            <input type="number" class="form-control inline-block" name="amount" min="0.00" step="0.01">
+                            <input type="submit" class="btn btn-success" value="{% trans "Deposit" %}">
+                            <input type="submit" class="btn btn-danger" value="{% trans "Withdraw" %}">
+                        </div>
+                    </form>
+                {% else %}
+                    <form method="POST" class="form-inline">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <input type="hidden" name="user_action" value="make_credit_acct">
+                            <input type="submit" class="btn btn-primary" value="{% trans "Create Credit Account" %}">
+                        </div>
+                    </form>
+                {% endif %}
                 </td>
             </tr>
             <tr>
@@ -97,8 +124,52 @@
 {% block tab_nav %}
     <ul class="nav nav-tabs">
         <li class="active"><a href="#user_orders" data-toggle="tab">{% trans "Orders" %}</a></li>
+        <li><a href="#user_transfers" data-toggle="tab">{% trans "Transactions" %}</a></li>
     </ul>
 {% endblock %}
 
-{% block user_addresses %}{% endblock %}
+{% block user_addresses %}
+    <div id="user_transfers" class="tab-pane">
+        <div class="panel-heading">{% trans "Transaction overview" %}</div>
+        <div class="panel-body table-responsive">
+            {% if customer.accounts %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>{% trans "Transfer" %}</th>
+                        <th>{% trans "Amount" %}</th>
+                        <th>{% trans "Description" %}</th>
+                        <th>{% trans "Authorised by" %}</th>
+                        <th>{% trans "Date" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for txn in customer.accounts.first.transactions.all|order_by:'-date_created' %}
+                    <tr>
+                        <td><a href="{% url 'accounts_dashboard:transfers-detail' txn.transfer.reference %}">{{ txn.transfer }}</a></td>
+                        <td>{{ txn.amount|currency }}</td>
+                        <td>{{ txn.transfer.description|default:"-" }}</td>
+                        <td>{{ txn.transfer.user|default:"-" }}</td>
+                        <td>{{ txn.date_created }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% include "oscar/dashboard/partials/pagination.html" %}
+            {% else %}
+            <p>{% trans "No transactions." %}</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
 {% block user_reviews %}{% endblock %}
+
+{% block onbodyload %}
+{{block.super}}
+
+$("#change_credit input[type='submit']").click(function() {
+    $("#change_credit input[name='credit_action']").val($(this).val().toLowerCase());
+});
+
+{% endblock %}
