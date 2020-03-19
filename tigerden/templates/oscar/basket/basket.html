@@ -1,5 +1,9 @@
 {% extends "oscar/basket/basket.html" %}
 
+{% block navigation %}
+    {% include "oscar/partials/nav_primary.html" with no_mobile_basket=True %}
+{% endblock %}
+
 {% block minibasket %}{% endblock %}
 
 {% block content %}

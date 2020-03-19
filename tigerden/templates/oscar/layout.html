@@ -9,28 +9,38 @@
     <style>
         body {
             margin: 5px;
-            /*background-color: #333333;*/
         }
 
-        /*
-        .brand {
-            background-color: #eeeeee;
-            border-radius: 6px 6px 0 0;
-            padding-top: 5px;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 5px rgba(0,0,0,0.24);
+        ::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            background-color: #101010;
         }
-        */
+
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+            background-color: #fcba04;
+        }
 
         .btn-primary {
             background-color: #fcba04;
-            border-color: black !important;
+            border-color: #101010 !important;
+            color: #101010;
         }
 
-        .btn-primary:hover, .btn-primary:active, .btn-primary:focus {
+        .btn-primary:hover, 
+        .btn-primary:active, 
+        .btn-primary:focus {
             background-color: #101010 !important;
         }
 
-        .btn-primary.disabled:hover, .btn-primary.disabled:active {
+        .btn-primary.disabled:hover, 
+        .btn-primary.disabled:active {
             background-color: #101010 !important;
         }
         
@@ -56,11 +66,13 @@
             color: darkorange;
         }
 
-        a:hover, a:focus {
+        a:hover, 
+        a:focus {
             color: #101010;
         }
 
-        .btn-link:hover, .btn-link:focus {
+        .btn-link:hover, 
+        .btn-link:focus {
             color: #101010;
         }
         
@@ -69,7 +81,31 @@
             box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 3px 5px rgba(0,0,0,0.24);
         }
 
-        .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
+        .navbar-form {
+            padding: 0px;
+        }
+
+        .navbar-nav > li > a {
+            padding-bottom: 0px;
+        }
+
+        .navbar-nav > li > h4 {
+            color: #9d9d9d; 
+            margin-top: 13px; 
+            margin-bottom: -3px; 
+            margin-left: 15px;
+        }
+
+        .navbar-nav > li > h4:hover span {
+            color: #fff; 
+        }
+
+        .nav-pills > li.active > a, 
+        .nav-pills > li.active > a:hover, 
+        .nav-pills > li.active > a:focus, 
+        .btn-primary:active, 
+        .btn-primary:hover,
+        .btn-primary:focus {
             color: darkorange;
             background-color: #101010;
         }
@@ -139,6 +175,9 @@
                     });                    
                 } else if (newReqs.find(".row").length) {
                     newReqs.hide();
+                    $("#empty").hide("normal", function() {
+                        $("#empty").remove();
+                    });
                     $("#mini_reqs_cart").prepend(newReqs);
                     newReqs.show("normal");
                 }

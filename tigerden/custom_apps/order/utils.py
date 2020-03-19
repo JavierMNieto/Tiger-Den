@@ -1,15 +1,14 @@
-from oscar.apps.order.utils import OrderCreator as CustomOrderCreator
-
+from oscar.apps.order import utils
+from decimal import Decimal as D
 from oscar.apps.order.signals import order_placed
 from django.conf import settings
 from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 from oscar.core.loading import get_model
 
-
 Order = get_model('order', 'Order')
 
-class OrderCreator(CustomOrderCreator):
+class OrderCreator(utils.OrderCreator):
     """
     Places the order by writing out the various models
     """
@@ -25,7 +24,7 @@ class OrderCreator(CustomOrderCreator):
         if basket.is_empty:
             raise ValueError(_("Empty baskets cannot be submitted"))
         if not order_number:
-            generator = OrderNumberGenerator()
+            generator = utils.OrderNumberGenerator()
             order_number = generator.order_number(basket)
         if not status and hasattr(settings, 'OSCAR_INITIAL_ORDER_STATUS'):
             status = getattr(settings, 'OSCAR_INITIAL_ORDER_STATUS')
