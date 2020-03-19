@@ -18,7 +18,7 @@ from django.urls import NoReverseMatch, reverse
 
 EventHandler = get_class('order.processing', 'EventHandler')
 CommunicationEventType = get_model('customer', 'CommunicationEventType')
-bank = acct_models.Account.objects.get(name__exact="Bank")
+bank = acct_models.Account.objects.get(id=4)
 
 class Order(AbstractOrder):
     group_order = models.ForeignKey(
@@ -129,13 +129,13 @@ class Order(AbstractOrder):
         account = self.user.accounts.first()
         self.total_credit = max(min(min(account.balance, self.max_alloc_credit), self.total_excl_tax), 0.00)
         if self.total_credit > 0.00:
-            transfer = None
             try:
                 transfer = facade.transfer(
                     source=account,
                     destination=bank,
                     amount=self.total_credit,
                     user=self.supervisor,
+                    merchant_reference=self.number,
                     description=_("Credit Spent on Order #" + self.number)
                 )
             except acct_exceptions.AccountException as e:
@@ -233,6 +233,7 @@ class Line(AbstractLine):
                     destination=self.order.user.accounts.first(),
                     amount=amt,
                     user=self.order.supervisor,
+                    merchant_reference=self.number,
                     description=_("Credit Refund on Order #" + self.order.number)
                 )
     

@@ -12,6 +12,9 @@ class CustomerConfig(apps.CustomerConfig):
         super().ready()
         
         self.confirm_supervisor_view = get_class('customer.views', 'SupervisorActView')
+        
+        self.transfer_history_view = get_class('customer.views', 'AccountTransactionsView')
+        self.transfer_detail_view = get_class('customer.views', 'TransferDetailView')
     
     def get_urls(self):
         urls = [
@@ -55,23 +58,31 @@ class CustomerConfig(apps.CustomerConfig):
                 login_required(self.order_line_view.as_view()),
                 name='order-line'),
 
+            # Transfer histort
+            url(r'^transfers/$',
+                login_required(self.transfer_history_view.as_view()),
+                name='transfer-list'),
+            url(r'^transfers/(?P<reference>[A-Z0-9]{32})/$',
+                login_required(self.transfer_detail_view.as_view()),
+                name='transfer'),
+
             # Address book
-            url(r'^addresses/$',
-                login_required(self.address_list_view.as_view()),
-                name='address-list'),
-            url(r'^addresses/add/$',
-                login_required(self.address_create_view.as_view()),
-                name='address-create'),
-            url(r'^addresses/(?P<pk>\d+)/$',
-                login_required(self.address_update_view.as_view()),
-                name='address-detail'),
-            url(r'^addresses/(?P<pk>\d+)/delete/$',
-                login_required(self.address_delete_view.as_view()),
-                name='address-delete'),
-            url(r'^addresses/(?P<pk>\d+)/'
-                r'(?P<action>default_for_(billing|shipping))/$',
-                login_required(self.address_change_status_view.as_view()),
-                name='address-change-status'),
+            # url(r'^addresses/$',
+            #     login_required(self.address_list_view.as_view()),
+            #     name='address-list'),
+            # url(r'^addresses/add/$',
+            #     login_required(self.address_create_view.as_view()),
+            #     name='address-create'),
+            # url(r'^addresses/(?P<pk>\d+)/$',
+            #     login_required(self.address_update_view.as_view()),
+            #     name='address-detail'),
+            # url(r'^addresses/(?P<pk>\d+)/delete/$',
+            #     login_required(self.address_delete_view.as_view()),
+            #     name='address-delete'),
+            # url(r'^addresses/(?P<pk>\d+)/'
+            #     r'(?P<action>default_for_(billing|shipping))/$',
+            #     login_required(self.address_change_status_view.as_view()),
+            #     name='address-change-status'),
 
             # Email history
             url(r'^emails/$',

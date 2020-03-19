@@ -39,7 +39,8 @@ class PaymentMethodForm(forms.Form):
     
     """
     payment_method = forms.ChoiceField()
-    max_credit_allocation = forms.FloatField(widget=forms.NumberInput(attrs={'min': '0.00'}), required=False)
+    max_credit_allocation = forms.DecimalField(widget=forms.NumberInput(attrs={'min': '0.00'}), 
+                                               required=False, decimal_places=2, max_digits=12)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
