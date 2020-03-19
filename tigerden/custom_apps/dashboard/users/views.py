@@ -12,7 +12,7 @@ from decimal import Decimal as D
 User = get_user_model()
 
 supervisor_group = Group.objects.get(name='Supervisor')
-bank = models.Account.objects.get(name__exact="Bank")
+bank = models.Account.objects.get(id=4)
 
 class UserDetailView(views.UserDetailView):
     actions = ('change_supervisor', 'credit_action', 'make_credit_acct')
