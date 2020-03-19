@@ -1,0 +1,8 @@
+{% load i18n %}{% blocktrans with order_number=order.number %}
+We are sorry to inform you that your order #{{ order_number }} is unable
+to be processed during this class period.{% endblocktrans %}
+
+{% if status_url %}
+{% blocktrans %}You can view the status of this order at the below URL:
+{{ status_url }}{% endblocktrans %}
+{% endif %}
