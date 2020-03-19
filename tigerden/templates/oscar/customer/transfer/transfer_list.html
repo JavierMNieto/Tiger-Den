@@ -1,0 +1,95 @@
+{% extends "oscar/customer/baseaccountpage.html" %}
+{% load currency_filters %}
+{% load i18n %}
+{% load static %}
+
+{% block styles %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static "oscar/js/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static "oscar/css/datetimepicker.css" %}" />
+{% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+    <script src="{% static "oscar/js/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js" %}"></script>
+    <script src="{% static "oscar/js/bootstrap-datetimepicker/locales/bootstrap-datetimepicker.all.js" %}"></script>
+{% endblock %}
+
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{{ homepage_url }}">{% trans 'Home' %}</a>
+        </li>
+        <li>
+            <a href="{% url 'customer:summary' %}">{% trans 'Account' %}</a>
+        </li>
+        <li class="active">{% trans 'Transfer history' %}</li>
+    </ul>
+{% endblock %}
+
+{% block tabcontent %}
+
+    {% if transfers %}
+        <div class="well">
+            <h2>{% trans "Send Tiger Den Credit" %}</h2>
+            <form method="post" class="form-horizontal">
+                {% csrf_token %}
+                {% include "oscar/partials/form_fields.html" with form=gift_form style='horizontal' %}
+                <input type="hidden" name="action" value="send_credits">
+                <div class="form-group">
+                    <div class="col-sm-offset-4 col-sm-8">
+                        <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Sending...' %}">{% trans 'Send credits' %}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    {% endif %}
+
+    {% if transfers or form.is_bound %}
+        <div class="well">
+            <h2>{% trans "Filter" %}</h2>
+            <form method="get" class="form-horizontal">
+                {% include "oscar/partials/form_fields.html" with form=form style='horizontal' %}
+                <div class="form-group">
+                    <div class="col-sm-offset-4 col-sm-8">
+                        <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Filtering...' %}">{% trans 'Filter results' %}</button>
+                        <a href="{% url 'customer:transfer-list' %}" class="btn btn-default">{% trans 'Reset' %}</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    {% endif %}
+
+    <h2>{{ queryset_description }}</h2>
+    {% if transfers %}
+        <div class="table-container table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>{% trans "Transfer" %}</th>
+                        <th>{% trans "Amount" %}</th>
+                        <th>{% trans "Description" %}</th>
+                        <th>{% trans "Authorised by" %}</th>
+                        <th>{% trans "Date" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for txn in transfers %}
+                    <tr>
+                        <td><a href="{% url 'customer:transfer' txn.transfer.reference %}">{{ txn.transfer }}</a></td>
+                        <td>{{ txn.amount|currency }}</td>
+                        <td>{{ txn.transfer.description|default:"-" }}</td>
+                        <td>{{ txn.transfer.user.label|default:"-" }}</td>
+                        <td>{{ txn.date_created }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% include "oscar/partials/pagination.html" %}
+    {% else %}
+        <p>{% trans "No transfers found." %}</p>
+    {% endif %}
+
+{% endblock tabcontent %}
