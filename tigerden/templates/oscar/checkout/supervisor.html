@@ -17,8 +17,9 @@
 <div class="col-sm-4"></div>
 <form action="{% url 'checkout:supervisor-info' %}" method="post" id="supervisor_info" autocomplete="off" class="col-sm-4">
     {% csrf_token %}
-    {{ form }}
-    <div class="col-sm-offset-4 col-sm-8" style="margin-top: 5px;">
+    <input type="search" placeholder="Search for Supervisor" class="form-control" id="supervisor_search">
+    {% include "oscar/partials/form_fields.html" with form=form %}
+    <div class="col-sm-offset-3 col-sm-8" style="margin-top: 5px;">
         <button type="submit" class="btn btn-lg btn-primary" data-loading-text="{% trans 'Continuing...' %}">{% trans "Continue" %}</button>
         {% trans "or" %} <a href="{% url 'basket:summary' %}">{% trans "return to basket" %}</a>
     </div>
@@ -29,12 +30,23 @@
 {% block extrascripts %}
 <script>
     $(function() {
-        $('#supervisor_info').submit(function(event) {
-            var value = $('input[name="supervisor"]').val();
-            $('input[name="supervisor"]').val($('#list__supervisor-list [value="' + value + '"]').data('value'));
+        $("#supervisor_search").keyup(function (e) {
+            var text = $(this).val(); 
+            var options = $("#id_supervisor option").each(function() {
+                var option = $(this); 
+                var optionText = option.text(); 
+                var lowerOptionText = optionText.toLowerCase();
+                var lowerText = text.toLowerCase(); 
+                var regex = new RegExp("^" + text, "i");
+                var match = optionText.match(regex); 
+                var contains = lowerOptionText.indexOf(lowerText) != -1;
+                if (match || contains) {
+                    $("#id_supervisor").val(option.val());
+                    return false;
+                }
+                $("#id_supervisor").attr("selectedIndex", 0);
+            });
         });
     });
 </script>
 {% endblock %}
-
-{% block reqs_script %}{% endblock %}
