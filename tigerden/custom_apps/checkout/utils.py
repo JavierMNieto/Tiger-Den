@@ -24,3 +24,13 @@ class CheckoutSessionData(utils.CheckoutSessionData):
         def is_payment_method_set(self):
             return self._get('payment', 'method', False)
         
+        def set_max_credit(self, max_credit):
+            self._check_namespace('submission')
+            self._set('submission', 'max_credit_allocation', max_credit)
+        
+        def max_credit(self):
+            return self._get('submission', 'max_credit_allocation')
+        
+        def is_max_credit(self):
+            return self._get('submission', 'max_credit_allocation', False)
+        

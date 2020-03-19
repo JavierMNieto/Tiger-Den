@@ -3,11 +3,14 @@ from django.views import generic
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext as _
 from oscar.core.loading import get_classes, get_class
+from oscar.apps.payment.models import SourceType, Source
 from django.contrib import messages
 from django.utils.http import urlquote
 from django.contrib.auth import login
 from django.shortcuts import redirect
+from django.conf import settings
 from django import http
+from decimal import Decimal as D
 
 logger = views.logger
 
@@ -80,11 +83,17 @@ class PaymentMethodView(views.CheckoutSessionMixin, generic.FormView):
     
     def form_valid(self, form):
         self.checkout_session.pay_by(form.cleaned_data['payment_method'])
+        self.checkout_session.set_max_credit(form.cleaned_data['max_credit_allocation'])
         return super().form_valid(form)
     
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated and request.user.is_supervisor() and request.basket.is_empty:
             self.success_url = reverse_lazy('checkout:order-requests')
+            return self.get_success_response()
+
+        if not request.user.is_authenticated:
+            self.checkout_session.pay_by('0')
+            self.checkout_session.set_max_credit('0.00')
             return self.get_success_response()
         
         return super().get(request, *args, **kwargs)
@@ -102,6 +111,58 @@ class PaymentDetailsView(views.PaymentDetailsView):
         'check_order_has_location']
     
     preview = True
+    
+    def get_preview_sources(self, user, total):
+        sources = []
+        allocated = 0
+        
+        if int(self.checkout_session.payment_method()) == 1:
+            allocated = self.get_credit_used(user, total)
+            sources.append({
+                'type': 'Tiger Den Credit',
+                'amount': allocated,
+                'currency': settings.OSCAR_DEFAULT_CURRENCY
+            })
+        
+        if total - allocated > 0:
+            sources.append({
+                'type': 'Cash (%s)' % settings.OSCAR_DEFAULT_CURRENCY,
+                'amount': total - allocated,
+                'currency': settings.OSCAR_DEFAULT_CURRENCY
+            })
+        
+        return sources
+    
+    def get(self, request, *args, **kwargs):
+        kwargs['sources'] = self.get_preview_sources(request.user, request.basket.total_excl_tax)
+        return super().get(request, *args, **kwargs)
+    
+    def render_preview(self, request, **kwargs):
+        """
+        Show a preview of the order.
+
+        If sensitive data was submitted on the payment details page, you will
+        need to pass it back to the view here so it can be stored in hidden
+        form inputs.  This avoids ever writing the sensitive data to disk.
+        """
+        self.preview = True
+        kwargs['sources'] = self.get_preview_sources(request.user, request.basket.total_excl_tax)
+        ctx = self.get_context_data(**kwargs)
+        return self.render_to_response(ctx)
+    
+    def get_credit_used(self, user, total):
+        return D(max(min(min(user.get_bal(), D(self.checkout_session.max_credit())), total), 0.00))
+    
+    def handle_payment(self, order_number, total, user, **kwargs):        
+        for source in self.get_preview_sources(user, total.excl_tax):
+            source_type, created = SourceType.objects.get_or_create(name=source['type'])
+            
+            source = Source(source_type=source_type,
+                            currency=source['currency'],
+                            amount_allocated=source['amount'])
+            self.add_payment_source(source)
+
+        self.add_payment_event('pre-auth', total.excl_tax)
     
     def submit(self, user, basket, shipping_address, shipping_method,  # noqa (too complex (10))
                shipping_charge, billing_address, order_total,
@@ -167,7 +228,7 @@ class PaymentDetailsView(views.PaymentDetailsView):
         signals.pre_payment.send_robust(sender=self, view=self)
 
         try:
-            self.handle_payment(order_number, order_total, **payment_kwargs)
+            self.handle_payment(order_number, order_total, user, **payment_kwargs)
         except RedirectRequired as e:
             # Redirect required (e.g. PayPal, 3DS)
             logger.info("Order #%s: redirecting to %s", order_number, e.url)

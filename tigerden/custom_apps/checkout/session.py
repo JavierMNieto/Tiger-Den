@@ -76,7 +76,9 @@ class CheckoutSessionMixin(session.CheckoutSessionMixin):
             'billing_address': billing_address,
             'order_total': total,
             'order_kwargs': {
-                'supervisor_id': self.checkout_session.supervisor()
+                'supervisor_id': self.checkout_session.supervisor(),
+                'total_credit': 0.00 if int(self.checkout_session.payment_method() or 0) == 1 else None,
+                'max_alloc_credit': self.checkout_session.max_credit() or 0.00
             },
             'payment_kwargs': {
                 'method': self.checkout_session.payment_method()

@@ -4,6 +4,19 @@
 {% load image_tags %}
 {% load purchase_info_tags %}
 
+{% block extrastyles %}
+{{block.super}}
+<style>
+    .progress-bar-warning {
+        background-color: #ffc107!important;
+    }
+
+    .text-warning {
+        color: #ffc107!important;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
     {% if error %}
         <div class="alert alert-danger">
@@ -89,3 +102,5 @@
     {% endblock place_order %}
 
 {% endblock content %}
+
+{% block reqs_script %}{% endblock %}

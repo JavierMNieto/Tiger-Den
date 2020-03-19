@@ -45,7 +45,7 @@ class GroupOrderListView(views.OrderListView):
     context_object_name = 'grouporders'
     template_name = 'oscar/dashboard/grouporders/grouporder_list.html'
     form_class = GroupOrderSearchForm
-    actions = ('download_selected_orders', 'change_grouporder_statuses', 'change_grouporder_status')
+    actions = ('download_selected_orders', 'change_grouporder_statuses', 'change_grouporder_status', 'product_out_of_stock')
     paginate_by = None
     
     def dispatch(self, request, *args, **kwargs):
@@ -82,8 +82,11 @@ class GroupOrderListView(views.OrderListView):
         self.form = self.form_class(self.request.GET)
         if not self.form.is_valid():
             return queryset
-
+        
         data = self.form.cleaned_data
+
+        if not self.request.GET:
+            data['date_from'] = datetime.datetime.fromtimestamp(datetime.datetime.now().timestamp() - 36000) # past 10 hours
 
         if data['order_number']:
             queryset = self.base_queryset.filter(
@@ -170,7 +173,18 @@ class GroupOrderListView(views.OrderListView):
                     request, _("Unable to change group order status as the requested "
                                 "new status is not valid"))
         return render(request, "oscar/dashboard/grouporders/grouporders.html", {"grouporders": [grouporder]})
-    
+
+    def product_out_of_stock(self, request, grouporder):
+        if isinstance(grouporder, list):
+            grouporder = grouporder[0]
+        
+        lines = grouporder.get_all_lines().filter(product_id=request.POST.get('product', -1))
+        
+        for line in lines:
+            line.out_of_stock()
+        
+        return render(request, "oscar/dashboard/grouporders/grouporders.html", {"grouporders": [GroupOrder.objects.get(pk=grouporder.pk)]})
+
     def download_selected_orders(self, request, grouporders):
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename=%s' \

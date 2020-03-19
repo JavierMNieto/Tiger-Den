@@ -1,8 +1,5 @@
-#from oscar.apps.checkout.forms import 
 from django import forms
 from django.contrib.auth.models import User
-
-from . import fields
 
 def get_supervisors_tuple():
     supervisors = ()
@@ -12,7 +9,7 @@ def get_supervisors_tuple():
         if name.strip() == "":
             name = user.email
         supervisors += ((user.pk, name),)
-    
+        
     return supervisors
 
 class SupervisorForm(forms.Form):
@@ -20,14 +17,13 @@ class SupervisorForm(forms.Form):
     Form to get user's supervisor
     """
     
-    supervisor = forms.CharField(required=True)
-    
+    supervisor = forms.ChoiceField(
+        label="Supervisor",
+        required=True,
+        choices=get_supervisors_tuple())
+
     def __init__(self, *args, **kwargs):
         super(SupervisorForm, self).__init__(*args, **kwargs)
-        
-        self.fields['supervisor'].widget = fields.ListTextWidget(data_list=get_supervisors_tuple(), 
-                                                                 name='supervisor-list', 
-                                                                 attrs={'class': 'form-control'})
 
 class LocationForm(forms.Form):
     """
@@ -42,9 +38,10 @@ class PaymentMethodForm(forms.Form):
     """
     
     """
-    payment_method = forms.ChoiceField() # change css
+    payment_method = forms.ChoiceField()
+    max_credit_allocation = forms.FloatField(widget=forms.NumberInput(attrs={'min': '0.00'}), required=False)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
-        self.fields['payment_method'].choices = ((0, "Cash"), (1, "Balance"))
+        self.fields['payment_method'].choices = ((0, "Cash"), (1, "Tiger Den Credit"))

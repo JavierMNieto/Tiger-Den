@@ -15,6 +15,7 @@
             </a>
         </div>
 
+        {% if not no_mobile_basket %}
         <a class="btn btn-default navbar-btn btn-cart navbar-right visible-xs-inline-block" href="{% url 'basket:summary' %}">
             <i class="icon-shopping-cart"></i>
             {% trans "Basket" %}
@@ -25,50 +26,13 @@
             {% endif %}
             <span class="label label-warning student_cart_label" style="display: none;"></span>
         </a>
-
+        {% endif %}
 
         <div class="navbar-collapse primary-collapse collapse">
             {% block nav_dropdown %}
-                <!--
-                <ul id="browse" class="nav navbar-nav">
-                    <li class="dropdown active {% if expand_dropdown %}open{% endif %}">
-                        <a href="#" class="dropdown-toggle" {% if not expand_dropdown %} data-toggle="dropdown"{% endif %}>
-                            {% trans "Browse store" %}
-                            <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu" data-navigation="dropdown-menu">
-                            {% category_tree depth=2 as tree_categories %}
-                            <li><a tabindex="-1" href="{% url 'catalogue:index' %}">{% trans "All products" %}</a></li>
-                            {% if tree_categories %}
-                                <li class="divider"></li>
-                                {% for tree_category in tree_categories %}
-                                    {% if tree_category.has_children %}
-                                        <li class="dropdown-submenu">
-                                            <a tabindex="-1" href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a>
-                                            <ul class="dropdown-menu">
-                                            {% else %}
-                                                <li><a tabindex="-1" href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a></li>
-                                            {% endif %}
-
-                                            {% for close in tree_category.num_to_close %}
-                                                </ul></li>
-                                            {% endfor %}
-                                {% endfor %}
-                            {% endif %}
-                            <li class="divider"></li>
-                            {% block nav_dropdown_extra_items %}
-                                <li><a href="{% url 'offer:list' %}">{% trans "Offers" %}</a></li>
-                            {% endblock %}
-                        </ul>
-                    </li>
-                    {% block nav_extra %}
-                    {% endblock %}
-                </ul>
-                -->
                 {% include "oscar/partials/nav_accounts.html" %}
             {% endblock %}
             {% include "oscar/partials/search.html" %}
-            
         </div><!-- /navbar-collapse -->
     </div>
 </div><!-- /navbar -->

@@ -84,10 +84,6 @@
     </form>
 {% endblock %}
 
-{% block vouchers %}
-    <div class="col-sm-6"></div>
-{% endblock %}
-
 {% block savedbasket %}
     {% if request.user.is_authenticated and request.user.is_supervisor %}
         <div id="reqs-container">

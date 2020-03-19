@@ -1,0 +1,20 @@
+{% extends "oscar/customer/emails/base.html" %}
+{% load i18n %}
+
+{% block tbody %}
+<tr>
+    <td class="content-block">
+        <p xmlns="http://www.w3.org/1999/html">{% trans 'Hello,' %}</p>
+        <p>{% blocktrans with order_number=order.number %}We are sorry to inform you that your order #{{ order_number }} is unable
+        to be processed during this class period.{% endblocktrans %}</p>
+    </td>
+</tr>
+{% endblock %}
+
+{% if status_url %}
+    <tr>
+        <td class="content-block">
+            {% blocktrans %}You can view the status of this order by clicking <a href="{{ status_url }}" title="order status">here</a>{% endblocktrans %}
+        </td>
+    </tr>
+{% endif %}

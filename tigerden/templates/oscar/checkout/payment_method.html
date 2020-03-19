@@ -23,8 +23,16 @@
 <div class="col-sm-4"></div>
 <form action="{% url 'checkout:payment-method' %}" method="post" autocomplete="off" class="col-sm-4">
     {% csrf_token %}
+    {% if request.user.is_authenticated %}
+    <div class="col-sm-offset-3">
+        <h4>
+            Tiger Den Credit: <strong>${{request.user.get_bal}}</strong> 
+            <i class="icon-question-sign" data-toggle="tooltip" title="Obtain Tiger Den Credit at Tiger Den Cashier"></i>
+        </h4>
+    </div>
+    {% endif %}
     {% include "oscar/partials/form_fields.html" with form=form %}
-    <div class="col-sm-offset-4 col-sm-8">
+    <div class="col-sm-offset-3 col-sm-8">
         <button type="submit" class="btn btn-lg btn-primary" data-loading-text="{% trans 'Continuing...' %}">{% trans "Continue" %}</button>
         {% trans "or" %} <a href="{% url 'basket:summary' %}">{% trans "return to basket" %}</a>
     </div>
@@ -32,4 +40,24 @@
 <div class="col-sm-4"></div>
 {% endblock payment-method %}
 
-{% block reqs_script %}{% endblock %}
+{% block onbodyload %}
+    {{block.super}}
+    {% block reqs_script %}{% endblock %}
+    $("#id_max_credit_allocation").closest(".form-group").hide();
+    {% if request.user.is_authenticated %}
+        $("#id_payment_method").change(function() {
+            if ($(this).val() == 1) {
+                $("#id_max_credit_allocation").closest(".form-group").show("normal");
+            } else {
+                $("#id_max_credit_allocation").closest(".form-group").hide("normal");
+            }
+        });
+
+        const bal = {{request.user.get_bal}};
+        $("#id_max_credit_allocation").val(bal);
+        if (bal >= 0.01) {
+            $("#id_payment_method").val(1);
+            $("#id_payment_method").trigger("change");
+        }
+    {% endif %}
+{% endblock %}

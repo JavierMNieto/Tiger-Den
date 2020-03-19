@@ -14,6 +14,10 @@
             position: sticky;
             top: 0;
         }
+
+        .modal input[type="checkbox"] {
+            display: none;
+        }
     </style>
 {% endblock %}
 
@@ -114,7 +118,7 @@
 
             {% block order_list %}
             <div class="table-responsive" style="overflow-y: auto !important; max-height: 500px; display: inline-block; width: 100%;">
-                <table class="table table-bordered table-hover">
+                <table class="table table-bordered">
                     <caption>
                         <h3 class="pull-left"><i class="icon-shopping-cart icon-large"></i>
                             {% if search_filters %}
@@ -146,7 +150,7 @@
                     </thead>
                     
                     <tbody id="grouporders" class="container">
-                        {% include "oscar/dashboard/grouporders/grouporders.html" with grouporders=grouporders  %}
+                        {% include "oscar/dashboard/grouporders/grouporders.html" with grouporders=grouporders %}
                     </tbody>
                 </table>
             </div>
@@ -194,37 +198,38 @@
         {{block.super}}
         <script>
             function changeGroupOrderStatus(id, status) {
-                $("input[type='checkbox']").prop('checked', false);
-                //$(`.grouporder[data-id='${id}'] input[type='checkbox]`).prop('checked', true);
-                var data = $("#orders_form").serialize();
-                data = data.substring(0, data.indexOf("&new_status="));
+                return new Promise(function (resolve) {
+                    $("input[type='checkbox']").prop('checked', false);
+                    //$(`.grouporder[data-id='${id}'] input[type='checkbox]`).prop('checked', true);
+                    var data = $("#orders_form").serialize();
+                    data = data.substring(0, data.indexOf("&new_status="));
 
-                data += `&new_status=${status}&action=change_grouporder_status&selected_grouporder=${id}`;
+                    data += `&new_status=${status}&action=change_grouporder_status&selected_grouporder=${id}`;
 
-                $.ajax({
-                    method: "POST",
-                    data: data,
-                    success: function(resp) {
-                        $("#group_" + id).replaceWith(resp);
-                    }
+                    $.ajax({
+                        method: "POST",
+                        data: data,
+                        success: function(resp) {
+                            $("#group_" + id).replaceWith(resp);
+                            return resolve();
+                        }
+                    });
                 });
             }
 
-            function PrintInvoice(id, isConfirm=false) {
+            async function PrintInvoice(id, isConfirm=false) {
+                if (isConfirm) {
+                    await changeGroupOrderStatus(id, "Processed");
+                }
+
                 var printWindow = window.open('', 'PRINT', 'height=600,width=800');
                 printWindow.document.write('<html><head><title> Group Order #' + $("#group_" + id).attr("data-number") + '</title>');
-                printWindow.document.write('<style media="print">input[type="checkbox"] {display: none;} footer {page-break-after: always;}</style></head><body>');
+                printWindow.document.write('<style>@media print {input[type="checkbox"], .btn-container {display: none;} footer {page-break-after: always;}}</style></head><body>');
                 printWindow.document.write($("#print_fulfill_" + id).html());
                 printWindow.document.write('<footer></footer>');
                 printWindow.document.write($("#print_invoice_" + id).html());
                 printWindow.document.write('</body></html>');
                 
-                if (isConfirm) {
-                    printWindow.onafterprint = function(event) {
-                        changeGroupOrderStatus(id, "Processed");
-                    };
-                }
-
                 printWindow.document.close(); // necessary for IE >= 10
                 printWindow.focus(); // necessary for IE >= 10*/
 
@@ -232,6 +237,23 @@
                 printWindow.close();
 
                 return true;
+            }
+
+            function productOutofStock(groupId, productId) {
+                $("input[type='checkbox']").prop('checked', false);
+                var data = $("#orders_form").serialize();
+
+                data += `&action=product_out_of_stock&selected_grouporder=${groupId}&product=${productId}`;
+
+                $.ajax({
+                    method: "POST",
+                    data: data,
+                    success: function(resp) {
+                        $(".modal-backdrop").remove();
+                        $("#group_" + groupId).replaceWith(resp);
+                        $("#print_modal_" + groupId).modal("show");
+                    }
+                });
             }
         </script>
     {% endblock %}

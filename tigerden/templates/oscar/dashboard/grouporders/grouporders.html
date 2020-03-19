@@ -17,7 +17,7 @@
         </td>
         <td>{{ grouporder.location }}</td>
         <td>{{ grouporder.date_placed }}</td>
-        <td class="btn-group" style="width: 100%; {% if grouporder.status != 'Processed' and grouporder.status != 'Cancelled' %} margin-right: -10rem; {% endif %}">
+        <td style="{% if grouporder.status != 'Processed' and grouporder.status != 'Cancelled' %} width: 300px; {% else %} width: 250px; {% endif %}">
             <!--
             <a class="btn btn-info" data-toggle="collapse" data-parent="#grouporders" href=".orders_{{grouporder.id}}">{% trans "View" %}</a>
             -->

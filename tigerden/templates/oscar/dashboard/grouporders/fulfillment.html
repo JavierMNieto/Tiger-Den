@@ -1,5 +1,7 @@
 {% load static %}
+{% load i18n %}
 {% load currency_filters %}
+
 <head>
     <link rel="stylesheet" type="text/css" href="{% static 'oscar/css/dashboard.css'  %}" media="print">
 </head>
@@ -27,19 +29,19 @@
                     <table class="table table-bordered table-condensed">
                         <tbody>
                             <tr>
-                                <th>Supervisor</th>
+                                <th>{% trans "Supervisor" %}</th>
                                 <td>{{ grouporder.user.label }}</td>
                             </tr>
                             <tr>
-                                <th>Location</th>
+                                <th>{% trans "Location" %}</th>
                                 <td>{{ grouporder.location }}</td>
                             </tr>
                             <tr>
-                                <th>Time of Purchase</th>
+                                <th>{% trans "Time of Purchase" %}</th>
                                 <td>{{ grouporder.date_placed }}</td>
                             </tr>
                             <tr>
-                                <th>Total</th>
+                                <th>{% trans "Total" %}</th>
                                 <td>{{ grouporder.total_excl_tax|currency:grouporder.currency }}</td>
                             </tr>
                         </tbody>
@@ -51,15 +53,22 @@
         <div class="container" style="width: 8.25in;">
             <table class="table table-bordered table-condensed">
                 <thead>
-                    <th>Quantity</th>
-                    <th>Product</th>
-                    <th>Options</th>
+                    <th>{% trans "Quantity" %}</th>
+                    <th>{% trans "Product" %}</th>
+                    <th>{% trans "Options" %}</th>
                 </thead>
                 <tbody>
                     {% for key, line in grouporder.get_all_lines_sorted.items %}
                         <tr>
                             <td><span style="font-size: large;">&#9744;</span>{{ line.quantity }}</td>
-                            <td>{{ line.title }}</td>
+                            <td>
+                                {{ line.title }}
+                            {% if grouporder.status != "Cancelled" and not grouporder.is_expired %}
+                                <span class="btn-container">
+                                    <btn class="btn btn-danger" onclick="productOutofStock({{grouporder.id}}, {{line.product_id}})">{% trans "Out of Stock" %}</btn>
+                                </span>
+                            {% endif %}
+                            </td>
                             <td class="text-center" style="max-width: 2in;">
                             {% for attribute in line.attributes %}
                                 {% if attribute.value != "" %}

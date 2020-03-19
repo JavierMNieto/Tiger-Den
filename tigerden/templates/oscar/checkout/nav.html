@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load custom_tags %}
 
 <div class="navbar navbar-static-top navbar-inverse nav-checkout">
     <ul class="nav navbar-nav">
@@ -9,12 +10,12 @@
                         <a href="{% url 'checkout:delivery-info' %}">
                             <span class="visible-inline-sm icon-chevron-right"></span>
                             <span>
-                                {% trans "1. Delivery Info" %}
+                                {% trans "1. Delivery" %}
                             </span>
                         </a>
                     {% else %}
                         <span class="navbar-text">
-                            {%  trans "1. Delivery Info" %}
+                            {%  trans "1. Delivery" %}
                         </span>
                     {% endif %}
                 </li>
@@ -40,18 +41,18 @@
                     <a href="{% url 'checkout:order-requests' %}">
                         <span class="visible-inline-sm icon-chevron-right"></span>
                         <span>
-                            {% trans "2. Order Requests" %}
+                            {% trans "2. Orders" %}
                         </span>
                     </a>
                 {% else %}
                     <span class="navbar-text">
-                        {%  trans "2. Order Requests" %}
+                        {%  trans "2. Orders" %}
                     </span>
                 {% endif %}
             </li>
             {% else %}
             <li class="step2 {% if step == 2 %}active{% else %}{% if step == 3 %}previous{% else %}{% if step > 2 %}visited{% else %}disabled{% endif %}{% endif %}{% endif %} ">
-                {% if step == 2 or step == 3 %}
+                {% if step == 2 or step == 3 and request.user.is_authenticated %}
                     <a href="{% url 'checkout:payment-method' %}">
                         <span class="visible-inline-sm icon-chevron-right"></span>
                         <span>
@@ -64,12 +65,27 @@
                     </span>
                 {% endif %}
             </li>
+            {% endif %}
             <li class="step3 {% if step == 3 or step == 4 %}active{% else %}disabled{% endif %} ">
                 <span class="navbar-text">
                     {% trans "3. Confirmation" %}
                 </span>
             </li>
-            {% endif %}
         {% endspaceless %}
     </ul><!-- /navbar-inner -->
+    {% if request.user.is_authenticated and request.user.is_supervisor %}
+    <ul class="nav navbar-nav navbar-right" style="width:50%; margin-bottom: -15px; margin-top: 5px;">
+        <li class="col-sm-offset-0 col-xs-offset-6 col-xs-12">
+            {% ongoing_group_orders as ongoing %}
+            <strong class="text-{{ ongoing.css }}">
+                {{ ongoing.status }}
+            </strong>
+            <div class="progress">
+                <div class="progress-bar progress-bar-{{ ongoing.css }} progress-bar-striped active" role="progressbar" aria-valuenow="{{ ongoing.percent }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ ongoing.percent }}%;">
+                    <em style="color:#333333;white-space: nowrap; margin-left: 5px;">{{ ongoing.count }} ongoing orders</em>
+                </div>
+            </div>
+        </li>
+    </ul>
+    {% endif %}
 </div><!-- /navbar -->

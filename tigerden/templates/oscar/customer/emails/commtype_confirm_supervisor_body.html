@@ -1,0 +1,7 @@
+{% load i18n %}
+<p>
+    {% trans 'Thank you for registering. Please click on the link to confirm your registration as a supervisor,' %}
+</p>
+<p>
+    https://{{ site }}{% url 'customer:activate-supervisor' uidb64=uid token=token %}
+</p>
