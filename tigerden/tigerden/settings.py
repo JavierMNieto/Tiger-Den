@@ -71,6 +71,8 @@ INSTALLED_APPS = [
     'oscar.apps.search',
     'oscar.apps.voucher',
     'oscar.apps.wishlists',
+    'oscar_accounts.apps.AccountsConfig',
+    'oscar_accounts.dashboard.apps.AccountsDashboardConfig',
     #'oscar.apps.dashboard',
     'custom_apps.dashboard.apps.DashboardConfig',
     'oscar.apps.dashboard.reports',
@@ -209,6 +211,9 @@ STATICFILES_DIRS = (
 
 OSCAR_SHOP_NAME = "Tiger Den"
 OSCAR_SHOP_TAGLINE = "Where Everyone Belongs"
+
+SUPERVISOR_EMAIL_HOST = "ecusd7"
+
 #OSCAR_HOMEPAGE = reverse_lazy('catalogue:index')
 OSCAR_HIDDEN_FEATURES = ["wishlists", "reviews"]
 
@@ -223,6 +228,9 @@ OSCAR_PRODUCTS_PER_PAGE = 100
 #OSCAR_STOCK_ALERTS_PER_PAGE
 OSCAR_DASHBOARD_ITEMS_PER_PAGE = 100
 
+MAX_ONGOING_GROUP_ORDERS = 15
+ONGOING_STATUS = 'Being processed'
+
 # Oscar Order Settings
 # https://django-oscar.readthedocs.io/en/stable/ref/settings.html#order-settings
 
@@ -231,6 +239,7 @@ OSCAR_INITIAL_LINE_STATUS = 'Waiting to be accepted'
 OSCAR_ORDER_STATUS_PIPELINE = {
     'Waiting to be accepted': ('Being processed', 'Cancelled',),
     'Being processed': ('Processed', 'Cancelled',),
+    'Processed': ('Cancelled',),
     'Cancelled': (),
 }
 
@@ -241,11 +250,12 @@ OSCAR_ORDER_STATUS_CASCADE = {
     'Processed': 'Processed'
 }
 
+OSCAR_LINE_STATUS_PIPELINE = OSCAR_ORDER_STATUS_PIPELINE
+
 # Oscar Checkout Settings
 # https://django-oscar.readthedocs.io/en/stable/ref/settings.html#checkout-settings
 
 OSCAR_ALLOW_ANON_CHECKOUT = True
-OSCAR_REQUIRED_ADDRESS_FIELDS = ('name', 'location') # 
 
 # Oscar Review Settings
 # https://django-oscar.readthedocs.io/en/stable/ref/settings.html#review-settings
@@ -359,6 +369,28 @@ OSCAR_DASHBOARD_NAVIGATION = [
             {
                 'label': _('Stock alert requests'),
                 'url_name': 'dashboard:user-alert-list',
+            },
+        ]
+    },
+    {
+        'label': 'Accounts',
+        'icon': 'icon-globe',
+        'children': [
+            {
+                'label': 'Accounts',
+                'url_name': 'accounts_dashboard:accounts-list',
+            },
+            {
+                'label': 'Transfers',
+                'url_name': 'accounts_dashboard:transfers-list',
+            },
+            {
+                'label': 'Deferred income report',
+                'url_name': 'accounts_dashboard:report-deferred-income',
+            },
+            {
+                'label': 'Profit/loss report',
+                'url_name': 'accounts_dashboard:report-profit-loss',
             },
         ]
     },
