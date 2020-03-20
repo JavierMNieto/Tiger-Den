@@ -1,0 +1,11 @@
+{% load i18n %}
+{% load currency_filters %}
+{% spaceless %}
+<form method="post" style="margin-bottom: 0px;">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="undo_transfer">
+    <input type="hidden" name="pk" value="{{transfer.pk}}">
+    Successfully sent {{transfer.amount|currency}} to {{transfer.destination.primary_user.label}}!
+    <button type="submit" class="btn btn-danger" data-loading-text="{% trans 'Undoing...' %}">{% trans 'Undo transfer' %}</button>
+</form>
+{% endspaceless %}
