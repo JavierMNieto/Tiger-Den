@@ -1,5 +1,5 @@
-{% load currency_filters %}
 {% load i18n %}
+{% load currency_filters %}
 {% load image_tags %}
 
 {% spaceless %}
@@ -8,7 +8,9 @@
         {% for req in reqs %}
             <li class="order-req" data-req-id="{{req.id}}" style="margin: 0;">
                 <h5 style="margin: 0;">
-                    {% if req.guest_email %}
+                    {% if req.guest_name %}
+                        {{ req.guest_name }}
+                    {% elif req.guest_email %}
                         {{ req.guest_email }}
                     {% elif req.user %}
                         {{ req.user.label }}
@@ -31,7 +33,8 @@
                             </div>
                         </div>
                         <div class="col-sm-5">
-                            <p><strong><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></strong></p>
+                            <p><strong><a href="{{ line.product.get_absolute_url }}">{{ line.product.title }}</a></strong></p>
+                            {% include "oscar/basket/partials/line_attributes.html" with line=line %}
                         </div>
                         <div class="col-sm-1 align-center"><strong>{% trans "Qty" %}</strong> {{ line.quantity }}</div>
                         <div class="col-sm-3 price_color align-right">{{ line.unit_price_excl_tax|currency:request.basket.currency }}</div>

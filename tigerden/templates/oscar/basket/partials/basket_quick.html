@@ -1,8 +1,9 @@
+{% load i18n %}
 {% load history_tags %}
 {% load basket_tags %}
 {% load currency_filters %}
 {% load image_tags %}
-{% load i18n %}
+{% load custom_tags %}
 
 <ul class="basket-mini-item list-unstyled">
     {% if request.basket.num_lines %}
@@ -20,7 +21,8 @@
                         </div>
                     </div>
                     <div class="col-sm-5">
-                        <p><strong><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></strong></p>
+                        <p><strong><a href="{{ line.product.get_absolute_url }}">{{ line.product.title }}</a></strong></p>
+                        {% include 'oscar/basket/partials/line_attributes.html' with line=line %}
                     </div>
                     <div class="col-sm-1 align-center"><strong>{% trans "Qty" %}</strong> {{ line.quantity }}</div>
                     <div class="col-sm-3 price_color align-right">{{ line.unit_price_excl_tax|currency:request.basket.currency }}</div>
