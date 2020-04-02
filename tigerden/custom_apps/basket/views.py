@@ -75,6 +75,6 @@ class RequestCancelView(View):
             messages.error(request, _("No order found with id '%s'") % order_id)
         else:
             order.set_status('Cancelled')
-            messages.info(request, _("%s Order '%s' has been cancelled") % (order.user.label(), order.number))
+            messages.info(request, _("%s Order '%s' has been cancelled") % (order.user_label, order.number))
 
         return response
