@@ -64,13 +64,7 @@
                         <tr class="text-dark">
                             <th colspan="4">
                                 Customer: 
-                                {% if order.guest_email %}
-                                    {{ order.guest_email }} (guest)
-                                {% elif order.user %}
-                                    {{ order.user.label }}
-                                {% else %}
-                                    User has deleted his or her account.
-                                {% endif %}
+                                {{ req.user_label }}
                                 <span style="float: right;">
                                 {% if order.status == "Cancelled" %}
                                     Cancelled

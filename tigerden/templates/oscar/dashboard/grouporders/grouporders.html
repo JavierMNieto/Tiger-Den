@@ -29,13 +29,13 @@
             {% endif %}
             <btn class="btn btn-primary" data-toggle="modal" data-target="#print_modal_{{grouporder.id}}">View Invoice</btn>
             <div class="modal fade" id="print_modal_{{grouporder.id}}" style="overflow: auto;">
-                <div class="modal-sm col-lg-offset-3">
-                    <div class="modal-body" id="print_fulfill_{{grouporder.id}}">
+                <div class="modal-sm" style="width: 8.5in; margin: 0 auto;">
+                    <div id="print_fulfill_{{grouporder.id}}">
                         {% include "oscar/dashboard/grouporders/fulfillment.html" with grouporder=grouporder %}
                     </div>
                 </div>
-                <div class="modal-sm col-lg-offset-3">
-                    <div class="modal-body" id="print_invoice_{{grouporder.id}}">
+                <div class="modal-sm" style="width: 8.5in; margin: 0 auto;">
+                    <div id="print_invoice_{{grouporder.id}}">
                         {% include "oscar/dashboard/grouporders/invoice.html" with grouporder=grouporder %}
                     </div>
                 </div>

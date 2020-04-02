@@ -16,7 +16,13 @@
                     <td>
                         {% trans "Customer checked out as a guest." %}
                     </td>
-                    <td>{{ order.email }}</td>
+                    <td>
+                        {% if order.guest_name %}
+                            {{ order.guest_name }}
+                        {% else %}
+                            {{ order.guest_email }}
+                        {% endif %}
+                    </td>
                 </tr>
             {% elif order.user %}
                 <tr>
@@ -30,7 +36,7 @@
                     <td>{{ order.user.email|default:"-" }}</td>
                 </tr>
             {% else %}
-                <tr><td>{% trans "Customer has deleted their account." %}</td></tr>
+                <tr><td>{% trans "Customer has deleted his or her account." %}</td></tr>
             {% endif %}
         </table>
     </div>

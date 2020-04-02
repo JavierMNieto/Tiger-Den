@@ -96,7 +96,9 @@
                                     <tr class="{% if order.status == "Processed" %} success {% elif order.status == "Cancelled" %} danger {% else %} info {% endif %}">
                                         <td><a href="{% url 'dashboard:order-detail' number=order.number %}">#{{ order.number }}</a></td>
                                         <td>
-                                            {% if order.guest_email %}
+                                            {% if order.guest_name %}
+                                                {{ order.guest_name }} (guest)
+                                            {% elif order.guest_email %}
                                                 {{ order.guest_email }} (guest)
                                             {% elif order.user %}
                                                 <a href="{% url 'dashboard:user-detail' pk=order.user.pk %}">{{order.user.label|default:"-"}}</a>
