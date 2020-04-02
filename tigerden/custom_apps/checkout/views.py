@@ -48,9 +48,9 @@ class IndexView(views.IndexView):
                     reverse('checkout:supervisor-info'), # guest stage 1
                     urlquote(email)
                 )
+            else:
+                self.checkout_session.set_guest_name(form.cleaned_data['guest_name'])
         else:
-            #if self.request.user.is_supervisor():
-            #    self.success_url = 'checkout:supervisor-info' # change to supervisor stage 1
             user = form.get_user()
             login(self.request, user)
 

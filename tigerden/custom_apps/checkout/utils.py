@@ -1,6 +1,12 @@
 from oscar.apps.checkout import utils
 
 class CheckoutSessionData(utils.CheckoutSessionData):
+        def set_guest_name(self, name):
+            self._set('guest', 'name', name)
+
+        def get_guest_name(self):
+            return self._get('guest', 'name')
+    
         def set_supervisor(self, supervisor_pk):
             self._check_namespace('submission')
             self._set('submission', 'supervisor', supervisor_pk)
