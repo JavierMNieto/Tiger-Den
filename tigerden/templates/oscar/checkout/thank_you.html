@@ -123,9 +123,9 @@
 
             <div class="basket-title">
                 <div class="row">
-                    <p class="col-sm-9 h4">{% trans "Items purchased" %}</p>
-                    <p class="col-sm-1 h4 align-center">{% trans "Quantity" %}</p>
-                    <p class="col-sm-2 h4 align-right">{% trans "Total" %}</p>
+                    <p class="col-sm-9 col-xs-6 h4">{% trans "Item" %}</p>
+                    <p class="col-sm-1 col-xs-3 h4 align-center">{% trans "Quantity" %}</p>
+                    <p class="col-sm-2 col-xs-3 h4 align-right">{% trans "Total" %}</p>
                 </div>
             </div>
 
@@ -142,21 +142,19 @@
                                 {% endwith %}
                             </div>
                         </div>
-                        <div class="col-sm-7">
-                            <h3><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h3>
-                            <p>
-                            {% if line.upc %}{{ line.upc }}<br/>{% endif %}
-                            {% if line.est_dispatch_date %}
-                                {% blocktrans with date=line.est_dispatch_date %}
-                                    Estimated dispatch: <strong>{{ date }}</strong>
-                                {% endblocktrans %}
-                            {% endif %}
+                        <div class="col-sm-7 col-xs-7">
+                            <h3 style="margin-bottom: 5px;">
+                                <a href="{{ line.product.get_absolute_url }}">{{ line.product.title }}</a>
+                            </h3>
+                            <p>{% if line.upc %}{{ line.upc }}<br/>{% endif %}</p>
+                            {% include "oscar/basket/partials/line_attributes.html" with line=line %}
+                        </div>
+                        <div class="col-sm-1 col-xs-2 align-center">
+                            <p style="margin-top: 10px;">
+                                {{ line.quantity }}
                             </p>
                         </div>
-                        <div class="col-sm-1 align-center">
-                            {{ line.quantity }}
-                        </div>
-                        <div class="col-sm-2 align-right">
+                        <div class="col-sm-2 col-xs-3 align-right">
                             <p class="price_color">
                                 {% if show_tax_separately %}
                                     {{ line.line_price_before_discounts_excl_tax|currency:order.currency }}

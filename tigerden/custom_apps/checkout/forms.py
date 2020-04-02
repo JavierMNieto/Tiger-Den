@@ -1,5 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
+from django.utils.translation import gettext as _
+from oscar.apps.checkout import forms as c_forms
 
 def get_supervisors_tuple():
     supervisors = ()
@@ -11,6 +13,9 @@ def get_supervisors_tuple():
         supervisors += ((user.pk, name),)
         
     return supervisors
+
+class GatewayForm(c_forms.GatewayForm):
+    guest_name = forms.CharField(max_length=25, required=False, label=_('My name is '))
 
 class SupervisorForm(forms.Form):
     """
@@ -39,8 +44,8 @@ class PaymentMethodForm(forms.Form):
     
     """
     payment_method = forms.ChoiceField()
-    max_credit_allocation = forms.DecimalField(widget=forms.NumberInput(attrs={'min': '0.00'}), 
-                                               required=False, decimal_places=2, max_digits=12)
+    max_credit_allocation = forms.FloatField(widget=forms.NumberInput(attrs={'min': '0.00'}), 
+                                               required=False, min_value=0.00)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

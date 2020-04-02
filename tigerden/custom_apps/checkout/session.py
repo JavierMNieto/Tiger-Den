@@ -104,4 +104,6 @@ class CheckoutSessionMixin(session.CheckoutSessionMixin):
                 and 'guest_email' not in submission['order_kwargs']):
             email = self.checkout_session.get_guest_email()
             submission['order_kwargs']['guest_email'] = email
+            name  = self.checkout_session.get_guest_name()
+            submission['order_kwargs']['guest_name'] = name
         return submission

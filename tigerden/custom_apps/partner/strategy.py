@@ -18,7 +18,9 @@ days_of_week = [
 
 class StockRequired(strategy.StockRequired):
     def availability_policy(self, product, stockrecord):
-        if (product.limited_day != datetime.today().weekday() and product.limited_day > -1):
+        if product.is_supervisor_only and (not self.user or not self.user.is_supervisor()):
+            return Unavailable(message='Only Available to Supervisors')
+        if product.limited_day != datetime.today().weekday() and product.limited_day > -1:
             return Unavailable(message='Only Available ' + days_of_week[product.limited_day] + 's')
         if not stockrecord:
             return Unavailable()

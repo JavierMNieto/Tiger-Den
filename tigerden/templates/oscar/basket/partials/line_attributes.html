@@ -1,0 +1,13 @@
+{% load i18n %}
+
+<ul class="options">
+    {% for attr in line.attributes.all %}
+        {% if attr.value.strip != "" %}
+            {% if attr.option.type == "boolean" and attr.value == "True" %}
+                <li>{{attr.option}}</li>
+            {% elif attr.option.type != "boolean" %}
+                <li>{{attr.option}}: {{attr.value}}</li>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+</ul>

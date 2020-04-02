@@ -25,10 +25,11 @@
                             {% endwith %}
                         </div>
                         <div class="col-sm-4">
-                            <h3><a href="{{ product.get_absolute_url }}">{{ line.description }}</a></h3>
-                            <p class="availability {{ session.availability.code }}">{{ session.availability.message }}</p>
+                            <h3 style="margin-bottom: 2px;"><a href="{{ product.get_absolute_url }}">{{ product.title }}</a></h3>
+                            <p class="availability {{ session.availability.code }}" style="margin-bottom: 0;">{{ session.availability.message }}</p>
+                            {% include "oscar/basket/partials/line_attributes.html" with line=line %}
                         </div>
-                        <div class="col-sm-3 col-xs-8">
+                        <div class="col-sm-3 col-xs-9">
                             <div class="checkout-quantity">
                                 <div class="input-group  {% if form.errors %}error{% endif %}">
                                     {% render_field form.quantity class+="form-control" %}
@@ -49,7 +50,6 @@
                                         {% endfor %}
                                     {% endfor %}
                                 </div>
-
                         </div>
                         <div class="col-sm-1 hidden-xs">
                             {% if not line.unit_price_incl_tax and not line.unit_tax_excl_tax %}

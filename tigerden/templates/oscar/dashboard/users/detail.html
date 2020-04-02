@@ -34,7 +34,7 @@
             <tr>
                 <th>{% trans "Supervisor" %}?</th>
                 <td>
-                    {{ customer.is_supervisor|yesno:_("True,False") }}
+                    {{ customer.is_supervisor|yesno:_("Yes,No") }}
                     <form method="POST" style="display: inline-block;">
                         {% csrf_token %}
                         <input type="hidden" name="user_action" value="change_supervisor">

@@ -123,6 +123,7 @@ class AccountTransactionsView(PageTitleMixin, PostActionMixin, generic.ListView)
                     amount = D(data["amount"])
                     if not amount.is_nan() and amount.is_finite() and amount > 0.00:
                         if amount <= account.balance:
+                            transfer = None
                             try:
                                 transfer = facade.transfer(
                                     source=account,

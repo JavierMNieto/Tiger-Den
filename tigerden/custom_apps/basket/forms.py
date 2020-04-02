@@ -9,13 +9,15 @@ Option = get_model('catalogue', 'option')
 
 def _option_text_field(attribute):
     return forms.CharField(label=attribute.name,
-                           required=attribute.required)
+                           required=attribute.required,
+                           max_length=50)
 
 
 def _option_textarea_field(attribute):
     return forms.CharField(label=attribute.name,
                            widget=forms.Textarea(),
-                           required=attribute.required)
+                           required=attribute.required,
+                           max_length=200)
 
 
 def _option_integer_field(attribute):

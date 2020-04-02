@@ -27,6 +27,8 @@ class Order(AbstractOrder):
         related_name='orders',
         on_delete=models.CASCADE)
     
+    guest_name = models.CharField(_("Name"), max_length=25, blank=True)
+    
     supervisor = models.ForeignKey(
         AUTH_USER_MODEL, related_name='order_requests', null=True, blank=True,
         verbose_name=_("Supervisor"), on_delete=models.SET_NULL)
@@ -92,7 +94,7 @@ class Order(AbstractOrder):
                 self.complete_payment()
             self.group_order.check_all_order_statuses(self.number)
         
-        if new_status == "Cancelled":
+        if new_status == "Cancelled" and code is not None:
             self.send_cancellation_message(code)            
     set_status.alters_data = True
 
@@ -129,12 +131,13 @@ class Order(AbstractOrder):
         account = self.user.accounts.first()
         self.total_credit = max(min(min(account.balance, self.max_alloc_credit), self.total_excl_tax), 0.00)
         if self.total_credit > 0.00:
+            transfer = None
             try:
                 transfer = facade.transfer(
                     source=account,
                     destination=bank,
                     amount=self.total_credit,
-                    user=self.supervisor,
+                    #user=self.supervisor,
                     merchant_reference=self.number,
                     description=_("Credit Spent on Order #" + self.number)
                 )
@@ -200,6 +203,16 @@ class Order(AbstractOrder):
         
         ctx['status_url'] = 'http://%s%s' % (ctx['site'].domain, path)
         return ctx
+    
+    @property
+    def user_label(self):
+        if self.guest_name:
+            return self.guest_name + " (Guest)"
+        if self.guest_email:
+            return self.guest_email + " (Guest)"
+        if self.user:
+            return self.user.label()
+        return "Customer has deleted his or her account"
 
 class Line(AbstractLine):
     
@@ -232,8 +245,8 @@ class Line(AbstractLine):
                     source=bank,
                     destination=self.order.user.accounts.first(),
                     amount=amt,
-                    user=self.order.supervisor,
-                    merchant_reference=self.number,
+                    #user=self.order.supervisor,
+                    merchant_reference=self.order.number,
                     description=_("Credit Refund on Order #" + self.order.number)
                 )
     
