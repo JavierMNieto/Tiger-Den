@@ -3,16 +3,14 @@ from django.http import HttpResponse, JsonResponse, Http404, HttpResponseRedirec
 from django.shortcuts import redirect
 from .forms import TeacherForm
 
-# Create your views here.
 
 def index(request):
     return render(request, "home/index.html")
 
-def teacher(request):
-    """Teacher page where they may register into the system 
 
-        TODO: Response page on registration and email verification.
-              Or, find a way to connect ecusd7 district accounts to Django
+def teacher(request):
+    """
+        Teacher page where they may register into the system 
     """
     if request.method == 'POST':
         form = TeacherForm(request.POST)

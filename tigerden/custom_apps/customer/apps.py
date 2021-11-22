@@ -5,17 +5,21 @@ from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
 from django.views import generic
 
+
 class CustomerConfig(apps.CustomerConfig):
     name = 'custom_apps.customer'
 
     def ready(self):
         super().ready()
-        
-        self.confirm_supervisor_view = get_class('customer.views', 'SupervisorActView')
-        
-        self.transfer_history_view = get_class('customer.views', 'AccountTransactionsView')
-        self.transfer_detail_view = get_class('customer.views', 'TransferDetailView')
-    
+
+        self.confirm_supervisor_view = get_class(
+            'customer.views', 'SupervisorActView')
+
+        self.transfer_history_view = get_class(
+            'customer.views', 'AccountTransactionsView')
+        self.transfer_detail_view = get_class(
+            'customer.views', 'TransferDetailView')
+
     def get_urls(self):
         urls = [
             # Login, logout and register doesn't require login
@@ -31,7 +35,7 @@ class CustomerConfig(apps.CustomerConfig):
                 login_required(self.change_password_view.as_view()),
                 name='change-password'),
             url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
-                login_required(self.confirm_supervisor_view.as_view()), 
+                login_required(self.confirm_supervisor_view.as_view()),
                 name='activate-supervisor'),
 
             # Profile
@@ -163,7 +167,7 @@ class CustomerConfig(apps.CustomerConfig):
             url(r'wishlists/(?P<key>[a-z0-9]+)/lines/(?P<line_pk>\d+)/move-to/'
                 r'(?P<to_key>[a-z0-9]+)/$',
                 login_required(self.wishlists_move_product_to_another_view
-                            .as_view()),
+                               .as_view()),
                 name='wishlists-move-product-to-another')]
 
         return self.post_process_urls(urls)

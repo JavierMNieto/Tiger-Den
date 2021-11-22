@@ -13,6 +13,7 @@ from custom_apps.customer.token import acct_activation_token
 
 User = get_user_model()
 
+
 class RegisterUserMixin(mixins.RegisterUserMixin):
     def register_user(self, form):
         """
@@ -58,17 +59,19 @@ class RegisterUserMixin(mixins.RegisterUserMixin):
         auth_login(self.request, user)
 
         if not user.accounts.exists():
-            account = Account.objects.create(primary_user_id=user.id, name=user.username)
+            account = Account.objects.create(
+                primary_user_id=user.id, name=user.username)
             account.save()
-        
+
         return user
-    
+
     def send_supervisor_email(self, user):
         code = "CONFIRM_SUPERVISOR"
         ctx = {'user': user,
                'site': get_current_site(self.request),
-               'uid':urlsafe_base64_encode(force_bytes(user.pk)),
-               'token':acct_activation_token.make_token(user),}
-        messages = mixins.CommunicationEventType.objects.get_and_render(code, ctx)
+               'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+               'token': acct_activation_token.make_token(user), }
+        messages = mixins.CommunicationEventType.objects.get_and_render(
+            code, ctx)
         if messages and messages['body']:
             mixins.Dispatcher().dispatch_user_messages(user, messages)

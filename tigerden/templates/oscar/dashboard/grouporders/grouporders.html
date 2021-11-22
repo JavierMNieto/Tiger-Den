@@ -22,10 +22,10 @@
             <a class="btn btn-info" data-toggle="collapse" data-parent="#grouporders" href=".orders_{{grouporder.id}}">{% trans "View" %}</a>
             -->
             {% if grouporder.status != "Processed" and grouporder.status != "Cancelled" %} 
-                <btn class="btn btn-success" onclick="PrintInvoice('{{grouporder.id}}', true)">Print Order(s)</btn>
+                <btn class="btn btn-success" onclick="PrintInvoice('{{grouporder.id}}', true)">Print</btn>
                 <btn class="btn btn-danger" onclick="changeGroupOrderStatus('{{grouporder.id}}', 'Cancelled')">Cancel</btn>
             {% else %}
-                <btn class="btn btn-primary" onclick="PrintInvoice('{{grouporder.id}}')">Print Order(s)</btn>
+                <btn class="btn btn-primary" onclick="PrintInvoice('{{grouporder.id}}')">Print</btn>
             {% endif %}
             <btn class="btn btn-primary" data-toggle="modal" data-target="#print_modal_{{grouporder.id}}">View Invoice</btn>
             <div class="modal fade" id="print_modal_{{grouporder.id}}" style="overflow: auto;">

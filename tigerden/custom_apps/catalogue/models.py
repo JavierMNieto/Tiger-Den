@@ -9,12 +9,13 @@ from django.core.files.base import File
 from oscar.core.validators import non_python_keyword
 from oscar.core.loading import get_model
 
+
 class Product(AbstractProduct):
     is_supervisor_only = models.BooleanField(
         _('Is for supervisors only?'),
         default=False,
-        help_text=_("Only show product as available to supervisors"))
-    
+        help_text=_("Only show product availability to supervisors"))
+
     LIMITED_DAY_CHOICES = [
         (-1, 'Every Day'),
         (0, 'Monday'),
@@ -26,18 +27,22 @@ class Product(AbstractProduct):
         (6, 'Sunday'),
     ]
 
-    limited_day = models.IntegerField(_("Time of product's availability"), choices=LIMITED_DAY_CHOICES, default=-1, help_text=_("Only show this product on a specific day."))
+    limited_day = models.IntegerField(_("Time of product's availability"), choices=LIMITED_DAY_CHOICES,
+                                      default=-1, help_text=_("Only show this product on a specific day."))
 
-class ProductClass(AbstractProductClass):    
+
+class ProductClass(AbstractProductClass):
     # Not implementing shipping
-    requires_shipping = models.BooleanField(_("Requires shipping?"), default=False)
-    
+    requires_shipping = models.BooleanField(
+        _("Requires shipping?"), default=False)
+
+
 class Option(models.Model):
     """
     Defines an option for a product class. (For example, number_of_pages for
     a 'book' class)
     """
-    
+
     name = models.CharField(_('Name'), max_length=128)
     code = models.SlugField(
         _('Code'), max_length=128,
@@ -77,7 +82,7 @@ class Option(models.Model):
         (FILE, _("File")),
         (IMAGE, _("Image")),
     )
-    
+
     type = models.CharField(
         choices=TYPE_CHOICES, default=TYPE_CHOICES[0][0],
         max_length=20, verbose_name=_("Type"))
@@ -91,7 +96,7 @@ class Option(models.Model):
         verbose_name=_("Option Group"),
         help_text=_('Select an option group if using type "Option" or "Multi Option"'))
     required = models.BooleanField(_('Required'), default=False)
-    
+
     class Meta:
         app_label = 'catalogue'
         ordering = ['code']
@@ -244,5 +249,6 @@ class Option(models.Model):
         if value and not isinstance(value, File):
             raise ValidationError(_("Must be a file field"))
     _validate_image = _validate_file
-    
-from oscar.apps.catalogue.models import *
+
+
+from oscar.apps.catalogue.models import *  # noqa isort:skip

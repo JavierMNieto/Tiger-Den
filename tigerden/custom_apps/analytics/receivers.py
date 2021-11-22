@@ -2,6 +2,7 @@ from oscar.apps.analytics.receivers import _record_products_in_order, _record_us
 from oscar.core.loading import get_model
 UserRecord = get_model('analytics', 'UserRecord')
 
+
 def _record_user_order(user, order):
     try:
         record = UserRecord.objects.filter(user=user)
@@ -20,6 +21,7 @@ def _record_user_order(user, order):
     except IntegrityError:      # pragma: no cover
         logger.error(
             "IntegrityError in analytics when recording a user order.")
+
 
 @receiver(order_placed)
 def receive_order_placed(sender, order, user, **kwargs):

@@ -1,5 +1,6 @@
 from oscar.apps.order.processing import EventHandler as CustomEventHandler
 
+
 class EventHandler(CustomEventHandler):
     def handle_order_status_change(self, order, new_status, note_msg=None, code=None):
         """
