@@ -16,6 +16,7 @@ days_of_week = [
     'Sunday'
 ]
 
+
 class StockRequired(strategy.StockRequired):
     def availability_policy(self, product, stockrecord):
         if product.is_supervisor_only and (not self.user or not self.user.is_supervisor()):
@@ -29,6 +30,7 @@ class StockRequired(strategy.StockRequired):
         else:
             return StockRequiredAvailability(
                 stockrecord.net_stock_level)
+
 
 class Selector(object):
     """
@@ -56,6 +58,7 @@ class Selector(object):
         # Default to the backwards-compatible strategy of picking the first
         # stockrecord but charging zero tax.
         return Default(request)
+
 
 class Default(strategy.UseFirstStockRecord, StockRequired, strategy.NoTax, strategy.Structured):
     """

@@ -13,6 +13,8 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.contrib.auth.models import Group, User
+from custom_apps.partner.models import Partner
 from django.contrib import admin
 from django.urls import include, path
 from django.conf.urls import url
@@ -26,15 +28,13 @@ from . import views
 urlpatterns = [
     # The Django admin is not officially supported; expect breakage.
     # Nonetheless, it's often useful for debugging.
-    path('admin/', admin.site.urls), # REMOVE IN PRODUCTION
-    
+    path('admin/', admin.site.urls),  # REMOVE IN PRODUCTION
+
     path('i18n/', include('django.conf.urls.i18n')),
     path('', include(apps.get_app_config('oscar').urls[0])),
     url(r'^dashboard/accounts/', apps.get_app_config('accounts_dashboard').urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-from custom_apps.partner.models import Partner
-from django.contrib.auth.models import Group, User
 
 def one_time_startup():
     """
@@ -45,9 +45,10 @@ def one_time_startup():
     if not Group.objects.filter(name__iexact='Supervisor').exists():
         Group.objects.create(name='Supervisor')
     supervisor_group = Group.objects.get(name='Supervisor')
-    
+
     for staff in User.objects.filter(is_staff=True):
         supervisor_group.user_set.add(staff)
+
 
 if ('makemigrations' not in sys.argv and 'migrate' not in sys.argv):
     one_time_startup()

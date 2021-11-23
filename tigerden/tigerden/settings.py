@@ -17,10 +17,14 @@ from django.utils.translation import gettext_lazy as _
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-location = lambda x: os.path.join(os.path.dirname(os.path.realpath(__file__)), x)
+
+def location(x): return os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), '..', x)
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
+
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = ')st-+2u+a=d@ky-$i8^c6196yq--axn@@==b(0g4oo-5ibck^('
@@ -33,7 +37,6 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
-    #'menu.apps.MenuConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,51 +49,39 @@ INSTALLED_APPS = [
 
     'custom_apps',
 
-    'oscar',
-    #'oscar.apps.analytics',
+    'oscar.config.Shop',
     'custom_apps.analytics.apps.AnalyticsConfig',
-    #'oscar.apps.checkout',
     'custom_apps.checkout.apps.CheckoutConfig',
-    #'oscar.apps.address',
     'custom_apps.address.apps.AddressConfig',
-    #'oscar.apps.shipping',
     'custom_apps.shipping.apps.ShippingConfig',
-    #'oscar.apps.catalogue',
     'custom_apps.catalogue.apps.CatalogueConfig',
-    'oscar.apps.catalogue.reviews',
-    #'oscar.apps.partner',
+    'oscar.apps.catalogue.reviews.apps.CatalogueReviewsConfig',
+    'oscar.apps.communication.apps.CommunicationConfig',
     'custom_apps.partner.apps.PartnerConfig',
-    #'oscar.apps.basket',
     'custom_apps.basket.apps.BasketConfig',
-    'oscar.apps.payment',
-    'oscar.apps.offer',
-    #'oscar.apps.order',
+    'oscar.apps.payment.apps.PaymentConfig',
+    'oscar.apps.offer.apps.OfferConfig',
     'custom_apps.order.apps.OrderConfig',
-    #'oscar.apps.customer',
     'custom_apps.customer.apps.CustomerConfig',
-    'oscar.apps.search',
-    'oscar.apps.voucher',
-    'oscar.apps.wishlists',
+    'oscar.apps.search.apps.SearchConfig',
+    'oscar.apps.voucher.apps.VoucherConfig',
+    'oscar.apps.wishlists.apps.WishlistsConfig',
     'oscar_accounts.apps.AccountsConfig',
     'oscar_accounts.dashboard.apps.AccountsDashboardConfig',
-    #'oscar.apps.dashboard',
     'custom_apps.dashboard.apps.DashboardConfig',
-    'oscar.apps.dashboard.reports',
-    #'oscar.apps.dashboard.users',
+    'oscar.apps.dashboard.reports.apps.ReportsDashboardConfig',
     'custom_apps.dashboard.users.apps.UsersDashboardConfig',
-    #'oscar.apps.dashboard.orders',
     'custom_apps.dashboard.orders.apps.OrdersDashboardConfig',
     'custom_apps.dashboard.grouporders.apps.GroupOrdersDashboardConfig',
-    #'oscar.apps.dashboard.catalogue',
     'custom_apps.dashboard.catalogue.apps.CatalogueDashboardConfig',
-    'oscar.apps.dashboard.offers',
-    'oscar.apps.dashboard.partners',
-    'oscar.apps.dashboard.pages',
-    'oscar.apps.dashboard.ranges',
-    'oscar.apps.dashboard.reviews',
-    'oscar.apps.dashboard.vouchers',
-    'oscar.apps.dashboard.communications',
-    'oscar.apps.dashboard.shipping',
+    'oscar.apps.dashboard.offers.apps.OffersDashboardConfig',
+    'oscar.apps.dashboard.partners.apps.PartnersDashboardConfig',
+    'oscar.apps.dashboard.pages.apps.PagesDashboardConfig',
+    'oscar.apps.dashboard.ranges.apps.RangesDashboardConfig',
+    'oscar.apps.dashboard.reviews.apps.ReviewsDashboardConfig',
+    'oscar.apps.dashboard.vouchers.apps.VouchersDashboardConfig',
+    'oscar.apps.dashboard.communications.apps.CommunicationsDashboardConfig',
+    'oscar.apps.dashboard.shipping.apps.ShippingDashboardConfig',
 
     # 3rd-party apps that oscar depends on
     'widget_tweaks',
@@ -120,7 +111,7 @@ ROOT_URLCONF = 'tigerden.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ["templates"],
+        'DIRS': [location('templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -130,15 +121,20 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'oscar.apps.search.context_processors.search_form',
                 'oscar.apps.checkout.context_processors.checkout',
-                'oscar.apps.customer.notifications.context_processors.notifications',
+                'oscar.apps.communication.notifications.context_processors.notifications',
                 'oscar.core.context_processors.metadata',
             ],
             'libraries':{
                 'custom_tags': 'templatetags.custom_tags'
             },
+            'debug': DEBUG,
         },
     },
 ]
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/dev/ref/settings/#default-auto-field
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 WSGI_APPLICATION = 'tigerden.wsgi.application'
 
@@ -200,10 +196,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-MEDIA_ROOT = location('public/media')
+#MEDIA_ROOT = location('public/media')
+MEDIA_ROOT = location('tigerden/public/media')
 STATIC_ROOT = location('public/static')
 STATICFILES_DIRS = (
-  os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'static'),
 )
 
 # Oscar Display Settings
@@ -219,13 +216,13 @@ OSCAR_HIDDEN_FEATURES = ["wishlists", "reviews"]
 
 # DEFAULT TO 20
 OSCAR_PRODUCTS_PER_PAGE = 100
-#OSCAR_OFFERS_PER_PAGE
-#OSCAR_REVIEWS_PER_PAGE
-#OSCAR_NOTIFICATIONS_PER_PAGE
-#OSCAR_EMAILS_PER_PAGE
-#OSCAR_ORDERS_PER_PAGE
-#OSCAR_ADDRESSES_PER_PAGE
-#OSCAR_STOCK_ALERTS_PER_PAGE
+# OSCAR_OFFERS_PER_PAGE
+# OSCAR_REVIEWS_PER_PAGE
+# OSCAR_NOTIFICATIONS_PER_PAGE
+# OSCAR_EMAILS_PER_PAGE
+# OSCAR_ORDERS_PER_PAGE
+# OSCAR_ADDRESSES_PER_PAGE
+# OSCAR_STOCK_ALERTS_PER_PAGE
 OSCAR_DASHBOARD_ITEMS_PER_PAGE = 100
 
 MAX_ONGOING_GROUP_ORDERS = 15
@@ -288,7 +285,7 @@ OSCAR_MISSING_IMAGE_URL = MEDIA_ROOT + '/image_not_found.jpg'
 # Oscar Misc Settings
 # https://django-oscar.readthedocs.io/en/stable/ref/settings.html#misc-settings
 
-#OSCAR_GOOGLE_ANALYTICS_ID
+# OSCAR_GOOGLE_ANALYTICS_ID
 
 # Oscar Dashboard Structure
 
@@ -318,10 +315,10 @@ OSCAR_DASHBOARD_NAVIGATION = [
                 'label': _('Ranges'),
                 'url_name': 'dashboard:range-list',
             },
-            #{
+            # {
             #    'label': _('Low stock alerts'),
             #    'url_name': 'dashboard:stock-alert-list',
-            #},
+            # },
             {
                 'label': _('Options'),
                 'url_name': 'dashboard:catalogue-option-list',
@@ -425,10 +422,10 @@ OSCAR_DASHBOARD_NAVIGATION = [
                 'label': _('Email templates'),
                 'url_name': 'dashboard:comms-list',
             },
-            #{
+            # {
             #    'label': _('Reviews'),
             #    'url_name': 'dashboard:reviews-list',
-            #},
+            # },
         ]
     },
     {

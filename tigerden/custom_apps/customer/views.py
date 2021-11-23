@@ -24,17 +24,22 @@ from custom_apps.customer.token import acct_activation_token
 from .forms import TransferGiftForm
 
 User = get_user_model()
-supervisor_group = Group.objects.get(name='Supervisor')
+
+try:
+    supervisor_group = Group.objects.get(name='Supervisor')
+except:
+    supervisor_group = None
 
 PageTitleMixin = get_class('customer.mixins', 'PageTitleMixin')
 
-Account     = get_model('oscar_accounts', 'Account')
-Transfer    = get_model('oscar_accounts', 'Transfer')
+Account = get_model('oscar_accounts', 'Account')
+Transfer = get_model('oscar_accounts', 'Transfer')
 Transaction = get_model('oscar_accounts', 'Transaction')
 
 # =======
 # Account
 # =======
+
 
 class AccountAuthView(views.AccountAuthView):
     def validate_registration_form(self):
@@ -46,15 +51,17 @@ class AccountAuthView(views.AccountAuthView):
             messages.success(self.request, msg)
 
             if getattr(settings, 'SUPERVISOR_EMAIL_HOST') in user.email:
-                messages.info(self.request, self.get_supervisor_registration_message(user))
+                messages.info(
+                    self.request, self.get_supervisor_registration_message(user))
 
             return redirect(self.get_registration_success_url(form))
 
         ctx = self.get_context_data(registration_form=form)
         return self.render_to_response(ctx)
-    
+
     def get_supervisor_registration_message(self, user):
         return _("To become a supervisor, please confirm the email sent to " + user.email)
+
 
 class SupervisorActView(generic.RedirectView):
     url = settings.LOGIN_REDIRECT_URL
@@ -62,23 +69,26 @@ class SupervisorActView(generic.RedirectView):
 
     def get(self, request, *args, **kwargs):
         uidb64 = kwargs['uidb64']
-        token  = kwargs['token']
+        token = kwargs['token']
         try:
-            uid  = urlsafe_base64_decode(uidb64)
+            uid = urlsafe_base64_decode(uidb64)
             user = User.objects.get(pk=uid)
         except (TypeError, ValueError, OverflowError, User.DoesNotExist) as e:
             messages.error(request, message=_("Invalid user id!"))
         else:
             if acct_activation_token.check_token(user, token) and getattr(settings, 'SUPERVISOR_EMAIL_HOST', user.email):
                 supervisor_group.user_set.add(user)
-                messages.success(request, message=_("Successfully confirmed supervisor account!"))
+                messages.success(request, message=_(
+                    "Successfully confirmed supervisor account!"))
             else:
-                messages.error(request, message=_("Activation link is invalid!"))
-        return super().get(request, *args, **kwargs)	 
+                messages.error(request, message=_(
+                    "Activation link is invalid!"))
+        return super().get(request, *args, **kwargs)
 
 # ================
 # Transfer history
 # ================
+
 
 class AccountTransactionsView(PageTitleMixin, PostActionMixin, generic.ListView):
     model = Transaction
@@ -87,9 +97,10 @@ class AccountTransactionsView(PageTitleMixin, PostActionMixin, generic.ListView)
     form_class = TransferSearchForm
     description = _("All transfers")
     page_title = _('Transfer History')
-    paginate_by = getattr(settings, 'OSCAR_ACCOUNTS_DASHBOARD_ITEMS_PER_PAGE', 20)
+    paginate_by = getattr(
+        settings, 'OSCAR_ACCOUNTS_DASHBOARD_ITEMS_PER_PAGE', 20)
     active_tab = 'transfers'
-    
+
     def do_undo_transfer(self, account):
         if "pk" in self.request.POST:
             try:
@@ -99,18 +110,19 @@ class AccountTransactionsView(PageTitleMixin, PostActionMixin, generic.ListView)
             else:
                 facade.reverse(transfer,
                                description="Reversed credit gift")
-                messages.success(self.request, "Successfully reversed transfer!")
+                messages.success(
+                    self.request, "Successfully reversed transfer!")
         else:
             messages.error(self.request, "Missing transfer id!")
-        
+
         self.response = self.get(self.request)
-    
+
     def do_send_credits(self, account):
         self.gift_form = TransferGiftForm(self.request.POST)
-        
+
         if self.gift_form.is_valid():
             data = self.gift_form.cleaned_data
-            
+
             try:
                 receiver = User.objects.get(id=data["receiver"])
                 if not receiver.accounts.exists():
@@ -130,31 +142,36 @@ class AccountTransactionsView(PageTitleMixin, PostActionMixin, generic.ListView)
                                     destination=receiver_acct,
                                     amount=amount,
                                     user=self.request.user,
-                                    description=_("Credit gift to %s from %s" % (receiver.label(), self.request.user.label()))
+                                    description=_("Credit gift to %s from %s" % (
+                                        receiver.label(), self.request.user.label()))
                                 )
                             except acct_exceptions.AccountException as e:
                                 if transfer:
                                     facade.reverse(transfer)
-                                messages.error(self.request, "Unable to send credits!")
+                                messages.error(
+                                    self.request, "Unable to send credits!")
                             else:
-                                messages.success(self.request, 
-                                                render_to_string("oscar/customer/transfer/undo_transfer_form.html", 
-                                                                context={"transfer": transfer},
-                                                                request=self.request))
+                                messages.success(self.request,
+                                                 render_to_string("oscar/customer/transfer/undo_transfer_form.html",
+                                                                  context={
+                                                                      "transfer": transfer},
+                                                                  request=self.request))
                         else:
-                            messages.error(self.request, "You have insufficient credits!")
+                            messages.error(
+                                self.request, "You have insufficient credits!")
                     else:
                         messages.error(self.request, "Invalid amount set!")
                 else:
-                    messages.error(self.request, "You can't send credits to yourself!")
+                    messages.error(
+                        self.request, "You can't send credits to yourself!")
         else:
             messages.error(self.request, "Form was not valid!")
-        
+
         self.response = self.get(self.request)
-    
+
     def get_object(self):
         return get_object_or_404(Account, id=self.request.user.accounts.first().id)
-    
+
     def get(self, request, *args, **kwargs):
         self.account = self.get_object()
         return super().get(request, *args, **kwargs)
@@ -197,7 +214,8 @@ class AccountTransactionsView(PageTitleMixin, PostActionMixin, generic.ListView)
             # Add 24 hours to make search inclusive
             date_from = data['start_date']
             date_to = data['end_date'] + datetime.timedelta(days=1)
-            queryset = queryset.filter(date_created__gte=date_from).filter(date_created__lt=date_to)
+            queryset = queryset.filter(date_created__gte=date_from).filter(
+                date_created__lt=date_to)
             desc_ctx['date'] = _(" created between %(start_date)s and %(end_date)s") % {
                 'start_date': data['start_date'],
                 'end_date': data['end_date']}
@@ -228,4 +246,3 @@ class TransferDetailView(PageTitleMixin, PostActionMixin, generic.DetailView):
 
     def get_object(self, queryset=None):
         return get_object_or_404(self.model, reference=self.kwargs['reference'])
-    

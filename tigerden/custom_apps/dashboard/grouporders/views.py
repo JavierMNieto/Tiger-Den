@@ -22,7 +22,9 @@ EventHandler = get_class('order.processing', 'EventHandler')
 Order = get_model('order', 'Order')
 GroupOrder = get_model('order', 'GroupOrder')
 
-GroupOrderSearchForm = get_class('dashboard.grouporders.forms', 'GroupOrderSearchForm')
+GroupOrderSearchForm = get_class(
+    'dashboard.grouporders.forms', 'GroupOrderSearchForm')
+
 
 def queryset_grouporders_for_user(user):
     """
@@ -34,26 +36,29 @@ def queryset_grouporders_for_user(user):
     ).prefetch_related('orders', 'status_changes')
     return queryset
 
+
 def get_grouporder_for_user_or_404(user, number):
     try:
         return queryset_grouporders_for_user(user).get(number=number)
     except ObjectDoesNotExist:
         raise Http404()
 
+
 class GroupOrderListView(views.OrderListView):
     model = GroupOrder
     context_object_name = 'grouporders'
     template_name = 'oscar/dashboard/grouporders/grouporder_list.html'
     form_class = GroupOrderSearchForm
-    actions = ('download_selected_orders', 'change_grouporder_statuses', 'change_grouporder_status', 'product_out_of_stock')
+    actions = ('download_selected_orders', 'change_grouporder_statuses',
+               'change_grouporder_status', 'product_out_of_stock')
     paginate_by = None
-    
+
     def dispatch(self, request, *args, **kwargs):
         # base_queryset is equal to all orders the user is allowed to access
         self.base_queryset = queryset_grouporders_for_user(
             request.user).order_by('-date_placed')
         return ListView.dispatch(self, request, *args, **kwargs)
-    
+
     def get(self, request, *args, **kwargs):
         if 'order_number' in request.GET and request.GET.get(
                 'response_format', 'html') == 'html':
@@ -66,12 +71,12 @@ class GroupOrderListView(views.OrderListView):
             else:
                 return redirect(
                     'dashboard:grouporder-detail', number=order.number)
-        
+
         if 'last_id' in request.GET:
             return self.update_grouporders(request)
-        
+
         return ListView.get(self, request, *args, **kwargs)
-    
+
     def get_queryset(self):  # noqa (too complex (19))
         """
         Build the queryset for this list.
@@ -82,11 +87,12 @@ class GroupOrderListView(views.OrderListView):
         self.form = self.form_class(self.request.GET)
         if not self.form.is_valid():
             return queryset
-        
+
         data = self.form.cleaned_data
 
         if not self.request.GET:
-            data['date_from'] = datetime.datetime.fromtimestamp(datetime.datetime.now().timestamp() - 36000) # past 10 hours
+            data['date_from'] = datetime.datetime.fromtimestamp(
+                datetime.datetime.now().timestamp() - 36000)  # past 10 hours
 
         if data['order_number']:
             queryset = self.base_queryset.filter(
@@ -122,7 +128,7 @@ class GroupOrderListView(views.OrderListView):
             queryset = queryset.filter(
                 discounts__voucher_code=data['voucher']).distinct()
         """
-        
+
         if data['date_from'] and data['date_to']:
             date_to = datetime_combine(data['date_to'], datetime.time.max)
             date_from = datetime_combine(data['date_from'], datetime.time.min)
@@ -134,7 +140,6 @@ class GroupOrderListView(views.OrderListView):
         elif data['date_to']:
             date_to = datetime_combine(data['date_to'], datetime.time.max)
             queryset = queryset.filter(date_placed__lt=date_to)
-
 
         if data['payment_method']:
             queryset = queryset.filter(
@@ -171,18 +176,19 @@ class GroupOrderListView(views.OrderListView):
                 # here during race conditions.
                 messages.error(
                     request, _("Unable to change group order status as the requested "
-                                "new status is not valid"))
+                               "new status is not valid"))
         return render(request, "oscar/dashboard/grouporders/grouporders.html", {"grouporders": [grouporder]})
 
     def product_out_of_stock(self, request, grouporder):
         if isinstance(grouporder, list):
             grouporder = grouporder[0]
-        
-        lines = grouporder.get_all_lines().filter(product_id=request.POST.get('product', -1))
-        
+
+        lines = grouporder.get_all_lines().filter(
+            product_id=request.POST.get('product', -1))
+
         for line in lines:
             line.out_of_stock()
-        
+
         return render(request, "oscar/dashboard/grouporders/grouporders.html", {"grouporders": [GroupOrder.objects.get(pk=grouporder.pk)]})
 
     def download_selected_orders(self, request, grouporders):
@@ -207,15 +213,17 @@ class GroupOrderListView(views.OrderListView):
             row = columns.copy()
             row['number'] = grouporder.number
             row['value'] = grouporder.total_excl_tax
-            row['date'] = format_datetime(grouporder.date_placed, 'DATETIME_FORMAT')
+            row['date'] = format_datetime(
+                grouporder.date_placed, 'DATETIME_FORMAT')
             row['num_orders'] = grouporder.num_orders
             row['status'] = grouporder.status
             row['supervisor'] = grouporder.user.email
             writer.writerow(row.values())
         return response
-    
+
     def get_download_filename(self, request):
         return 'grouporders.csv'
+
 
 class GroupOrderDetailView(views.OrderDetailView):
     """
@@ -299,7 +307,7 @@ class GroupOrderDetailView(views.OrderDetailView):
         try:
             handler.handle_order_status_change(
                 order, new_status, note_msg=success_msg)
-        #except PaymentError as e:
+        # except PaymentError as e:
         #    messages.error(
         #        request, _("Unable to change order status due to "
         #                   "payment error: %s") % e)
@@ -320,7 +328,7 @@ class GroupOrderDetailView(views.OrderDetailView):
             return self.reload_page(error=_("Invalid form submission"))
 
         new_status = form.cleaned_data['new_status']
-        
+
         try:
             order.set_status(new_status)
         except order_exceptions.InvalidOrderStatus:
@@ -329,5 +337,5 @@ class GroupOrderDetailView(views.OrderDetailView):
             messages.error(
                 request, _("Unable to change order status as the requested "
                            "new status is not valid"))
-            
+
         return self.reload_page()

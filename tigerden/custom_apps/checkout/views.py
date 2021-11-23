@@ -16,8 +16,8 @@ logger = views.logger
 
 SupervisorForm, PaymentMethodForm, LocationForm \
     = get_classes('checkout.forms', ['SupervisorForm',
-                                         'PaymentMethodForm',
-                                         'LocationForm'])
+                                     'PaymentMethodForm',
+                                     'LocationForm'])
 
 UnableToPlaceOrder = get_class('order.exceptions', 'UnableToPlaceOrder')
 RedirectRequired, UnableToTakePayment, PaymentError \
@@ -25,9 +25,10 @@ RedirectRequired, UnableToTakePayment, PaymentError \
                                          'UnableToTakePayment',
                                          'PaymentError'])
 
+
 class IndexView(views.IndexView):
-    success_url = reverse_lazy("checkout:supervisor-info") # stage 1
-    
+    success_url = reverse_lazy("checkout:supervisor-info")  # stage 1
+
     def form_valid(self, form):
         if form.is_guest_checkout() or form.is_new_account_checkout():
             email = form.cleaned_data['username']
@@ -45,11 +46,12 @@ class IndexView(views.IndexView):
                       "back to the checkout process"))
                 self.success_url = "%s?next=%s&email=%s" % (
                     reverse('customer:register'),
-                    reverse('checkout:supervisor-info'), # guest stage 1
+                    reverse('checkout:supervisor-info'),  # guest stage 1
                     urlquote(email)
                 )
             else:
-                self.checkout_session.set_guest_name(form.cleaned_data['guest_name'])
+                self.checkout_session.set_guest_name(
+                    form.cleaned_data['guest_name'])
         else:
             user = form.get_user()
             login(self.request, user)
@@ -65,6 +67,7 @@ class IndexView(views.IndexView):
 # Payment Views
 # =============
 
+
 class PaymentMethodView(views.CheckoutSessionMixin, generic.FormView):
     """
     Determine the user's method of payment (either through credits or cash)
@@ -72,7 +75,7 @@ class PaymentMethodView(views.CheckoutSessionMixin, generic.FormView):
     template_name = 'oscar/checkout/payment_method.html'
     form_class = PaymentMethodForm
     success_url = reverse_lazy('checkout:payment-details')
-    
+
     pre_conditions = [
         'check_basket_is_not_empty',
         'check_basket_is_valid',
@@ -80,12 +83,13 @@ class PaymentMethodView(views.CheckoutSessionMixin, generic.FormView):
         'check_order_has_supervisor']
 
     #skip_conditions = ['skip_unless_payment_is_required']
-    
+
     def form_valid(self, form):
         self.checkout_session.pay_by(form.cleaned_data['payment_method'])
-        self.checkout_session.set_max_credit(form.cleaned_data['max_credit_allocation'])
+        self.checkout_session.set_max_credit(
+            form.cleaned_data['max_credit_allocation'])
         return super().form_valid(form)
-    
+
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated and request.user.is_supervisor() and request.basket.is_empty:
             self.success_url = reverse_lazy('checkout:order-requests')
@@ -95,11 +99,12 @@ class PaymentMethodView(views.CheckoutSessionMixin, generic.FormView):
             self.checkout_session.pay_by('0')
             self.checkout_session.set_max_credit('0.00')
             return self.get_success_response()
-        
+
         return super().get(request, *args, **kwargs)
-    
+
     def get_success_response(self):
         return redirect(self.get_success_url())
+
 
 class PaymentDetailsView(views.PaymentDetailsView):
     pre_conditions = [
@@ -109,13 +114,13 @@ class PaymentDetailsView(views.PaymentDetailsView):
         'check_order_has_supervisor',
         'check_order_has_payment',
         'check_order_has_location']
-    
+
     preview = True
-    
+
     def get_preview_sources(self, user, total):
         sources = []
         allocated = 0
-        
+
         if int(self.checkout_session.payment_method()) == 1:
             allocated = self.get_credit_used(user, total)
             sources.append({
@@ -123,20 +128,21 @@ class PaymentDetailsView(views.PaymentDetailsView):
                 'amount': allocated,
                 'currency': settings.OSCAR_DEFAULT_CURRENCY
             })
-        
+
         if total - allocated > 0:
             sources.append({
                 'type': 'Cash (%s)' % settings.OSCAR_DEFAULT_CURRENCY,
                 'amount': total - allocated,
                 'currency': settings.OSCAR_DEFAULT_CURRENCY
             })
-        
+
         return sources
-    
+
     def get(self, request, *args, **kwargs):
-        kwargs['sources'] = self.get_preview_sources(request.user, request.basket.total_excl_tax)
+        kwargs['sources'] = self.get_preview_sources(
+            request.user, request.basket.total_excl_tax)
         return super().get(request, *args, **kwargs)
-    
+
     def render_preview(self, request, **kwargs):
         """
         Show a preview of the order.
@@ -146,24 +152,26 @@ class PaymentDetailsView(views.PaymentDetailsView):
         form inputs.  This avoids ever writing the sensitive data to disk.
         """
         self.preview = True
-        kwargs['sources'] = self.get_preview_sources(request.user, request.basket.total_excl_tax)
+        kwargs['sources'] = self.get_preview_sources(
+            request.user, request.basket.total_excl_tax)
         ctx = self.get_context_data(**kwargs)
         return self.render_to_response(ctx)
-    
+
     def get_credit_used(self, user, total):
         return D(max(min(min(user.get_bal(), D(self.checkout_session.max_credit())), total), 0.00))
-    
-    def handle_payment(self, order_number, total, user, **kwargs):        
+
+    def handle_payment(self, order_number, total, user, **kwargs):
         for source in self.get_preview_sources(user, total.excl_tax):
-            source_type, created = SourceType.objects.get_or_create(name=source['type'])
-            
+            source_type, created = SourceType.objects.get_or_create(
+                name=source['type'])
+
             source = Source(source_type=source_type,
                             currency=source['currency'],
                             amount_allocated=source['amount'])
             self.add_payment_source(source)
 
         self.add_payment_event('pre-auth', total.excl_tax)
-    
+
     def submit(self, user, basket, shipping_address, shipping_method,  # noqa (too complex (10))
                shipping_charge, billing_address, order_total,
                payment_kwargs=None, order_kwargs=None, location=None):
@@ -194,11 +202,11 @@ class PaymentDetailsView(views.PaymentDetailsView):
             order_kwargs = {}
         if location is None:
             location = "Tiger Den"
-            
+
         # Taxes must be known at this point
-        #assert basket.is_tax_known, (
+        # assert basket.is_tax_known, (
         #    "Basket tax must be set before a user can place an order")
-        #assert shipping_charge.is_tax_known, (
+        # assert shipping_charge.is_tax_known, (
         #    "Shipping charge tax must be set before a user can place an order")
 
         # We generate the order number first as this will be used
@@ -228,7 +236,8 @@ class PaymentDetailsView(views.PaymentDetailsView):
         signals.pre_payment.send_robust(sender=self, view=self)
 
         try:
-            self.handle_payment(order_number, order_total, user, **payment_kwargs)
+            self.handle_payment(order_number, order_total,
+                                user, **payment_kwargs)
         except RedirectRequired as e:
             # Redirect required (e.g. PayPal, 3DS)
             logger.info("Order #%s: redirecting to %s", order_number, e.url)
@@ -296,6 +305,7 @@ class PaymentDetailsView(views.PaymentDetailsView):
 # Custom Views
 # ===========
 
+
 class SupervisorView(views.CheckoutSessionMixin, generic.FormView):
     """
     Determine Supervisor of guest to receive and administer guest's order
@@ -303,54 +313,56 @@ class SupervisorView(views.CheckoutSessionMixin, generic.FormView):
     template_name = 'oscar/checkout/supervisor.html'
     form_class = SupervisorForm
     success_url = reverse_lazy('checkout:payment-method')
-    
+
     pre_conditions = [
         'check_basket_is_not_empty',
         'check_basket_is_valid',
         'check_user_email_is_captured']
-    
+
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated and request.user.is_supervisor():
             self.checkout_session.set_supervisor(request.user.pk)
             self.success_url = reverse_lazy("checkout:delivery-info")
             return self.get_success_response()
-        
+
         return super().get(request, *args, **kwargs)
-    
+
     def form_valid(self, form):
         self.checkout_session.set_supervisor(form.cleaned_data['supervisor'])
         return super().form_valid(form)
-    
+
     def get_success_response(self):
         return redirect(self.get_success_url())
+
 
 class LocationView(views.CheckoutSessionMixin, generic.FormView):
     """
     Get location of supervisor for delivery
     """
-    
+
     template_name = 'oscar/checkout/location.html'
     form_class = LocationForm
     success_url = reverse_lazy('checkout:payment-method')
-    
+
     pre_conditions = [
         'check_basket_is_not_empty',
         'check_basket_is_valid',
         'check_user_email_is_captured',
         'check_order_has_supervisor']
-    
+
     def form_valid(self, form):
         self.checkout_session.set_location(form.cleaned_data['location'])
         return super().form_valid(form)
 
+
 class OrderRequestsView(views.OrderPlacementMixin, generic.TemplateView):
     template_name = 'oscar/checkout/order_requests.html'
-    
+
     pre_conditions = [
         'check_basket_is_not_empty',
         'check_user_email_is_captured',
         'check_order_has_location']
-    
+
     def post(self, request, *args, **kwargs):
 
         # We use a custom parameter to indicate if this is an attempt to place
@@ -359,9 +371,9 @@ class OrderRequestsView(views.OrderPlacementMixin, generic.TemplateView):
         # this case, the form needs validating and the order preview shown.
         if request.POST.get('action', '') == 'place_requests':
             return self.place_requests(request)
-    
+
     def place_requests(self, request):
         return super().handle_requests_placement(request.user,
-                                          request.user.get_order_requests().first().number,
-                                          self.checkout_session.location(),
-                                          "USD")
+                                                 request.user.get_order_requests().first().number,
+                                                 self.checkout_session.location(),
+                                                 "USD")

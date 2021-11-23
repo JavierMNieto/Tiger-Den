@@ -7,6 +7,7 @@ from django.utils.translation import gettext_lazy as _
 GroupOrder = get_model('order', 'GroupOrder')
 SourceType = get_model('payment', 'SourceType')
 
+
 class GroupOrderSearchForm(forms.Form):
     order_number = forms.CharField(required=False, label=_("Order number"))
     name = forms.CharField(required=False, label=_("Supervisor name"))

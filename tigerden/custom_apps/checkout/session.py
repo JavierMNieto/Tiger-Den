@@ -6,6 +6,7 @@ from oscar.core.loading import get_classes, get_class
 
 NoShippingRequired = get_class('shipping.methods', 'NoShippingRequired')
 
+
 class CheckoutSessionMixin(session.CheckoutSessionMixin):
     def check_basket_is_not_empty(self, request):
         if (request.basket.is_empty and not request.user.is_authenticated) or (request.basket.is_empty and request.user.is_authenticated and not request.user.get_order_requests().exists()):
@@ -14,7 +15,7 @@ class CheckoutSessionMixin(session.CheckoutSessionMixin):
                 message=_(
                     "You need to add some items to your basket to checkout")
             )
-    
+
     def check_order_has_supervisor(self, request):
         # Check that supervisor has been set
         if not self.checkout_session.is_supervisor_set():
@@ -24,14 +25,15 @@ class CheckoutSessionMixin(session.CheckoutSessionMixin):
             )
 
         # Check that the supervisor is still valid
-        supervisor = auth.models.User.objects.filter(pk=self.checkout_session.supervisor()).first()
+        supervisor = auth.models.User.objects.filter(
+            pk=self.checkout_session.supervisor()).first()
         if not supervisor or not supervisor.is_supervisor():
             raise exceptions.FailedPreCondition(
                 url=reverse('checkout:supervisor-info'),
                 message=_("Your previously chosen supervisor is "
                           "no longer valid.  Please choose another one")
             )
-    
+
     def check_order_has_payment(self, request):
         # Check that supervisor has been set
         if not self.checkout_session.is_payment_method_set():
@@ -39,7 +41,7 @@ class CheckoutSessionMixin(session.CheckoutSessionMixin):
                 url=reverse('checkout:payment-method'),
                 message=_("Please choose a payment method")
             )
-            
+
     def check_order_has_location(self, request):
         # Check that supervisor has been set
         if request.user.is_authenticated and request.user.is_supervisor() and not self.checkout_session.is_location_set():
@@ -47,7 +49,7 @@ class CheckoutSessionMixin(session.CheckoutSessionMixin):
                 url=reverse('checkout:delivery-info'),
                 message=_("Please indicate your location")
             )
-    
+
     def build_submission(self, **kwargs):
         """
         Return a dict of data that contains everything required for an order
@@ -104,6 +106,6 @@ class CheckoutSessionMixin(session.CheckoutSessionMixin):
                 and 'guest_email' not in submission['order_kwargs']):
             email = self.checkout_session.get_guest_email()
             submission['order_kwargs']['guest_email'] = email
-            name  = self.checkout_session.get_guest_name()
+            name = self.checkout_session.get_guest_name()
             submission['order_kwargs']['guest_name'] = name
         return submission

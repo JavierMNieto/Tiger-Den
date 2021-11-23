@@ -1,0 +1,198 @@
+[
+    {
+        "model": "catalogue.productclass",
+        "pk": 4,
+        "fields": {
+            "name": "Bagel",
+            "slug": "bagel",
+            "track_stock": true,
+            "requires_shipping": false,
+            "options": [
+                4,
+                9,
+                5
+            ]
+        }
+    },
+    {
+        "model": "catalogue.productclass",
+        "pk": 15,
+        "fields": {
+            "name": "Chocolate Chip Cookie",
+            "slug": "chocolate-chip-cookie",
+            "track_stock": true,
+            "requires_shipping": false,
+            "options": [
+                15,
+                9
+            ]
+        }
+    },
+    {
+        "model": "catalogue.productclass",
+        "pk": 13,
+        "fields": {
+            "name": "Cliff Bar",
+            "slug": "cliff-bar",
+            "track_stock": true,
+            "requires_shipping": false,
+            "options": [
+                14,
+                9
+            ]
+        }
+    },
+    {
+        "model": "catalogue.productclass",
+        "pk": 2,
+        "fields": {
+            "name": "Coffee",
+            "slug": "coffee",
+            "track_stock": true,
+            "requires_shipping": false,
+            "options": [
+                1,
+                9,
+                2
+            ]
+        }
+    },
+    {
+        "model": "catalogue.productclass",
+        "pk": 12,
+        "fields": {
+            "name": "Cold Tea",
+            "slug": "cold-tea",
+            "track_stock": true,
+            "requires_shipping": false,
+            "options": [
+                11,
+                9
+            ]
+        }
+    },
+    {
+        "model": "catalogue.productclass",
+        "pk": 5,
+        "fields": {
+            "name": "Donut",
+            "slug": "donut",
+            "track_stock": true,
+            "requires_shipping": false,
+            "options": [
+                6,
+                9
+            ]
+        }
+    },
+    {
+        "model": "catalogue.productclass",
+        "pk": 9,
+        "fields": {
+            "name": "Donut with Sprinkles",
+            "slug": "donut-with-sprinkles",
+            "track_stock": true,
+            "requires_shipping": false,
+            "options": [
+                9,
+                10
+            ]
+        }
+    },
+    {
+        "model": "catalogue.productclass",
+        "pk": 8,
+        "fields": {
+            "name": "Drink",
+            "slug": "drink",
+            "track_stock": true,
+            "requires_shipping": false,
+            "options": [
+                9
+            ]
+        }
+    },
+    {
+        "model": "catalogue.productclass",
+        "pk": 14,
+        "fields": {
+            "name": "Flavored Latte",
+            "slug": "flavored-latte",
+            "track_stock": true,
+            "requires_shipping": false,
+            "options": [
+                3,
+                9
+            ]
+        }
+    },
+    {
+        "model": "catalogue.productclass",
+        "pk": 1,
+        "fields": {
+            "name": "Food",
+            "slug": "food",
+            "track_stock": true,
+            "requires_shipping": false,
+            "options": [
+                9
+            ]
+        }
+    },
+    {
+        "model": "catalogue.productclass",
+        "pk": 6,
+        "fields": {
+            "name": "Hot Chocolate",
+            "slug": "hot-chocolate",
+            "track_stock": true,
+            "requires_shipping": false,
+            "options": [
+                7,
+                9
+            ]
+        }
+    },
+    {
+        "model": "catalogue.productclass",
+        "pk": 11,
+        "fields": {
+            "name": "Hot Tea",
+            "slug": "hot-tea",
+            "track_stock": true,
+            "requires_shipping": false,
+            "options": [
+                12,
+                11,
+                9
+            ]
+        }
+    },
+    {
+        "model": "catalogue.productclass",
+        "pk": 3,
+        "fields": {
+            "name": "Latte",
+            "slug": "latte",
+            "track_stock": true,
+            "requires_shipping": false,
+            "options": [
+                9
+            ]
+        }
+    },
+    {
+        "model": "catalogue.productclass",
+        "pk": 7,
+        "fields": {
+            "name": "With whipped cream",
+            "slug": "hot-drink-whipped-cream",
+            "track_stock": true,
+            "requires_shipping": false,
+            "options": [
+                9,
+                8
+            ]
+        }
+    }
+]

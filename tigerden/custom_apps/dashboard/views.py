@@ -17,6 +17,7 @@ Order = get_model('order', 'Order')
 Line = get_model('order', 'Line')
 User = get_user_model()
 
+
 class IndexView(CustomIndexView):
     def get_hourly_report(self, orders, hours=24, segments=10):
         """
@@ -76,8 +77,9 @@ class IndexView(CustomIndexView):
     def get_stats(self):
         datetime_24hrs_ago = now() - timedelta(hours=24)
 
-        # Only get orders passed first status        
-        orders = Order.objects.all().exclude(status__in=[next(iter(getattr(settings, 'OSCAR_ORDER_STATUS_PIPELINE', {}))), 'Cancelled'])
+        # Only get orders passed first status
+        orders = Order.objects.all().exclude(status__in=[next(
+            iter(getattr(settings, 'OSCAR_ORDER_STATUS_PIPELINE', {}))), 'Cancelled'])
         alerts = StockAlert.objects.all()
         baskets = Basket.objects.filter(status=Basket.OPEN)
         customers = User.objects.filter(orders__isnull=False).distinct()
@@ -98,15 +100,17 @@ class IndexView(CustomIndexView):
                 orders__lines__partner_id__in=partners_ids
             ).distinct()
             lines = lines.filter(partner_id__in=partners_ids)
-            products = products.filter(stockrecords__partner_id__in=partners_ids)
+            products = products.filter(
+                stockrecords__partner_id__in=partners_ids)
 
         orders_last_day = orders.filter(date_placed__gt=datetime_24hrs_ago)
         open_alerts = alerts.filter(status=StockAlert.OPEN)
         closed_alerts = alerts.filter(status=StockAlert.CLOSED)
 
         # Not efficient to get all Orders again
-        total_lines_last_day = lines.filter(order__in=Order.objects.all().filter(date_placed__gt=datetime_24hrs_ago)).count()
-       
+        total_lines_last_day = lines.filter(order__in=Order.objects.all().filter(
+            date_placed__gt=datetime_24hrs_ago)).count()
+
         stats = {
             'total_orders_last_day': orders_last_day.count(),
             'total_lines_last_day': total_lines_last_day,
@@ -146,7 +150,10 @@ class IndexView(CustomIndexView):
         }
         if user.is_staff:
             stats.update(
-                total_site_offers=self.get_active_site_offers().count(),
+                offer_maps=(ConditionalOffer.objects.filter(end_datetime__gt=now())
+                            .values('offer_type')
+                            .annotate(count=Count('id'))
+                            .order_by('offer_type')),
                 total_vouchers=self.get_active_vouchers().count(),
             )
         return stats

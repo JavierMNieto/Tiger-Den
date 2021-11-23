@@ -17,8 +17,13 @@ from django.utils.crypto import constant_time_compare
 from django.urls import NoReverseMatch, reverse
 
 EventHandler = get_class('order.processing', 'EventHandler')
-CommunicationEventType = get_model('customer', 'CommunicationEventType')
-bank = acct_models.Account.objects.get(id=4)
+CommunicationEventType = get_model('communication', 'CommunicationEventType')
+
+try:
+    bank = acct_models.Account.objects.get(id=4)
+except:
+    bank = None
+
 
 class Order(AbstractOrder):
     group_order = models.ForeignKey(
@@ -26,9 +31,9 @@ class Order(AbstractOrder):
         verbose_name=_("Group Order"),
         related_name='orders',
         on_delete=models.CASCADE)
-    
+
     guest_name = models.CharField(_("Name"), max_length=25, blank=True)
-    
+
     supervisor = models.ForeignKey(
         AUTH_USER_MODEL, related_name='order_requests', null=True, blank=True,
         verbose_name=_("Supervisor"), on_delete=models.SET_NULL)
@@ -38,11 +43,11 @@ class Order(AbstractOrder):
 
     max_alloc_credit = models.DecimalField(
         _("Maximum Amount of Credit Allowed to Use"), decimal_places=2, max_digits=12, default=D('0.00'))
-    
+
     @property
     def total_cash(self):
         return self.total_excl_tax - (self.total_credit if self.total_credit else D("0.00"))
-    
+
     @property
     def is_complete(self):
         return len(self.available_statuses()) < 2
@@ -86,16 +91,16 @@ class Order(AbstractOrder):
                                   )
 
         self._create_order_status_change(old_status, new_status)
-        
+
         if new_status == self.all_statuses()[1]:
             order_placed.send(sender=self, order=self, user=self.user)
         elif self.group_order and self.is_complete:
             if self.total_credit is not None and new_status == "Processed":
                 self.complete_payment()
             self.group_order.check_all_order_statuses(self.number)
-        
+
         if new_status == "Cancelled" and code is not None:
-            self.send_cancellation_message(code)            
+            self.send_cancellation_message(code)
     set_status.alters_data = True
 
     def calculate_total(self, line_ids=[]):
@@ -107,7 +112,7 @@ class Order(AbstractOrder):
             total += line.line_price_excl_tax
         self.total_excl_tax = total
         self.save()
-        self.group_order.calculate_total([self.id])        
+        self.group_order.calculate_total([self.id])
 
     def get_cancelled_lines(self):
         return self.lines.filter(status="Cancelled")
@@ -121,7 +126,7 @@ class Order(AbstractOrder):
                 return
             if line.status != "Cancelled":
                 is_cancelled = False
-        
+
         if is_cancelled:
             self.set_status("Cancelled", "ORDER_OUT")
         else:
@@ -129,7 +134,8 @@ class Order(AbstractOrder):
 
     def complete_payment(self):
         account = self.user.accounts.first()
-        self.total_credit = max(min(min(account.balance, self.max_alloc_credit), self.total_excl_tax), 0.00)
+        self.total_credit = max(
+            min(min(account.balance, self.max_alloc_credit), self.total_excl_tax), 0.00)
         if self.total_credit > 0.00:
             transfer = None
             try:
@@ -137,7 +143,7 @@ class Order(AbstractOrder):
                     source=account,
                     destination=bank,
                     amount=self.total_credit,
-                    #user=self.supervisor,
+                    # user=self.supervisor,
                     merchant_reference=self.number,
                     description=_("Credit Spent on Order #" + self.number)
                 )
@@ -146,12 +152,12 @@ class Order(AbstractOrder):
                     facade.reverse(transfer)
             else:
                 pass
-        
+
         self.save()
-    
+
     def send_cancellation_message(self, code):
-        Dispatcher = get_class('customer.utils', 'Dispatcher')
-        
+        Dispatcher = get_class('communication.utils', 'Dispatcher')
+
         try:
             ctx = self.get_message_context(code)
         except TypeError:
@@ -179,7 +185,8 @@ class Order(AbstractOrder):
             dispatcher = Dispatcher(logger)
             dispatcher.dispatch_order_messages(self, messages, event_type)
         else:
-            logger.warning("Order #%s - no %s communication event type", self.number, code)
+            logger.warning(
+                "Order #%s - no %s communication event type", self.number, code)
 
     def get_message_context(self, code=None):
         ctx = {
@@ -200,10 +207,10 @@ class Order(AbstractOrder):
         except NoReverseMatch:
             # We don't care that much if we can't resolve the URL
             pass
-        
+
         ctx['status_url'] = 'http://%s%s' % (ctx['site'].domain, path)
         return ctx
-    
+
     @property
     def user_label(self):
         if self.guest_name:
@@ -214,12 +221,13 @@ class Order(AbstractOrder):
             return self.user.label()
         return "Customer has deleted his or her account"
 
+
 class Line(AbstractLine):
-    
+
     @property
     def is_complete(self):
         return len(self.available_statuses()) < 2
-    
+
     def out_of_stock(self):
         refund = False
         if self.status == "Processed" and self.order.total_credit:
@@ -231,13 +239,14 @@ class Line(AbstractLine):
         self.order.calculate_total([self.id])
         if refund:
             self.refund()
-        
+
         if self.order.status != "Cancelled":
             self.order.send_cancellation_message(code="ORDER_LINE_OUT")
-    
+
     def refund(self):
         if self.order.total_credit:
-            amt = max(min(self.line_price_excl_tax, self.order.total_credit), D("0.00"))
+            amt = max(min(self.line_price_excl_tax,
+                          self.order.total_credit), D("0.00"))
             if amt > 0.00:
                 self.order.total_credit -= amt
                 self.order.save()
@@ -245,17 +254,18 @@ class Line(AbstractLine):
                     source=bank,
                     destination=self.order.user.accounts.first(),
                     amount=amt,
-                    #user=self.order.supervisor,
+                    # user=self.order.supervisor,
                     merchant_reference=self.order.number,
-                    description=_("Credit Refund on Order #" + self.order.number)
+                    description=_("Credit Refund on Order #" + \
+                                  self.order.number)
                 )
-    
+
     def set_status(self, new_status):
         super().set_status(new_status)
-        
-        if self.order and self.is_complete:            
+
+        if self.order and self.is_complete:
             self.order.check_all_line_statuses(self.id)
-        
+
     @property
     def description(self):
         """
@@ -273,14 +283,14 @@ class Line(AbstractLine):
 
     def get_clean_attrs(self):
         attrs = []
-        
+
         for attribute in self.attributes.all():
             if attribute.value.strip() != "":
                 attrs.append({
                     'option': attribute.option,
                     'value': attribute.value
                 })
-        
+
         return attrs
 
     @property
@@ -288,35 +298,38 @@ class Line(AbstractLine):
         if not self.product:
             return str(self.id)
         code = str(self.product.id)
-        
+
         for attr in self.attributes.all():
             if attr.value.strip() != "":
                 code += attr.value.replace(" ", "")
-        
+
         return code
-    
+
+
 class GroupOrder(models.Model):
     """
     Group Order Model
     """
-    
-    number = models.CharField(_("Group Order number"), max_length=128, db_index=True, unique=True)
-    
+
+    number = models.CharField(_("Group Order number"),
+                              max_length=128, db_index=True, unique=True)
+
     # Supervisor placing order
     user = models.ForeignKey(
         AUTH_USER_MODEL, related_name='grouporders', null=True,
         verbose_name=_("Supervisor"), on_delete=models.SET_NULL)
-    
+
     location = models.CharField(_("Delivery Location"), max_length=50)
-    
-    currency = models.CharField(_("Currency"), max_length=14, default=get_default_currency)
-    
+
+    currency = models.CharField(
+        _("Currency"), max_length=14, default=get_default_currency)
+
     total_excl_tax = models.DecimalField(
         _("Order total (excl. tax)"), decimal_places=2, max_digits=12)
-    
+
     # Use this field to indicate that an order is on hold / awaiting payment
     status = models.CharField(_("Status"), max_length=100, blank=True)
-    
+
     # Index added to this field for reporting
     date_placed = models.DateTimeField(db_index=True)
 
@@ -330,7 +343,7 @@ class GroupOrder(models.Model):
     #: *line* status that needs to be set when the order is set to the new
     #: status
     cascade = getattr(settings, 'OSCAR_ORDER_STATUS_CASCADE', {})
-    
+
     @classmethod
     def all_statuses(cls):
         """
@@ -369,19 +382,20 @@ class GroupOrder(models.Model):
                 % {'new_status': new_status,
                    'number': self.number,
                    'status': self.status})
-        
+
         for order in self.orders.all():
             if order.status != new_status:
                 handler = EventHandler(order.user)
                 success_msg = _(
                     "Order status changed from '%(old_status)s' to "
                     "'%(new_status)s'") % {'old_status': old_status,
-                                        'new_status': new_status}
+                                           'new_status': new_status}
                 try:
-                    handler.handle_order_status_change(order, new_status, note_msg=success_msg, code="ORDER_BUSY")
+                    handler.handle_order_status_change(
+                        order, new_status, note_msg=success_msg, code="ORDER_BUSY")
                 except exceptions.InvalidOrderStatus:
                     pass
-        
+
         if self.available_statuses():
             self._set_status(old_status, new_status)
 
@@ -394,8 +408,9 @@ class GroupOrder(models.Model):
 
     def _create_order_status_change(self, old_status, new_status):
         # Not setting the status on the order as that should be handled before
-        self.status_changes.create(old_status=old_status, new_status=new_status)
-    
+        self.status_changes.create(
+            old_status=old_status, new_status=new_status)
+
     def check_all_order_statuses(self, cur_order):
         is_cancelled = True
         for order in self.orders.all():
@@ -405,31 +420,31 @@ class GroupOrder(models.Model):
                 return
             if order.status != "Cancelled":
                 is_cancelled = False
-        
+
         if is_cancelled:
             self._set_status(self.status, "Cancelled")
         else:
             self._set_status(self.status, "Processed")
-    
+
     class Meta:
         app_label = 'order'
         ordering = ['-date_placed']
         verbose_name = _("Group Order")
         verbose_name_plural = _("Group Orders")
-    
+
     def __str__(self):
         return "#%s" % (self.number,)
-    
+
     def verification_hash(self):
         signer = Signer(salt='oscar.apps.order.GroupOrder')
         return signer.sign(self.number)
-    
+
     def check_verification_hash(self, hash_to_check):
         """
         Checks the received verification hash against this order number.
         Returns False if the verification failed, True otherwise.
         """
-        #if self.check_deprecated_verification_hash(hash_to_check):
+        # if self.check_deprecated_verification_hash(hash_to_check):
         #   return True
 
         signer = Signer(salt='oscar.apps.order.GroupOrder')
@@ -439,22 +454,22 @@ class GroupOrder(models.Model):
             return False
 
         return constant_time_compare(signed_number, self.number)
-    
+
     @property
     def email(self):
         return self.user.email
-    
+
     @property
     def num_orders(self):
         return self.orders.all().count()
-    
+
     @property
     def order_requests(self):
         return self.orders.all().exclude(user_id=self.user.id)
 
     @property
     def is_expired(self):
-        return now().timestamp() - self.date_placed.timestamp() > 7200 # 2 hours
+        return now().timestamp() - self.date_placed.timestamp() > 7200  # 2 hours
 
     def set_date_placed_default(self):
         if self.date_placed is None:
@@ -466,16 +481,16 @@ class GroupOrder(models.Model):
         # useful when importing orders from another system).
         self.set_date_placed_default()
         super().save(*args, **kwargs)
-    
+
     def get_all_lines(self):
         return Line.objects.filter(order__group_order__id=self.id)
-    
+
     def get_all_lines_sorted(self):
         lines = self.get_all_lines()
         if self.status != "Cancelled":
-            lines = lines.exclude(status="Cancelled")        
+            lines = lines.exclude(status="Cancelled")
         lines_dict = {}
-        
+
         for line in lines:
             if line.code in lines_dict:
                 lines_dict[line.code]['quantity'] += line.quantity
@@ -486,18 +501,19 @@ class GroupOrder(models.Model):
                     'quantity': line.quantity,
                     'attributes': line.get_clean_attrs()
                 }
-        
+
         return lines_dict
-    
+
     def calculate_total(self, order_ids=[]):
         orders = self.orders.all()
-        total  = D("0.00")
+        total = D("0.00")
         if not self.is_cancelled:
             orders = orders.exclude(status="Cancelled", id__in=order_ids)
         for order in orders:
             total += order.total_excl_tax
         self.total_excl_tax = total
         self.save()
+
 
 class GroupOrderStatusChange(models.Model):
     group_order = models.ForeignKey(
@@ -508,7 +524,8 @@ class GroupOrderStatusChange(models.Model):
     )
     old_status = models.CharField(_('Old Status'), max_length=100, blank=True)
     new_status = models.CharField(_('New Status'), max_length=100, blank=True)
-    date_created = models.DateTimeField(_('Date Created'), auto_now_add=True, db_index=True)
+    date_created = models.DateTimeField(
+        _('Date Created'), auto_now_add=True, db_index=True)
 
     class Meta:
         app_label = 'order'
@@ -520,5 +537,6 @@ class GroupOrderStatusChange(models.Model):
         return _('{order} has changed status from {old_status} to {new_status}').format(
             order=self.group_order, old_status=self.old_status, new_status=self.new_status
         )
+
 
 from oscar.apps.order.models import *  # noqa isort:skip

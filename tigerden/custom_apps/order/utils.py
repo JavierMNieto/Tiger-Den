@@ -8,6 +8,7 @@ from oscar.core.loading import get_model
 
 Order = get_model('order', 'Order')
 
+
 class OrderCreator(utils.OrderCreator):
     """
     Places the order by writing out the various models
@@ -44,7 +45,8 @@ class OrderCreator(utils.OrderCreator):
                 self.update_stock_records(line)
 
             for voucher in basket.vouchers.select_for_update():
-                available_to_user, msg = voucher.is_available_to_user(user=user)
+                available_to_user, msg = voucher.is_available_to_user(
+                    user=user)
                 if not voucher.is_active() or not available_to_user:
                     raise ValueError(msg)
 
@@ -75,4 +77,3 @@ class OrderCreator(utils.OrderCreator):
         #order_placed.send(sender=self, order=order, user=user)
         print("Stopped order_placed")
         return order
-

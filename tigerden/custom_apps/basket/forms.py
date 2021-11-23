@@ -7,6 +7,7 @@ from django.db.models.query import QuerySet
 
 Option = get_model('catalogue', 'option')
 
+
 def _option_text_field(attribute):
     return forms.CharField(label=attribute.name,
                            required=attribute.required,
@@ -84,8 +85,9 @@ def _option_image_field(attribute):
     return forms.ImageField(
         label=attribute.name, required=attribute.required)
 
+
 class AddToBasketForm(base_forms.AddToBasketForm):
-    
+
     OPTION_FIELD_FACTORIES = {
         "text": _option_text_field,
         "richtext": _option_textarea_field,
@@ -104,7 +106,7 @@ class AddToBasketForm(base_forms.AddToBasketForm):
 
     def clean(self):
         info = self.basket.strategy.fetch_for_product(self.product)
-        
+
         # Check that a price was found by the strategy
         if not info.price.exists:
             raise forms.ValidationError(
@@ -128,7 +130,7 @@ class AddToBasketForm(base_forms.AddToBasketForm):
             raise forms.ValidationError(reason)
 
         return self.cleaned_data
-    
+
     def _add_option_field(self, product, option):
         """
         Creates the appropriate form field for the product option.
@@ -136,10 +138,10 @@ class AddToBasketForm(base_forms.AddToBasketForm):
         for certain types of options.
         """
         field = self.OPTION_FIELD_FACTORIES[option.type](option)
-        
+
         if field:
             self.fields[option.code] = field
-    
+
     def cleaned_options(self):
         """
         Return submitted options in a clean format
@@ -155,15 +157,16 @@ class AddToBasketForm(base_forms.AddToBasketForm):
                             new_value += ", "
                         new_value += str(val)
                     value = new_value
-                
+
                 if value is None:
-                    value = ""    
-                       
+                    value = ""
+
                 options.append({
                     'option': option,
                     'value': value})
         return options
-        
+
+
 class SimpleAddToBasketForm(AddToBasketForm):
     """
     Simplified version of the add to basket form where the quantity is

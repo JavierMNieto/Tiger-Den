@@ -3,13 +3,14 @@ from oscar.core.loading import get_class
 from django.conf.urls import include, url
 from django.apps import apps
 
+
 class DashboardConfig(oscar_apps.DashboardConfig):
     name = 'custom_apps.dashboard'
-    
+
     def ready(self):
         super().ready()
         self.grouporders_app = apps.get_app_config('grouporders_dashboard')
-    
+
     def get_urls(self):
         from django.contrib.auth import views as auth_views
         from django.contrib.auth.forms import AuthenticationForm
