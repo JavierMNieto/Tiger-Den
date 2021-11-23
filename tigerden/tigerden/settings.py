@@ -19,7 +19,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def location(x): return os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), x)
+    os.path.dirname(os.path.realpath(__file__)), '..', x)
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -45,6 +46,8 @@ INSTALLED_APPS = [
 
     'django.contrib.sites',
     'django.contrib.flatpages',
+
+    'custom_apps',
 
     'oscar.config.Shop',
     'custom_apps.analytics.apps.AnalyticsConfig',
@@ -108,7 +111,7 @@ ROOT_URLCONF = 'tigerden.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ["templates"],
+        'DIRS': [location('templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -118,12 +121,13 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'oscar.apps.search.context_processors.search_form',
                 'oscar.apps.checkout.context_processors.checkout',
-                'oscar.apps.customer.notifications.context_processors.notifications',
+                'oscar.apps.communication.notifications.context_processors.notifications',
                 'oscar.core.context_processors.metadata',
             ],
             'libraries':{
                 'custom_tags': 'templatetags.custom_tags'
             },
+            'debug': DEBUG,
         },
     },
 ]
@@ -192,8 +196,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-MEDIA_ROOT = location('public/media')
-#MEDIA_ROOT = location('tigerden/public/media')
+#MEDIA_ROOT = location('public/media')
+MEDIA_ROOT = location('tigerden/public/media')
 STATIC_ROOT = location('public/static')
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),

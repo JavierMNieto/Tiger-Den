@@ -1,6 +1,6 @@
 .vscode/
 tigerden/db.sqlite3
-tigerden/tigerden/public/media/
+tigerden/tigerden/public/media/cache/
 
 # Byte-compiled / optimized / DLL files
 **/__pycache__/
