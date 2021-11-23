@@ -14,7 +14,7 @@ class Product(AbstractProduct):
     is_supervisor_only = models.BooleanField(
         _('Is for supervisors only?'),
         default=False,
-        help_text=_("Only show product availability to supervisors"))
+        help_text=_('Only show product availability to supervisors'))
 
     LIMITED_DAY_CHOICES = [
         (-1, 'Every Day'),

@@ -17,7 +17,12 @@ from django.utils.crypto import constant_time_compare
 from django.urls import NoReverseMatch, reverse
 
 EventHandler = get_class('order.processing', 'EventHandler')
-bank = acct_models.Account.objects.get(id=4)
+CommunicationEventType = get_model('communication', 'CommunicationEventType')
+
+try:
+    bank = acct_models.Account.objects.get(id=4)
+except:
+    bank = None
 
 
 class Order(AbstractOrder):
@@ -151,9 +156,7 @@ class Order(AbstractOrder):
         self.save()
 
     def send_cancellation_message(self, code):
-        CommunicationEventType = get_model(
-            'customer', 'CommunicationEventType')
-        Dispatcher = get_class('customer.utils', 'Dispatcher')
+        Dispatcher = get_class('communication.utils', 'Dispatcher')
 
         try:
             ctx = self.get_message_context(code)

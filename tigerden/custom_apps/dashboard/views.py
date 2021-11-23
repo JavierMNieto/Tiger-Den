@@ -150,7 +150,10 @@ class IndexView(CustomIndexView):
         }
         if user.is_staff:
             stats.update(
-                total_site_offers=self.get_active_site_offers().count(),
+                offer_maps=(ConditionalOffer.objects.filter(end_datetime__gt=now())
+                            .values('offer_type')
+                            .annotate(count=Count('id'))
+                            .order_by('offer_type')),
                 total_vouchers=self.get_active_vouchers().count(),
             )
         return stats

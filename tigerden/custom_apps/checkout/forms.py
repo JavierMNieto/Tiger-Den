@@ -7,11 +7,14 @@ from oscar.apps.checkout import forms as c_forms
 def get_supervisors_tuple():
     supervisors = ()
 
-    for user in User.objects.filter(groups__name='Supervisor'):
-        name = user.get_full_name()
-        if name.strip() == "":
-            name = user.email
-        supervisors += ((user.pk, name),)
+    try:
+        for user in User.objects.filter(groups__name='Supervisor'):
+            name = user.get_full_name()
+            if name.strip() == "":
+                name = user.email
+            supervisors += ((user.pk, name),)
+    except:
+        pass
 
     return supervisors
 

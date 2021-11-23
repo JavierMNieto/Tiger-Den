@@ -1,5 +1,5 @@
 from oscar.apps.customer.forms import EmailUserCreationForm as CoreEmailUserCreationForm
-from oscar.core.compat import (existing_user_fields, get_user_model)
+from oscar.core.compat import get_user_model
 
 from django import forms
 from django.utils.translation import gettext_lazy as _
@@ -11,8 +11,11 @@ User = get_user_model()
 
 def get_customers_tuple():
     customers = ()
-    for user in User.objects.all():
-        customers += ((user.pk, user.label()),)
+    try:
+        for user in User.objects.all():
+            customers += ((user.pk, user.label()),)
+    except:
+        pass
     return customers
 
 

@@ -11,8 +11,12 @@ from decimal import Decimal as D
 
 User = get_user_model()
 
-supervisor_group = Group.objects.get(name='Supervisor')
-bank = models.Account.objects.get(id=4)
+try:
+    supervisor_group = Group.objects.get(name='Supervisor')
+    bank = models.Account.objects.get(id=4)
+except:
+    supervisor_group = None
+    bank = None
 
 
 class UserDetailView(views.UserDetailView):

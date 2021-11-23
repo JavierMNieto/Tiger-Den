@@ -24,7 +24,11 @@ from custom_apps.customer.token import acct_activation_token
 from .forms import TransferGiftForm
 
 User = get_user_model()
-supervisor_group = Group.objects.get(name='Supervisor')
+
+try:
+    supervisor_group = Group.objects.get(name='Supervisor')
+except:
+    supervisor_group = None
 
 PageTitleMixin = get_class('customer.mixins', 'PageTitleMixin')
 
