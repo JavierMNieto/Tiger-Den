@@ -1,0 +1,42 @@
+[
+    {
+        "model": "oscar_accounts.account",
+        "pk": 4,
+        "fields": {
+            "name": "Tiger Den Credit Bank",
+            "description": "",
+            "account_type": 3,
+            "code": null,
+            "primary_user": 1,
+            "status": "Open",
+            "credit_limit": null,
+            "balance": "-10012.25",
+            "start_date": null,
+            "end_date": null,
+            "product_range": null,
+            "can_be_used_for_non_products": true,
+            "date_created": "2020-03-07T17:29:31.363Z",
+            "secondary_users": []
+        }
+    },
+    {
+        "model": "oscar_accounts.account",
+        "pk": 5,
+        "fields": {
+            "name": "Unpaid source",
+            "description": null,
+            "account_type": 4,
+            "code": null,
+            "primary_user": null,
+            "status": "Open",
+            "credit_limit": null,
+            "balance": "0.00",
+            "start_date": null,
+            "end_date": null,
+            "product_range": null,
+            "can_be_used_for_non_products": true,
+            "date_created": "2020-03-07T17:29:31.395Z",
+            "secondary_users": []
+        }
+    }
+]

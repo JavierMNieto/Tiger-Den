@@ -1,0 +1,54 @@
+[
+    {
+        "model": "catalogue.category",
+        "pk": 1,
+        "fields": {
+            "path": "0001",
+            "depth": 1,
+            "numchild": 2,
+            "name": "Drinks",
+            "description": "",
+            "image": "",
+            "slug": "drinks"
+        }
+    },
+    {
+        "model": "catalogue.category",
+        "pk": 8,
+        "fields": {
+            "path": "00010001",
+            "depth": 2,
+            "numchild": 0,
+            "name": "Cold Drinks",
+            "description": "",
+            "image": "",
+            "slug": "iced-drinks"
+        }
+    },
+    {
+        "model": "catalogue.category",
+        "pk": 7,
+        "fields": {
+            "path": "00010003",
+            "depth": 2,
+            "numchild": 0,
+            "name": "Hot Drinks",
+            "description": "",
+            "image": "",
+            "slug": "hot-drinks"
+        }
+    },
+    {
+        "model": "catalogue.category",
+        "pk": 4,
+        "fields": {
+            "path": "0002",
+            "depth": 1,
+            "numchild": 0,
+            "name": "Food",
+            "description": "",
+            "image": "",
+            "slug": "food"
+        }
+    }
+]

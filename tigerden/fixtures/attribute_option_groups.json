@@ -1,0 +1,72 @@
+[
+    {
+        "model": "catalogue.attributeoptiongroup",
+        "pk": 1,
+        "fields": {
+            "name": "Creamer"
+        }
+    },
+    {
+        "model": "catalogue.attributeoptiongroup",
+        "pk": 2,
+        "fields": {
+            "name": "Sweetener"
+        }
+    },
+    {
+        "model": "catalogue.attributeoptiongroup",
+        "pk": 3,
+        "fields": {
+            "name": "Latte Flavors"
+        }
+    },
+    {
+        "model": "catalogue.attributeoptiongroup",
+        "pk": 4,
+        "fields": {
+            "name": "Bagel Toppings"
+        }
+    },
+    {
+        "model": "catalogue.attributeoptiongroup",
+        "pk": 5,
+        "fields": {
+            "name": "Donut Toppings"
+        }
+    },
+    {
+        "model": "catalogue.attributeoptiongroup",
+        "pk": 6,
+        "fields": {
+            "name": "Hot Chocolate Toppings"
+        }
+    },
+    {
+        "model": "catalogue.attributeoptiongroup",
+        "pk": 7,
+        "fields": {
+            "name": "Caffeinated Tea Options"
+        }
+    },
+    {
+        "model": "catalogue.attributeoptiongroup",
+        "pk": 8,
+        "fields": {
+            "name": "Decaffeinated Tea Options"
+        }
+    },
+    {
+        "model": "catalogue.attributeoptiongroup",
+        "pk": 9,
+        "fields": {
+            "name": "Drink Type"
+        }
+    },
+    {
+        "model": "catalogue.attributeoptiongroup",
+        "pk": 10,
+        "fields": {
+            "name": "Cliff Bar Types"
+        }
+    }
+]
