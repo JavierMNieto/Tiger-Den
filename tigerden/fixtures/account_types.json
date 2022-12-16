@@ -1,0 +1,79 @@
+[
+    {
+        "model": "oscar_accounts.accounttype",
+        "pk": 1,
+        "fields": {
+            "path": "0001",
+            "depth": 1,
+            "numchild": 3,
+            "code": null,
+            "name": "Assets"
+        }
+    },
+    {
+        "model": "oscar_accounts.accounttype",
+        "pk": 2,
+        "fields": {
+            "path": "00010001",
+            "depth": 2,
+            "numchild": 0,
+            "code": null,
+            "name": "Sales"
+        }
+    },
+    {
+        "model": "oscar_accounts.accounttype",
+        "pk": 3,
+        "fields": {
+            "path": "00010002",
+            "depth": 2,
+            "numchild": 0,
+            "code": null,
+            "name": "Cash"
+        }
+    },
+    {
+        "model": "oscar_accounts.accounttype",
+        "pk": 4,
+        "fields": {
+            "path": "00010003",
+            "depth": 2,
+            "numchild": 0,
+            "code": null,
+            "name": "Unpaid accounts"
+        }
+    },
+    {
+        "model": "oscar_accounts.accounttype",
+        "pk": 5,
+        "fields": {
+            "path": "0002",
+            "depth": 1,
+            "numchild": 1,
+            "code": null,
+            "name": "Liabilities"
+        }
+    },
+    {
+        "model": "oscar_accounts.accounttype",
+        "pk": 6,
+        "fields": {
+            "path": "00020001",
+            "depth": 2,
+            "numchild": 1,
+            "code": null,
+            "name": "Deferred income"
+        }
+    },
+    {
+        "model": "oscar_accounts.accounttype",
+        "pk": 7,
+        "fields": {
+            "path": "000200010001",
+            "depth": 3,
+            "numchild": 0,
+            "code": null,
+            "name": "Dashboard created accounts"
+        }
+    }
+]
