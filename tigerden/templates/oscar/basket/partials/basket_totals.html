@@ -25,7 +25,7 @@
 
                         {% for discount in offer_discounts %}
                             <tr>
-                                <td class="basket-discount"><span class="label label-success">{% trans "Discount" %}</span> {{ discount.name }}
+                                <td class="basket-discount"><span class="badge badge-success">{% trans "Discount" %}</span> {{ discount.name }}
                                     {% if discount.description %}
                                         <br/><small>{{ discount.description }}</small>
                                     {% endif %}
