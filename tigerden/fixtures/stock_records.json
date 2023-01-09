@@ -1,0 +1,578 @@
+[
+    {
+        "model": "partner.stockrecord",
+        "pk": 1,
+        "fields": {
+            "product": 1,
+            "partner": 1,
+            "partner_sku": "cinnamon_bites",
+            "price_currency": "USD",
+            "price": "1.00",
+            "num_in_stock": 99999,
+            "num_allocated": 96,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-20T03:59:59.727Z",
+            "date_updated": "2020-02-20T03:59:59.728Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 3,
+        "fields": {
+            "product": 3,
+            "partner": 1,
+            "partner_sku": "hot_coffee",
+            "price_currency": "USD",
+            "price": "1.00",
+            "num_in_stock": 99999,
+            "num_allocated": 6,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-20T04:03:01.664Z",
+            "date_updated": "2020-02-20T04:03:01.664Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 4,
+        "fields": {
+            "product": 4,
+            "partner": 1,
+            "partner_sku": "bagel",
+            "price_currency": "USD",
+            "price": "1.00",
+            "num_in_stock": 99999,
+            "num_allocated": 14,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-20T04:04:58.756Z",
+            "date_updated": "2020-02-20T04:04:58.756Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 5,
+        "fields": {
+            "product": 5,
+            "partner": 1,
+            "partner_sku": "eeffociced_",
+            "price_currency": "USD",
+            "price": "1.00",
+            "num_in_stock": 999999,
+            "num_allocated": 1,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-20T13:24:57.754Z",
+            "date_updated": "2020-02-20T13:24:57.754Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 6,
+        "fields": {
+            "product": 6,
+            "partner": 1,
+            "partner_sku": "Lemonade",
+            "price_currency": "USD",
+            "price": "1.00",
+            "num_in_stock": 1000,
+            "num_allocated": null,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-20T15:07:58.794Z",
+            "date_updated": "2020-02-20T15:07:58.794Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 7,
+        "fields": {
+            "product": 8,
+            "partner": 1,
+            "partner_sku": "strawberry_lemonade",
+            "price_currency": "USD",
+            "price": "1.00",
+            "num_in_stock": 1000,
+            "num_allocated": null,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-20T15:09:32.318Z",
+            "date_updated": "2020-02-20T15:09:50.400Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 8,
+        "fields": {
+            "product": 9,
+            "partner": 1,
+            "partner_sku": "orange_juice",
+            "price_currency": "USD",
+            "price": "1.00",
+            "num_in_stock": 1000,
+            "num_allocated": null,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-20T15:10:55.525Z",
+            "date_updated": "2020-02-20T15:10:55.525Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 9,
+        "fields": {
+            "product": 10,
+            "partner": 1,
+            "partner_sku": "water",
+            "price_currency": "USD",
+            "price": "1.00",
+            "num_in_stock": 1000,
+            "num_allocated": null,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-20T15:11:42.610Z",
+            "date_updated": "2020-02-20T15:11:42.610Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 10,
+        "fields": {
+            "product": 11,
+            "partner": 1,
+            "partner_sku": "glazed_donut",
+            "price_currency": "USD",
+            "price": "1.00",
+            "num_in_stock": 999999,
+            "num_allocated": 39,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-20T15:13:20.166Z",
+            "date_updated": "2020-02-20T15:13:20.166Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 11,
+        "fields": {
+            "product": 12,
+            "partner": 1,
+            "partner_sku": "choc_donut",
+            "price_currency": "USD",
+            "price": "1.00",
+            "num_in_stock": 999999,
+            "num_allocated": 7,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-20T15:13:53.122Z",
+            "date_updated": "2020-02-20T15:13:53.122Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 12,
+        "fields": {
+            "product": 13,
+            "partner": 1,
+            "partner_sku": "mocha_frappuccino",
+            "price_currency": "USD",
+            "price": "3.00",
+            "num_in_stock": 1000,
+            "num_allocated": null,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-20T15:14:11.842Z",
+            "date_updated": "2020-02-20T15:14:11.842Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 13,
+        "fields": {
+            "product": 14,
+            "partner": 1,
+            "partner_sku": "fruit_cup",
+            "price_currency": "USD",
+            "price": "2.00",
+            "num_in_stock": 999999,
+            "num_allocated": 7,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-20T15:14:36.862Z",
+            "date_updated": "2020-02-25T14:00:00.797Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 14,
+        "fields": {
+            "product": 15,
+            "partner": 1,
+            "partner_sku": "hard_boiled_eggs",
+            "price_currency": "USD",
+            "price": "1.00",
+            "num_in_stock": 999999,
+            "num_allocated": 1,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-20T15:15:27.387Z",
+            "date_updated": "2020-02-20T15:15:27.387Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 15,
+        "fields": {
+            "product": 16,
+            "partner": 1,
+            "partner_sku": "strawberry_smoothie",
+            "price_currency": "USD",
+            "price": "3.00",
+            "num_in_stock": 1000,
+            "num_allocated": null,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-20T15:16:11.219Z",
+            "date_updated": "2020-02-20T15:16:11.219Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 16,
+        "fields": {
+            "product": 17,
+            "partner": 1,
+            "partner_sku": "frozen_hot_chocolate",
+            "price_currency": "USD",
+            "price": "3.00",
+            "num_in_stock": 1000,
+            "num_allocated": 1,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-20T15:17:18.289Z",
+            "date_updated": "2020-02-20T15:17:18.289Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 17,
+        "fields": {
+            "product": 18,
+            "partner": 1,
+            "partner_sku": "choc_cookie",
+            "price_currency": "USD",
+            "price": "1.00",
+            "num_in_stock": 999999,
+            "num_allocated": 7,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-20T15:17:23.313Z",
+            "date_updated": "2020-02-20T15:17:23.313Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 18,
+        "fields": {
+            "product": 19,
+            "partner": 1,
+            "partner_sku": "choc_brownie_cookie",
+            "price_currency": "USD",
+            "price": "1.00",
+            "num_in_stock": 999999,
+            "num_allocated": 1,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-20T15:19:40.820Z",
+            "date_updated": "2020-02-20T15:19:40.820Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 19,
+        "fields": {
+            "product": 20,
+            "partner": 1,
+            "partner_sku": "reg_biscuits",
+            "price_currency": "USD",
+            "price": "2.00",
+            "num_in_stock": 999999,
+            "num_allocated": null,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-20T15:29:46.081Z",
+            "date_updated": "2020-02-20T15:29:46.081Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 20,
+        "fields": {
+            "product": 21,
+            "partner": 1,
+            "partner_sku": "lg_biscuits",
+            "price_currency": "USD",
+            "price": "3.00",
+            "num_in_stock": 999999,
+            "num_allocated": null,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-20T15:30:44.476Z",
+            "date_updated": "2020-02-20T15:30:44.476Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 21,
+        "fields": {
+            "product": 22,
+            "partner": 1,
+            "partner_sku": "sugar_cookie",
+            "price_currency": "USD",
+            "price": "1.00",
+            "num_in_stock": 999999,
+            "num_allocated": null,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-20T15:32:32.400Z",
+            "date_updated": "2020-02-20T15:32:32.400Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 22,
+        "fields": {
+            "product": 23,
+            "partner": 1,
+            "partner_sku": "snickerdoodle",
+            "price_currency": "USD",
+            "price": "1.00",
+            "num_in_stock": 999999,
+            "num_allocated": null,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-20T15:34:00.386Z",
+            "date_updated": "2020-02-20T15:34:00.386Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 23,
+        "fields": {
+            "product": 24,
+            "partner": 1,
+            "partner_sku": "carnival",
+            "price_currency": "USD",
+            "price": "1.00",
+            "num_in_stock": 999999,
+            "num_allocated": null,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-20T15:34:32.080Z",
+            "date_updated": "2020-02-20T15:34:32.080Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 24,
+        "fields": {
+            "product": 25,
+            "partner": 1,
+            "partner_sku": "hot_tea",
+            "price_currency": "USD",
+            "price": "1.00",
+            "num_in_stock": 1000,
+            "num_allocated": 1,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-20T15:34:52.779Z",
+            "date_updated": "2020-02-20T15:34:52.779Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 25,
+        "fields": {
+            "product": 26,
+            "partner": 1,
+            "partner_sku": "iced_tea",
+            "price_currency": "USD",
+            "price": "1.00",
+            "num_in_stock": 999999,
+            "num_allocated": 2,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-20T15:38:09.556Z",
+            "date_updated": "2020-02-20T15:38:09.556Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 27,
+        "fields": {
+            "product": 29,
+            "partner": 1,
+            "partner_sku": "hot_chocolate",
+            "price_currency": "USD",
+            "price": "1.00",
+            "num_in_stock": 1000,
+            "num_allocated": null,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-22T17:49:51.904Z",
+            "date_updated": "2020-02-22T17:49:51.904Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 31,
+        "fields": {
+            "product": 28,
+            "partner": 1,
+            "partner_sku": "choc_milk",
+            "price_currency": "USD",
+            "price": "1.00",
+            "num_in_stock": 10000,
+            "num_allocated": null,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-23T20:45:07.759Z",
+            "date_updated": "2020-02-23T20:45:07.759Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 32,
+        "fields": {
+            "product": 33,
+            "partner": 1,
+            "partner_sku": "iced_plain_latte",
+            "price_currency": "USD",
+            "price": "1.00",
+            "num_in_stock": 9999,
+            "num_allocated": null,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-23T22:35:39.249Z",
+            "date_updated": "2020-02-23T22:44:13.316Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 41,
+        "fields": {
+            "product": 42,
+            "partner": 1,
+            "partner_sku": "hot_plain_latte",
+            "price_currency": "USD",
+            "price": "1.00",
+            "num_in_stock": 9999,
+            "num_allocated": null,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-23T22:49:18.319Z",
+            "date_updated": "2020-02-23T22:49:18.319Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 50,
+        "fields": {
+            "product": 51,
+            "partner": 1,
+            "partner_sku": "parfait",
+            "price_currency": "USD",
+            "price": "1.00",
+            "num_in_stock": 9999,
+            "num_allocated": null,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-23T23:15:56.077Z",
+            "date_updated": "2020-02-23T23:15:56.077Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 51,
+        "fields": {
+            "product": 52,
+            "partner": 1,
+            "partner_sku": "choc_dipper_bar",
+            "price_currency": "USD",
+            "price": "1.00",
+            "num_in_stock": 9999,
+            "num_allocated": null,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-23T23:16:46.311Z",
+            "date_updated": "2020-02-25T14:01:12.913Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 52,
+        "fields": {
+            "product": 53,
+            "partner": 1,
+            "partner_sku": "cliff_bar",
+            "price_currency": "USD",
+            "price": "2.00",
+            "num_in_stock": 9999,
+            "num_allocated": null,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-23T23:18:22.024Z",
+            "date_updated": "2020-02-25T14:01:35.450Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 53,
+        "fields": {
+            "product": 54,
+            "partner": 1,
+            "partner_sku": "gluten_free_protein_bar",
+            "price_currency": "USD",
+            "price": "1.00",
+            "num_in_stock": 9999,
+            "num_allocated": 1,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-23T23:19:07.064Z",
+            "date_updated": "2020-02-23T23:19:07.064Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 54,
+        "fields": {
+            "product": 55,
+            "partner": 1,
+            "partner_sku": "s_granola_bar",
+            "price_currency": "USD",
+            "price": "1.00",
+            "num_in_stock": 9999,
+            "num_allocated": 1001,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-23T23:19:39.010Z",
+            "date_updated": "2020-02-23T23:19:39.010Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 55,
+        "fields": {
+            "product": 56,
+            "partner": 1,
+            "partner_sku": "hot_flavored_latte",
+            "price_currency": "USD",
+            "price": "1.00",
+            "num_in_stock": 99999,
+            "num_allocated": 1,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-25T00:24:46.060Z",
+            "date_updated": "2020-02-25T00:24:46.060Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 56,
+        "fields": {
+            "product": 57,
+            "partner": 1,
+            "partner_sku": "flavored_cappuccino",
+            "price_currency": "USD",
+            "price": "1.00",
+            "num_in_stock": 9999,
+            "num_allocated": 1,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-25T00:25:22.554Z",
+            "date_updated": "2020-02-25T00:25:22.554Z"
+        }
+    },
+    {
+        "model": "partner.stockrecord",
+        "pk": 57,
+        "fields": {
+            "product": 58,
+            "partner": 1,
+            "partner_sku": "iced_flavored_latte",
+            "price_currency": "USD",
+            "price": "1.00",
+            "num_in_stock": 9999,
+            "num_allocated": 1,
+            "low_stock_threshold": null,
+            "date_created": "2020-02-25T00:25:47.738Z",
+            "date_updated": "2020-02-25T00:25:47.738Z"
+        }
+    }
+]
