@@ -5,9 +5,11 @@
         "fields": {
             "name": "Decaffeinated Tea Option",
             "code": "Decaf_tea_opt",
-            "type": "option",
+            "type": "select",
             "option_group": 8,
-            "required": false
+            "required": false,
+            "help_text": null,
+            "order": null
         }
     },
     {
@@ -16,9 +18,11 @@
         "fields": {
             "name": "Bagel Toppings",
             "code": "bagel_toppings",
-            "type": "multi_option",
+            "type": "multi_select",
             "option_group": 4,
-            "required": false
+            "required": false,
+            "help_text": null,
+            "order": null
         }
     },
     {
@@ -27,9 +31,11 @@
         "fields": {
             "name": "Caffeinated Tea Option",
             "code": "caf_tea_opt",
-            "type": "option",
+            "type": "select",
             "option_group": 7,
-            "required": false
+            "required": false,
+            "help_text": null,
+            "order": null
         }
     },
     {
@@ -38,9 +44,11 @@
         "fields": {
             "name": "Cliff Bar Type",
             "code": "cliff_bar_type",
-            "type": "option",
+            "type": "select",
             "option_group": 10,
-            "required": true
+            "required": true,
+            "help_text": null,
+            "order": null
         }
     },
     {
@@ -49,9 +57,11 @@
         "fields": {
             "name": "Creamer",
             "code": "creamer",
-            "type": "option",
+            "type": "select",
             "option_group": 1,
-            "required": false
+            "required": false,
+            "help_text": null,
+            "order": null
         }
     },
     {
@@ -60,9 +70,11 @@
         "fields": {
             "name": "Donut Toppings",
             "code": "donut_toppings",
-            "type": "multi_option",
+            "type": "multi_select",
             "option_group": 5,
-            "required": false
+            "required": false,
+            "help_text": null,
+            "order": null
         }
     },
     {
@@ -71,9 +83,11 @@
         "fields": {
             "name": "Drink Type",
             "code": "drink_type",
-            "type": "option",
+            "type": "select",
             "option_group": 9,
-            "required": true
+            "required": true,
+            "help_text": null,
+            "order": null
         }
     },
     {
@@ -82,9 +96,11 @@
         "fields": {
             "name": "Flavor",
             "code": "flavors",
-            "type": "option",
+            "type": "select",
             "option_group": 3,
-            "required": true
+            "required": true,
+            "help_text": null,
+            "order": null
         }
     },
     {
@@ -95,7 +111,9 @@
             "code": "gluten_free",
             "type": "boolean",
             "option_group": null,
-            "required": false
+            "required": false,
+            "help_text": null,
+            "order": null
         }
     },
     {
@@ -104,9 +122,11 @@
         "fields": {
             "name": "Hot Chocolate",
             "code": "hot_choc",
-            "type": "multi_option",
+            "type": "multi_select",
             "option_group": 6,
-            "required": false
+            "required": false,
+            "help_text": null,
+            "order": null
         }
     },
     {
@@ -117,7 +137,9 @@
             "code": "special_req",
             "type": "text",
             "option_group": null,
-            "required": false
+            "required": false,
+            "help_text": null,
+            "order": null
         }
     },
     {
@@ -128,7 +150,9 @@
             "code": "sprinkles",
             "type": "boolean",
             "option_group": null,
-            "required": false
+            "required": false,
+            "help_text": null,
+            "order": null
         }
     },
     {
@@ -137,9 +161,11 @@
         "fields": {
             "name": "Sweetener",
             "code": "sweetener",
-            "type": "option",
+            "type": "select",
             "option_group": 2,
-            "required": false
+            "required": false,
+            "help_text": null,
+            "order": null
         }
     },
     {
@@ -150,7 +176,9 @@
             "code": "toasted",
             "type": "boolean",
             "option_group": null,
-            "required": false
+            "required": false,
+            "help_text": null,
+            "order": null
         }
     },
     {
@@ -161,7 +189,9 @@
             "code": "whipped_cream",
             "type": "boolean",
             "option_group": null,
-            "required": false
+            "required": false,
+            "help_text": null,
+            "order": null
         }
     }
 ]
