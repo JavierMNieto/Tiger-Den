@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import argparse
 import os
@@ -28,10 +28,6 @@ def parse_arguments():
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(help="commands")
 
-    # setup virtualenv
-    env_parser = subparsers.add_parser("setup", help="setup environment")
-    env_parser.set_defaults(func=setup_env)
-
     # initialize db
     db_parser = subparsers.add_parser("initdb", help="initialize database")
     db_parser.set_defaults(func=initialize_db)
@@ -47,17 +43,9 @@ def runserver(args):
     os.system(f"python {MANAGE} runserver")
 
 
-def setup_env(args):
-    pass
-
-
-# def activate_env(args):
-#     os.system(f'"{windows_activate}"')
-
-
 def initialize_db(args):
-    # os.system(f"python {MANAGE} migrate --run-syncdb")
-    # os.system(f"python {MANAGE} createsuperuser")
+    os.system(f"python {MANAGE} migrate --run-syncdb")
+    os.system(f"python {MANAGE} createsuperuser")
     for fixture in FIXTURES:
         fixture_path = os.path.join(FIXTURES_DIR, fixture)
         os.system(f"python {MANAGE} loaddata {fixture_path}")
