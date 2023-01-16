@@ -1,0 +1,36 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+asgiref = ">=3.5.2"
+autopep8 = ">=2.0.1"
+babel = ">=2.11.0"
+django = ">=3.2.16"
+django-extra-views = ">=0.13.0"
+django-haystack = ">=3.2.1"
+django-oscar = ">=3.1"
+django-oscar-accounts = ">=3.0.1"
+django-phonenumber-field = ">=5.2.0"
+django-tables2 = ">=2.3.4"
+django-treebeard = ">=4.4"
+django-widget-tweaks = ">=1.4.12"
+factory-boy = ">=3.2.1"
+faker = ">=15.3.4"
+phonenumbers = ">=8.13.2"
+pillow = ">=9.3.0"
+purl = ">=1.6"
+pycodestyle = ">=2.10.0"
+sorl-thumbnail = "*"
+six = "*"
+python-dateutil = "*"
+sqlparse = "*"
+pytz = "*"
+tomli = "*"
+tzdata = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.11"
