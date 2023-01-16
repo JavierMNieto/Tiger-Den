@@ -15,47 +15,47 @@
                 {% purchase_info_for_line request line as session %}
                 <div class="basket-items">
                     <div class="row">
-                        <div class="col-sm-2">
+                        <div class="col-md-2 text-center text-md-left">
                             {{ form.id }}
                             {% with image=product.primary_image %}
                                 {% oscar_thumbnail image.original "100x100" upscale=False as thumb %}
                                 <a href="{{ product.get_absolute_url }}">
-                                    <img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"/>
+                                    <img class="img-thumbnail mx-auto my-0" src="{{ thumb.url }}" alt="{{ product.get_title }}"/>
                                 </a>
                             {% endwith %}
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-md-4">
                             <h3 style="margin-bottom: 2px;"><a href="{{ product.get_absolute_url }}">{{ product.title }}</a></h3>
                             <p class="availability {{ session.availability.code }}" style="margin-bottom: 0;">{{ session.availability.message }}</p>
                             {% include "oscar/basket/partials/line_attributes.html" with line=line %}
                         </div>
-                        <div class="col-sm-3 col-xs-9">
+                        <div class="col-md-3 col-8">
                             <div class="checkout-quantity">
-                                <div class="input-group  {% if form.errors %}error{% endif %}">
+                                <div class="input-group{% if form.errors %} error{% endif %}">
                                     {% render_field form.quantity class+="form-control" %}
                                     <span class="input-group-btn">
                                         <button class="btn btn-default" type="submit" data-loading-text="{% trans 'Updating...' %}">{% trans "Update" %}</button>
                                     </span>
                                 </div>
                             </div>
-                                <div>
-                                    <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="remove" class="inline">{% trans "Remove" %}</a>
-                                    <div style="display:none">
-                                        {{ form.save_for_later }}
-                                        {{ form.DELETE }}
-                                    </div>
-                                    {% for field_errors in form.errors.values %}
-                                        {% for error in field_errors %}
-                                            <span class="error-block"><i class="icon-exclamation-sign"></i> {{ error }}</span>
-                                        {% endfor %}
-                                    {% endfor %}
+                            <div>
+                                <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="remove" class="inline">{% trans "Remove" %}</a>
+                                <div style="display:none">
+                                    {{ form.save_for_later }}
+                                    {{ form.DELETE }}
                                 </div>
+                                {% for field_errors in form.errors.values %}
+                                    {% for error in field_errors %}
+                                        <span class="error-block"><i class="icon-exclamation-sign"></i> {{ error }}</span>
+                                    {% endfor %}
+                                {% endfor %}
+                            </div>
                         </div>
-                        <div class="col-sm-1 hidden-xs">
+                        <div class="col-md-1 d-none d-md-block">
                             {% if not line.unit_price_incl_tax and not line.unit_tax_excl_tax %}
-                                <p class="align-right">&mdash;</p>
+                                <p class="text-right mt-2">&mdash;</p>
                             {% else %}
-                                <p class="price_color align-right">
+                                <p class="price_color text-right mt-2">
                                     {% if line.is_tax_known %}
                                         {{ line.unit_price_incl_tax|currency:line.price_currency }}
                                     {% else %}
@@ -64,11 +64,11 @@
                                 </p>
                             {% endif %}
                         </div>
-                        <div class="col-sm-2 col-xs">
+                        <div class="col-md-2 col-4">
                             {% if not line.line_price_incl_tax and not line_price_excl_tax %}
-                                <p class="align-right">&mdash;</p>
+                                <p class="text-right mt-2">&mdash;</p>
                             {% else %}
-                                <p class="price_color align-right">
+                                <p class="price_color text-right mt-2">
                                     {% if line.is_tax_known %}
                                         {{ line.line_price_incl_tax|currency:line.price_currency }}
                                     {% else %}

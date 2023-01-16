@@ -43,3 +43,5 @@ coverage.xml
 *.log
 *.pot
 venv/
+.prettierignore
+Pipfile.lock

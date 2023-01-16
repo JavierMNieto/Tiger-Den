@@ -38,7 +38,7 @@
     {% block order_contents %}
         <div class="sub-header">
             {% block order_contents_actions %}
-                <a href="{% url 'basket:summary' %}" class="pull-right">
+                <a href="{% url 'basket:summary' %}" class="float-right">
                     {% trans "Edit order contents" %}
                 </a>
             {% endblock %}
@@ -47,9 +47,9 @@
         </div>
         <div class="basket-title">
             <div class="row">
-                <p class="col-sm-9 col-xs-6 h4">{% trans "Item" %}</p>
-                <p class="col-sm-1 col-xs-3 h4 align-center">{% trans "Quantity" %}</p>
-                <p class="col-sm-2 col-xs-3 h4 align-right">{% trans "Total" %}</p>
+                <p class="col-sm-9 h4">{% trans "Item" %}</p>
+                <p class="col-sm-1 h4 text-center">{% trans "Quantity" %}</p>
+                <p class="col-sm-2 h4 text-right">{% trans "Total" %}</p>
             </div>
         </div>
         {% for line in basket.all_lines %}

@@ -1,0 +1,274 @@
+[
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 1,
+        "fields": {
+            "group": 1,
+            "option": "Regular"
+        }
+    },
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 2,
+        "fields": {
+            "group": 1,
+            "option": "French Vanilla"
+        }
+    },
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 3,
+        "fields": {
+            "group": 1,
+            "option": "Hazelnut"
+        }
+    },
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 4,
+        "fields": {
+            "group": 1,
+            "option": "Half & Half"
+        }
+    },
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 5,
+        "fields": {
+            "group": 2,
+            "option": "Sugar"
+        }
+    },
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 6,
+        "fields": {
+            "group": 2,
+            "option": "Sweet'n Low"
+        }
+    },
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 7,
+        "fields": {
+            "group": 2,
+            "option": "Equal"
+        }
+    },
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 8,
+        "fields": {
+            "group": 2,
+            "option": "Splenda"
+        }
+    },
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 9,
+        "fields": {
+            "group": 3,
+            "option": "Chocolate Mocha"
+        }
+    },
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 10,
+        "fields": {
+            "group": 3,
+            "option": "French Vanilla"
+        }
+    },
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 11,
+        "fields": {
+            "group": 3,
+            "option": "Caramel"
+        }
+    },
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 12,
+        "fields": {
+            "group": 3,
+            "option": "Peppermint"
+        }
+    },
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 13,
+        "fields": {
+            "group": 3,
+            "option": "Vanilla"
+        }
+    },
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 14,
+        "fields": {
+            "group": 3,
+            "option": "Hazelnut"
+        }
+    },
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 15,
+        "fields": {
+            "group": 3,
+            "option": "Salted Caramel"
+        }
+    },
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 16,
+        "fields": {
+            "group": 3,
+            "option": "Chocolate Mint"
+        }
+    },
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 17,
+        "fields": {
+            "group": 4,
+            "option": "Cream Cheese"
+        }
+    },
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 18,
+        "fields": {
+            "group": 4,
+            "option": "Butter"
+        }
+    },
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 19,
+        "fields": {
+            "group": 4,
+            "option": "Jelly"
+        }
+    },
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 20,
+        "fields": {
+            "group": 5,
+            "option": "Chocolate"
+        }
+    },
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 21,
+        "fields": {
+            "group": 5,
+            "option": "Vanilla"
+        }
+    },
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 22,
+        "fields": {
+            "group": 5,
+            "option": "Sprinklers"
+        }
+    },
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 23,
+        "fields": {
+            "group": 6,
+            "option": "Whipped Cream"
+        }
+    },
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 24,
+        "fields": {
+            "group": 6,
+            "option": "Marshmallows"
+        }
+    },
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 25,
+        "fields": {
+            "group": 7,
+            "option": "Black Tea"
+        }
+    },
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 26,
+        "fields": {
+            "group": 7,
+            "option": "Green Tea"
+        }
+    },
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 27,
+        "fields": {
+            "group": 7,
+            "option": "Lemon Tea"
+        }
+    },
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 28,
+        "fields": {
+            "group": 8,
+            "option": "Black Tea"
+        }
+    },
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 29,
+        "fields": {
+            "group": 8,
+            "option": "Green Tea"
+        }
+    },
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 30,
+        "fields": {
+            "group": 8,
+            "option": "Lemon Tea"
+        }
+    },
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 31,
+        "fields": {
+            "group": 9,
+            "option": "Hot"
+        }
+    },
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 32,
+        "fields": {
+            "group": 9,
+            "option": "Iced"
+        }
+    },
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 33,
+        "fields": {
+            "group": 10,
+            "option": "Chocolate Chip"
+        }
+    },
+    {
+        "model": "catalogue.attributeoption",
+        "pk": 34,
+        "fields": {
+            "group": 10,
+            "option": "Peanut Butter"
+        }
+    }
+]

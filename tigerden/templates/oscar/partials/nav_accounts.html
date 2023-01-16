@@ -20,35 +20,46 @@
     </form>
 {% endif %}
 {% endblock %}
-<ul class="nav navbar-nav navbar-right">
+<ul class="nav navbar-nav mr-auto">
     {% if user.is_authenticated %}
     {% block nav_account_navbar_authenticated %}
-        <li>
-            <h4>
-                Tiger Den Credit: <span>{{ request.user.get_bal|currency:"USD" }}</span>
-            </h4>
-        </li>
-        <li>
+        <li class="nav-item mr-2">
             {% if num_unread_notifications > 0 %}
                 {# If user has new notifications - we change account link to go to inbox #}
-                <a href="{% url 'customer:notifications-inbox' %}">
-                    <i class="icon-user"></i>
+                <a href="{% url 'customer:notifications-inbox' %}" class="nav-link">
+                    <i class="far fa-user mr-2"></i>
                     {% trans "Account" %}
-                    <span class="label label-warning">{{ num_unread_notifications }}</span>
+                    <span class="badge badge-warning">{{ num_unread_notifications }}</span>
                 </a>
             {% else %}
-                <a href="{% url 'customer:summary' %}"><i class="icon-user"></i> {% trans "Account" %}</a>
+                <a href="{% url 'customer:summary' %}" class="nav-link">
+                    <i class="far fa-user mr-2"></i> 
+                    {% trans "Account" %}
+                </a>
             {% endif %}
         </li>
         {% if user.is_staff or perms.partner.dashboard_access %}
-            <li><a href="{% url 'dashboard:index' %}"><i class="icon-list-ul"></i> {% trans "Dashboard" %}</a></li>
+            <li class="nav-item mr-2">
+                <a href="{% url 'dashboard:index' %}" class="nav-link">
+                    <i class="fas fa-list-ul mr-2"></i> 
+                    {% trans "Dashboard" %}
+                </a>
+            </li>
         {% endif %}
-        <li><a id="logout_link" href="{% url 'customer:logout' %}"><i class="icon-signout"></i> {% trans "Logout" %}</a></li>
+        <li class="nav-item mr-2">
+            <a id="logout_link" href="{% url 'customer:logout' %}" class="nav-link">
+                <i class="fas fa-sign-out-alt mr-2"></i> 
+                {% trans "Logout" %}
+            </a>
+        </li>
+        <li class="nav-item navbar-text h4 my-auto mr-2">
+            Credits: <span>{{ request.user.get_bal|currency:"USD" }}</span>
+        </li>
     {% endblock %}
     {% else %}
-        <li>
-            <a id="login_link" href="{% url 'customer:login' %}">
-                <i class="icon-signin"></i> 
+        <li class="nav-item mr-2">
+            <a id="login_link" href="{% url 'customer:login' %}" class="nav-link py-0">
+                <i class="fas fa-sign-in-alt mr-2"></i>
                 {% trans "Login or register" %}
             </a>
         </li>

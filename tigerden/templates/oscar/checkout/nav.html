@@ -1,14 +1,14 @@
 {% load i18n %}
 {% load custom_tags %}
 
-<div class="navbar navbar-static-top navbar-inverse nav-checkout">
-    <ul class="nav navbar-nav">
+<div class="navbar navbar-static-top sticky-top nav-checkout navbar-expand-md navbar-dark bg-dark">
+    <ul class="navbar-nav w-100">
         {% spaceless %}
             {% if request.user.is_authenticated and request.user.is_supervisor %}
-                <li class="step1 {% if step == 1 %}active{% else %}{% if step == 2 %}previous{% else %}{% if step > 1 %}visited{% else %}disabled{% endif %}{% endif %}{% endif %} ">
+                <li class="nav-item step1 {% if step == 1 %}active{% else %}{% if step == 2 %}previous{% else %}{% if step > 1 %}visited{% else %}disabled{% endif %}{% endif %}{% endif %} ">
                     {% if step == 1 or step == 2 or step == 3 %}
-                        <a href="{% url 'checkout:delivery-info' %}">
-                            <span class="visible-inline-sm icon-chevron-right"></span>
+                        <a href="{% url 'checkout:delivery-info' %}" class="nav-link">
+                            <i class="fas fa-chevron-right"></i>
                             <span>
                                 {% trans "1. Delivery" %}
                             </span>
@@ -20,10 +20,10 @@
                     {% endif %}
                 </li>
             {% else %}
-                <li class="step1 {% if step == 1 %}active{% else %}{% if step == 2 %}previous{% else %}{% if step > 1 %}visited{% else %}disabled{% endif %}{% endif %}{% endif %} ">
+                <li class="nav-item step1 {% if step == 1 %}active{% else %}{% if step == 2 %}previous{% else %}{% if step > 1 %}visited{% else %}disabled{% endif %}{% endif %}{% endif %} ">
                     {% if step == 1 or step == 2 or step == 3 %}
-                        <a href="{% url 'checkout:supervisor-info' %}">
-                            <span class="visible-inline-sm icon-chevron-right"></span>
+                        <a href="{% url 'checkout:supervisor-info' %}" class="nav-link">
+                            <i class="fas fa-chevron-right"></i>
                             <span>
                                 {% trans "1. Supervisor" %}
                             </span>
@@ -36,10 +36,10 @@
                 </li>
             {% endif %}
             {% if request.user.is_authenticated and request.user.is_supervisor and request.basket.is_empty %}
-            <li class="step2 {% if step == 2 %}active{% else %}{% if step == 3 %}previous{% else %}{% if step > 2 %}visited{% else %}disabled{% endif %}{% endif %}{% endif %} ">
+            <li class="nav-item step2 {% if step == 2 %}active{% else %}{% if step == 3 %}previous{% else %}{% if step > 2 %}visited{% else %}disabled{% endif %}{% endif %}{% endif %} ">
                 {% if step == 2 or step == 3 %}
-                    <a href="{% url 'checkout:order-requests' %}">
-                        <span class="visible-inline-sm icon-chevron-right"></span>
+                    <a href="{% url 'checkout:order-requests' %}" class="nav-link">
+                        <i class="fas fa-chevron-right"></i>
                         <span>
                             {% trans "2. Orders" %}
                         </span>
@@ -51,10 +51,10 @@
                 {% endif %}
             </li>
             {% else %}
-            <li class="step2 {% if step == 2 %}active{% else %}{% if step == 3 %}previous{% else %}{% if step > 2 %}visited{% else %}disabled{% endif %}{% endif %}{% endif %} ">
+            <li class="nav-item step2 {% if step == 2 %}active{% else %}{% if step == 3 %}previous{% else %}{% if step > 2 %}visited{% else %}disabled{% endif %}{% endif %}{% endif %} ">
                 {% if step == 2 or step == 3 and request.user.is_authenticated %}
-                    <a href="{% url 'checkout:payment-method' %}">
-                        <span class="visible-inline-sm icon-chevron-right"></span>
+                    <a href="{% url 'checkout:payment-method' %}" class="nav-link">
+                        <i class="fas fa-chevron-right"></i>
                         <span>
                             {% trans "2. Payment" %}
                         </span>
@@ -66,26 +66,24 @@
                 {% endif %}
             </li>
             {% endif %}
-            <li class="step3 {% if step == 3 or step == 4 %}active{% else %}disabled{% endif %} ">
+            <li class="nav-item step3 {% if step == 3 or step == 4 %}active{% else %}disabled{% endif %} ">
                 <span class="navbar-text">
                     {% trans "3. Confirmation" %}
                 </span>
             </li>
+            {% if request.user.is_authenticated and request.user.is_supervisor %}
+                <li class="nav-item text-center flex-grow-1 mt-n1">
+                    {% ongoing_group_orders as ongoing %}
+                    <strong class="text-{{ ongoing.css }}">
+                        {{ ongoing.status }}
+                    </strong>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-{{ ongoing.css }} progress-bar-striped active" role="progressbar" aria-valuenow="{{ ongoing.percent }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ ongoing.percent }}%; overflow: visible;">
+                            <em class="ml-1" style="color:#333333; white-space: nowrap;">{{ ongoing.count }} ongoing orders</em>
+                        </div>
+                    </div>
+                </li>
+            {% endif %}
         {% endspaceless %}
     </ul><!-- /navbar-inner -->
-    {% if request.user.is_authenticated and request.user.is_supervisor %}
-    <ul class="nav navbar-nav navbar-right" style="width:50%; margin-bottom: -15px; margin-top: 5px;">
-        <li class="col-sm-offset-0 col-xs-offset-6 col-xs-12">
-            {% ongoing_group_orders as ongoing %}
-            <strong class="text-{{ ongoing.css }}">
-                {{ ongoing.status }}
-            </strong>
-            <div class="progress">
-                <div class="progress-bar progress-bar-{{ ongoing.css }} progress-bar-striped active" role="progressbar" aria-valuenow="{{ ongoing.percent }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ ongoing.percent }}%;">
-                    <em style="color:#333333;white-space: nowrap; margin-left: 5px;">{{ ongoing.count }} ongoing orders</em>
-                </div>
-            </div>
-        </li>
-    </ul>
-    {% endif %}
 </div><!-- /navbar -->

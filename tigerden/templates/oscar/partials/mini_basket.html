@@ -1,23 +1,25 @@
 {% load currency_filters %}
 {% load i18n %}
 
-<div class="basket-mini pull-right hidden-xs">
-    <strong>{% trans "Basket total:" %}</strong>
-    {% if request.basket.is_tax_known %}
-        {{ request.basket.total_incl_tax|currency:request.basket.currency }}
-    {% else %}
-        {{ request.basket.total_excl_tax|currency:request.basket.currency }}
-    {% endif %}
+<div class="basket-mini position-absolute d-none d-sm-flex justify-content-end mr-5 mt-1" style="right: 0">
+    <span class="my-auto">
+        <strong>{% trans "Basket total:" %}</strong>
+        {% if request.basket.is_tax_known %}
+            {{ request.basket.total_incl_tax|currency:request.basket.currency }}
+        {% else %}
+            {{ request.basket.total_excl_tax|currency:request.basket.currency }}
+        {% endif %}
+    </span>
 
     <span class="btn-group">
         <a class="btn btn-default" href="{% url 'basket:summary' %}">
             {% trans "View basket" %} 
-            <span class="label label-warning req_cart_label" style="display: none;"></span>
+            <span class="badge badge-warning req_cart_label" style="display: none;"></span>
         </a>
-        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false">
             <span class="caret"></span>
         </button>
-        <ul class="dropdown-menu pull-right">
+        <ul class="dropdown-menu dropdown-menu-right float-right">
             <li>{% include "oscar/basket/partials/basket_quick.html" %}</li>
         </ul>
     </span>

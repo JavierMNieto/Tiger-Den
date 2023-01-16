@@ -7,12 +7,16 @@
             <h2>{% trans 'Products you recently viewed' %}</h2>
         </div>
 
-        <ul class="row">
-        {% for product in products_sliced %}
-            <a href="{{product.get_absolute_url}}">
-                <li class="col-xs-6 col-sm-4 col-md-3 col-lg-3">{% render_product product %}</li>
-            </a>
-        {% endfor %}
-        </ul>
+        <section>
+            <div class="container">
+                <ol class="row list-unstyled ml-0 pl-0">
+                    {% for product in products_sliced %}
+                        <li class="col-xs-6 col-sm-4 col-md-3 col-lg-3 m-0 p-1">
+                            {% render_product product %}
+                        </li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </section>
     {% endif %}
 {% endwith %}

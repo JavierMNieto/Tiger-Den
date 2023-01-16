@@ -3,7 +3,7 @@
 {% load shipping_tags %}
 
 <div id="basket_totals">
-    <table class="table table-condensed table-responsive">
+    <table class="table table-sm">
         <tbody>
             <tr>
                 <th colspan="2"><h3>{% trans "Your Cart" %}</h3></th>
@@ -25,7 +25,7 @@
 
                         {% for discount in offer_discounts %}
                             <tr>
-                                <td class="basket-discount"><span class="label label-success">{% trans "Discount" %}</span> {{ discount.name }}
+                                <td class="basket-discount"><span class="badge badge-success">{% trans "Discount" %}</span> {{ discount.name }}
                                     {% if discount.description %}
                                         <br/><small>{{ discount.description }}</small>
                                     {% endif %}
