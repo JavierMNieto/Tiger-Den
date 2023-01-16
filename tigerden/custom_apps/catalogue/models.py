@@ -1,8 +1,7 @@
 from datetime import date, datetime
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from oscar.apps.catalogue.abstract_models import AbstractProductAttribute, AbstractProductClass, AbstractProduct
-from oscar.models.fields import AutoSlugField
+from oscar.apps.catalogue.abstract_models import AbstractOption, AbstractProductClass, AbstractProduct
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 from django.core.files.base import File
@@ -37,15 +36,14 @@ class ProductClass(AbstractProductClass):
         _("Requires shipping?"), default=False)
 
 
-class Option(models.Model):
+class Option(AbstractOption):
     """
     Defines an option for a product class. (For example, number_of_pages for
     a 'book' class)
     """
 
-    name = models.CharField(_('Name'), max_length=128)
     code = models.SlugField(
-        _('Code'), max_length=128,
+        _('Code'), max_length=128, unique=True,
         validators=[
             RegexValidator(
                 regex=r'^[a-zA-Z_][0-9a-zA-Z_]*$',
@@ -54,73 +52,6 @@ class Option(models.Model):
                     "and underscores, and can't start with a digit.")),
             non_python_keyword
         ])
-
-    # Option types
-    TEXT = "text"
-    INTEGER = "integer"
-    BOOLEAN = "boolean"
-    FLOAT = "float"
-    RICHTEXT = "richtext"
-    DATE = "date"
-    DATETIME = "datetime"
-    OPTION = "option"
-    MULTI_OPTION = "multi_option"
-    ENTITY = "entity"
-    FILE = "file"
-    IMAGE = "image"
-    TYPE_CHOICES = (
-        (TEXT, _("Text")),
-        (INTEGER, _("Integer")),
-        (BOOLEAN, _("True / False")),
-        (FLOAT, _("Float")),
-        (RICHTEXT, _("Rich Text")),
-        (DATE, _("Date")),
-        (DATETIME, _("Datetime")),
-        (OPTION, _("Option")),
-        (MULTI_OPTION, _("Multi Option")),
-        (ENTITY, _("Entity")),
-        (FILE, _("File")),
-        (IMAGE, _("Image")),
-    )
-
-    type = models.CharField(
-        choices=TYPE_CHOICES, default=TYPE_CHOICES[0][0],
-        max_length=20, verbose_name=_("Type"))
-
-    option_group = models.ForeignKey(
-        'catalogue.AttributeOptionGroup',
-        blank=True,
-        null=True,
-        on_delete=models.CASCADE,
-        related_name='product_options',
-        verbose_name=_("Option Group"),
-        help_text=_('Select an option group if using type "Option" or "Multi Option"'))
-    required = models.BooleanField(_('Required'), default=False)
-
-    class Meta:
-        app_label = 'catalogue'
-        ordering = ['code']
-        verbose_name = _('Product option')
-        verbose_name_plural = _('Product options')
-
-    @property
-    def is_option(self):
-        return self.type == self.OPTION
-
-    @property
-    def is_multi_option(self):
-        return self.type == self.MULTI_OPTION
-
-    @property
-    def is_file(self):
-        return self.type in [self.FILE, self.IMAGE]
-
-    @property
-    def is_required(self):
-        return self.required
-
-    def __str__(self):
-        return self.name
 
     def _save_file(self, value_obj, value):
         # File fields in Django are treated differently, see

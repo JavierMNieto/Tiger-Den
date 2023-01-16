@@ -74,6 +74,6 @@ class OrderCreator(utils.OrderCreator):
                 self.record_voucher_usage(order, voucher, user)
 
         # Send signal for analytics to pick up
-        #order_placed.send(sender=self, order=order, user=user)
-        print("Stopped order_placed")
+        # order_placed.send(sender=self, order=order, user=user)
+        # print("Stopped order_placed")
         return order
