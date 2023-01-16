@@ -59,8 +59,7 @@ class OrderPlacementMixin(mixins.OrderPlacementMixin):
                 req.save()
 
                 # Send confirmation message (normally an email)
-                self.send_confirmation_message(
-                    req, self.communication_type_code)
+                # self.send_order_placed_email(req)
 
         group_order.set_status(GroupOrder.all_statuses()[1])
 
@@ -81,7 +80,7 @@ class OrderPlacementMixin(mixins.OrderPlacementMixin):
         order is submitted.
         """
         # Send confirmation message (normally an email)
-        #self.send_confirmation_message(order, self.communication_type_code)
+        # self.send_order_placed_email(order, )
 
         # Flush all session data
         self.checkout_session.flush()
