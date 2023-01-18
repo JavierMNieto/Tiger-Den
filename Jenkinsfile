@@ -4,6 +4,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
+                sh 'mkdir .venv'
                 sh 'pipenv install'
                 sh 'pipenv run python ./tigerden/manage.py migrate'
             }
