@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                bat 'mkdir .venv'
+                bat 'if not exist .venv mkdir .venv'
                 bat 'pipenv install'
                 bat 'pipenv run python ./tigerden/manage.py migrate'
             }
