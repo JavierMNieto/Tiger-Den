@@ -4,19 +4,19 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'mkdir .venv'
-                sh 'pipenv install'
-                sh 'pipenv run python ./tigerden/manage.py migrate'
+                bat 'mkdir .venv'
+                bat 'pipenv install'
+                bat 'pipenv run python ./tigerden/manage.py migrate'
             }
         }
         stage('Test') {
             steps {
-                sh 'pipenv run python ./tigerden/manage.py test'
+                bat 'pipenv run python ./tigerden/manage.py test'
             }
         }
         stage('Deploy') {
             steps {
-                sh 'pipenv run python ./tigerden/manage.py runserver'
+                bat 'pipenv run python ./tigerden/manage.py runserver'
             }
         }
     }
