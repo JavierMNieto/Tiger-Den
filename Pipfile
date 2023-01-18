@@ -29,6 +29,7 @@ sqlparse = "*"
 pytz = "*"
 tomli = "*"
 tzdata = "*"
+wfastcgi = "*"
 
 [dev-packages]
 
