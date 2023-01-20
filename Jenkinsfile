@@ -16,7 +16,9 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                bat 'pipenv run python ./tigerden/manage.py runserver'
+                bat 'pipenv run python ./tigerden/manage.py collectstatic --noinput'
+                bat '%windir%\\system32\\inetsrv\\appcmd stop site /site.name:"Tiger Den"'
+                bat '%windir%\\system32\\inetsrv\\appcmd start site /site.name:"Tiger Den"'
             }
         }
     }
