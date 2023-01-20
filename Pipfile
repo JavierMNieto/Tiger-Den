@@ -23,13 +23,8 @@ pillow = ">=9.3.0"
 purl = ">=1.6"
 pycodestyle = ">=2.10.0"
 sorl-thumbnail = "*"
-six = "*"
-python-dateutil = "*"
-sqlparse = "*"
-pytz = "*"
-tomli = "*"
-tzdata = "*"
 wfastcgi = "*"
+pytz = "*"
 
 [dev-packages]
 
