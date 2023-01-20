@@ -196,7 +196,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-# MEDIA_ROOT = location('public/media')
 MEDIA_ROOT = location('tigerden/public/media')
 STATIC_ROOT = location('public/static')
 STATICFILES_DIRS = (
