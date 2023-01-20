@@ -198,7 +198,7 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 # MEDIA_ROOT = location('public/media')
 MEDIA_ROOT = location('tigerden/public/media')
-STATIC_ROOT = location('public/static')
+STATIC_ROOT = location('static')
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
