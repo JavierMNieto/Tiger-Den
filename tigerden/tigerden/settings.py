@@ -26,13 +26,16 @@ def location(x): return os.path.join(
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ')st-+2u+a=d@ky-$i8^c6196yq--axn@@==b(0g4oo-5ibck^('
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ["*"]
+if os.environ.get('DJANGO_PRODUCTION') == 'true':
+    SECRET_KEY = os.environ.get('SECRET_KEY')
+    DEBUG = False
+    ALLOWED_HOSTS = ['192.168.26.43:80']
+else:
+    # SECURITY WARNING: keep the secret key used in production secret!
+    SECRET_KEY = ')st-+2u+a=d@ky-$i8^c6196yq--axn@@==b(0g4oo-5ibck^('
+    # SECURITY WARNING: don't run with debug turned on in production!
+    DEBUG = True
+    ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
