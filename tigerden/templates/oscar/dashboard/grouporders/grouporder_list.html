@@ -93,7 +93,7 @@
     {% if grouporders %}
         <form method="post" class="order_table" id="orders_form">
             {% csrf_token %}
-            {% include "oscar/dashboard/orders/partials/bulk_edit_form.html" with status=active_status %}
+            {% comment %} {% include "oscar/dashboard/orders/partials/bulk_edit_form.html" with status=active_status %} {% endcomment %}
 
             {% block order_list %}
             <div class="table-responsive" style="overflow-y: auto !important; max-height: 500px; display: inline-block; width: 100%;">
@@ -154,7 +154,7 @@
                     {% endif %}
                 </div>
             {% endblock %}
-            {% include "oscar/dashboard/orders/partials/bulk_edit_form.html" with status=active_status %}
+            {% comment %} {% include "oscar/dashboard/orders/partials/bulk_edit_form.html" with status=active_status %} {% endcomment %}
             {% include "oscar/dashboard/partials/pagination.html" %}
         </form>
     {% else %}

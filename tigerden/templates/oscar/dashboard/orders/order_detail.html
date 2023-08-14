@@ -77,11 +77,11 @@
 
     <div class="tabbable dashboard">
 
-        <ul class="nav nav-tabs">
+        <ul class="nav">
             {% block nav_tabs %}
-                <li class="{% if active_tab == 'lines' %}active{% endif %}"><a href="#lines" data-toggle="tab">{% trans "Order contents" %}</a></li>
-                <li class="{% if active_tab == 'payment' %}active{% endif %}"><a href="#payment" data-toggle="tab">{% trans "Payment" %}</a></li>
-                <li class="{% if active_tab == 'notes' %}active{% endif %}"><a href="#notes" data-toggle="tab">{% trans "Notes" %}</a></li>
+                <li class="nav-item {% if active_tab == 'lines' %}active{% endif %}"><a class="nav-link" href="#lines" data-toggle="tab">{% trans "Order contents" %}</a></li>
+                <li class="nav-item {% if active_tab == 'payment' %}active{% endif %}"><a class="nav-link" href="#payment" data-toggle="tab">{% trans "Payment" %}</a></li>
+                <li class="nav-item {% if active_tab == 'notes' %}active{% endif %}"><a class="nav-link" href="#notes" data-toggle="tab">{% trans "Notes" %}</a></li>
             {% endblock nav_tabs %}
         </ul>
 
