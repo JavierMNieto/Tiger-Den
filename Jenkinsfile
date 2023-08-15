@@ -6,8 +6,8 @@ pipeline {
             steps {
                 bat 'if not exist .venv mkdir .venv'
                 bat 'pipenv install'
-                bat 'pipenv run wfastcgi-disable'
-                bat 'pipenv run wfastcgi-enable'
+                // bat 'pipenv run wfastcgi-disable'
+                // bat 'pipenv run wfastcgi-enable'
                 bat 'pipenv run python ./tigerden/manage.py migrate'
             }
         }
